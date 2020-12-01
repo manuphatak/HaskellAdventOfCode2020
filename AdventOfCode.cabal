@@ -7,7 +7,7 @@ cabal-version: 1.12
 -- hash: ef04133c9d76df1416a97707cf7f3005236ecd1ba2c33c28786abfdbb619588f
 
 name:           AdventOfCode
-version:        0.1.0.0
+version:        2.0.2.0
 description:    Please see the README on GitHub at <https://github.com/bionikspoon/HaskellAdventOfCode2020#readme>
 homepage:       https://github.com/bionikspoon/HaskellAdventOfCode2020#readme
 bug-reports:    https://github.com/bionikspoon/HaskellAdventOfCode2020/issues

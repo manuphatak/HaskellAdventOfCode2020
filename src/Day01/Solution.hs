@@ -1,4 +1,4 @@
-module Day01.Solution where
+module Day01.Solution (part1, part2) where
 
 part1 :: String -> String
 part1 = id
