@@ -1,6 +1,6 @@
 module Template.SolutionSpec (spec) where
 
-import Template.Solution
+import Template.Solution (part1, part2)
 import Test.Hspec
 
 spec :: Spec

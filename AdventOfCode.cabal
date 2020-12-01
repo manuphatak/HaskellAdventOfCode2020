@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4ebd7eb77ecc4dac43fbdfb206ceef40dea9c6075b4bd1aab61a45f1b9af95f5
+-- hash: ef04133c9d76df1416a97707cf7f3005236ecd1ba2c33c28786abfdbb619588f
 
 name:           AdventOfCode
-version:        0.1.0.0
+version:        2.0.2.0
 description:    Please see the README on GitHub at <https://github.com/bionikspoon/HaskellAdventOfCode2020#readme>
 homepage:       https://github.com/bionikspoon/HaskellAdventOfCode2020#readme
 bug-reports:    https://github.com/bionikspoon/HaskellAdventOfCode2020/issues
@@ -27,6 +27,7 @@ source-repository head
 
 library
   exposed-modules:
+      Day01.Solution
       Template.Solution
   other-modules:
       Paths_AdventOfCode
@@ -45,6 +46,7 @@ test-suite AdventOfCode-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Day01.SolutionSpec
       Template.SolutionSpec
       Paths_AdventOfCode
   hs-source-dirs:
