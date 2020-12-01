@@ -1,7 +1,5 @@
 # AdventOfCode 2020
-
-Doing some prep work for AdventOfCode2020 https://adventofcode.com/2020
-
+Solutions to adventofcode.com/2020
 
 ## Run tests
 
