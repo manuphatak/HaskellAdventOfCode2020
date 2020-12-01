@@ -15,17 +15,8 @@ readInt :: String -> Int
 readInt n = read n :: Int
 
 goalSeek :: Int -> Int -> [Int] -> Maybe Int
-goalSeek n target = maybeProduct <=< find sumEqualGoals . combinations n
-  where
-    sumEqualGoals :: [Int] -> Bool
-    sumEqualGoals ns = sum ns == target
-    maybeProduct :: [Int] -> Maybe Int
-    maybeProduct = Just . foldl' (*) 1
+goalSeek n target = Just . foldl' (*) 1 <=< find ((target ==) . sum) . combinations n
 
 combinations :: Int -> [a] -> [[a]]
 combinations 0 _ = [[]]
-combinations n xs =
-  [ y : ys
-    | y : xs' <- tails xs,
-      ys <- combinations (n -1) xs'
-  ]
+combinations n xs = [y : ys | y : xs' <- tails xs, ys <- combinations (n -1) xs']
