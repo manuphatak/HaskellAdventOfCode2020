@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v html-to-md &> /dev/null
+then
+    echo "html-to-md could not be found"
+    echo ""
+    echo "  $ yarn global add @bionikspoon/html-to-md"
+    echo ""
+    echo ""
+fi
+
+if ! command -v pup &> /dev/null
+then
+    echo "'pup' could not be found"
+    echo ""
+    echo "  $ go get github.com/ericchiang/pup"
+    echo ""
+    echo ""
+fi

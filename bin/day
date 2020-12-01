@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+d=$1
+D=$(printf "%02d" "$d")
+new_day_src="src/Day$D"
+new_day_test="test/Day$D"
+
+function log() {
+  local length=${#1}
+  local char=${2:-'-'}
+  printf "\n"
+  echo "$1"
+  printf '%*s' "$length" ''| tr ' ' "$char"
+  printf "\n"
+
+}
+
+log "Removing existing directory"
+rm -rfv "$new_day_src"
+rm -rfv "$new_day_test"
+
+
+log "Copying template directory"
+cp -rv "src/Template" "$new_day_src"
+cp -rv "test/Template" "$new_day_test"
+
+
+log "Replacing placeholder values"
+find "$new_day_src" -name "*.hs" -exec sed -i "" "s/Template/Day$D/g" {} +
+find "$new_day_test" -name "*.hs" -exec sed -i "" "s/Template/Day$D/g" {} +
+find "$new_day_test" -name "*.hs" -exec sed -i "" "s/ it / xit /g" {} +
+
+
+log "Fetching input.txt"
+./bin/input "$d"
+
+
+log "Fetching README.md"
+./bin/readme "$d"
+
+
+log "Update Stack"
+stack setup
+
+if [ $# -eq 2 ] && [ "$2" = "commit" ]
+then
+  log "Checkout branch"
+  git checkout -b "day_$D"
+
+
+  log "Git add"
+  git add -v "$new_day_src"
+  git add -v "$new_day_test"
+  git add -v AdventOfCode.cabal
+
+  log "Git Commit"
+  git commit -v -m "Setup Day $D"
+fi
+
+
+log "Successfully scaffolded Day $D" "="

@@ -1,0 +1,63 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 4ebd7eb77ecc4dac43fbdfb206ceef40dea9c6075b4bd1aab61a45f1b9af95f5
+
+name:           AdventOfCode
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/bionikspoon/HaskellAdventOfCode2020#readme>
+homepage:       https://github.com/bionikspoon/HaskellAdventOfCode2020#readme
+bug-reports:    https://github.com/bionikspoon/HaskellAdventOfCode2020/issues
+author:         Manu Phatak
+maintainer:     bionikspoon@gmail.com
+copyright:      2020 Manu Phatak
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/bionikspoon/HaskellAdventOfCode2020
+
+library
+  exposed-modules:
+      Template.Solution
+  other-modules:
+      Paths_AdventOfCode
+  hs-source-dirs:
+      src
+  build-tool-depends:
+      hpc-lcov:hpc-lcov
+    , implicit-hie:implicit-hie
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , parsec
+  default-language: Haskell2010
+
+test-suite AdventOfCode-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Template.SolutionSpec
+      Paths_AdventOfCode
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      hpc-lcov:hpc-lcov
+    , implicit-hie:implicit-hie
+  build-depends:
+      AdventOfCode
+    , base >=4.7 && <5
+    , containers
+    , hspec
+    , hspec-discover
+    , parsec
+  default-language: Haskell2010

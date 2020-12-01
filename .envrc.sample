@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+PATH_add bin
+
+export SESSION_ID=0000000000

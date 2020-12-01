@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+d=$1
+D=$(printf "%02d" "$d")
+
+
+# html-to-md needs some work
+# it stops reading on \n when piping from curl
+# but it seems to be fine when piping a file
+#
+# This block is from
+# https://stackoverflow.com/questions/55435352/bad-file-descriptor-when-reading-from-fd-3-pointing-to-a-temp-file
+# We're creating a temporary file that will delete itself when the program finishes
+tmpfile=$(mktemp)
+exec 3> "$tmpfile"
+exec 4< "$tmpfile"
+rm "$tmpfile"
+
+url="https://adventofcode.com/2020/day/${d}"
+
+curl "$url" \
+  -H "cookie: session=${SESSION_ID}" \
+  | pup --pre --plain 'article' \
+  | sed -e "s/---//g" \
+  >&3
+
+echo "<h2>Link</h2>" >&3
+echo "<a href='$url'>$url</a>" >&3
+
+html-to-md <&4 > "src/Day${D}/README.md"
