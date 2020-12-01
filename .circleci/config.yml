@@ -38,8 +38,3 @@ jobs:
       - run:
           name: Publish coverage
           command: bash <(curl -s https://codecov.io/bash)
-      # - run:
-      #     name: Generate Coverage
-      #     command: stack --no-terminal hpc report --all --destdir coverage
-
-
