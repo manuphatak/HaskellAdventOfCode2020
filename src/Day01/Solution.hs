@@ -1,33 +1,26 @@
 module Day01.Solution (part1, part2, goalSeek) where
 
 import Control.Monad ((<=<))
-import Data.Foldable (find)
+import Data.Foldable (Foldable (foldl'), find)
 import Data.List (tails)
 import Data.Maybe (fromJust)
 
 part1 :: String -> String
-part1 = show . fromJust . goalSeek 2020 . map readInt . lines
+part1 = show . fromJust . goalSeek 2 2020 . map readInt . lines
 
 part2 :: String -> String
-part2 = id
+part2 = show . fromJust . goalSeek 3 2020 . map readInt . lines
 
 readInt :: String -> Int
 readInt n = read n :: Int
 
-goalSeek :: Int -> [Int] -> Maybe Int
-goalSeek target = uncurry maybeProduct <=< find (uncurry sumEqualGoals) . pairs
+goalSeek :: Int -> Int -> [Int] -> Maybe Int
+goalSeek n target = maybeProduct <=< find sumEqualGoals . combinations n
   where
-    sumEqualGoals :: Int -> Int -> Bool
-    sumEqualGoals l r = l + r == target
-    maybeProduct :: Int -> Int -> Maybe Int
-    maybeProduct a b = Just (a * b)
-
-pairs :: [a] -> [(a, a)]
-pairs = map pair . combinations 2
-  where
-    pair :: [b] -> (b, b)
-    pair [x, y] = (x, y)
-    pair _ = error "this should never happen"
+    sumEqualGoals :: [Int] -> Bool
+    sumEqualGoals ns = sum ns == target
+    maybeProduct :: [Int] -> Maybe Int
+    maybeProduct = Just . foldl' (*) 1
 
 combinations :: Int -> [a] -> [[a]]
 combinations 0 _ = [[]]
