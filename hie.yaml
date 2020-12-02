@@ -1,7 +1,7 @@
 cradle:
   stack:
     - path: "./src"
-      component: "AdventOfCode:lib"
+      component: "AdventOfCode2020:lib"
 
     - path: "./test"
-      component: "AdventOfCode:test:AdventOfCode-test"
+      component: "AdventOfCode2020:test:AdventOfCode2020-test"
