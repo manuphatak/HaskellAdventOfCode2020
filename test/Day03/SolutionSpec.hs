@@ -1,6 +1,6 @@
 module Day03.SolutionSpec (spec) where
 
-import Day03.Solution (followSlope, part1, part2)
+import Day03.Solution (part1, part2, slopePath)
 import Test.Hspec
 
 spec :: Spec
@@ -11,9 +11,9 @@ spec = parallel $ do
   it "solves Part 2" $ do
     input <- readFile "./test/Day03/input.txt"
     part2 input `shouldBe` "1666768320"
-  describe "followSlope" $
-    context "given the example input" $ do
-      it "should count the number of trees" $ do
+  describe "slopePath" $ do
+    context "given the example input and slope" $ do
+      it "should follow the input to build a path" $ do
         input <- readFile "./test/Day03/example.txt"
-
-        followSlope 3 1 input `shouldBe` 7
+        let expected = ".#.##.####"
+        slopePath 3 1 (lines input) `shouldBe` expected
