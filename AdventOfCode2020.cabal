@@ -4,9 +4,9 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ef04133c9d76df1416a97707cf7f3005236ecd1ba2c33c28786abfdbb619588f
+-- hash: 3aa8503bdda4789789f6109e1ad37ddad55f2cb0116b3ac6c7fd3789e0960f8e
 
-name:           AdventOfCode
+name:           AdventOfCode2020
 version:        2.0.2.0
 description:    Please see the README on GitHub at <https://github.com/bionikspoon/HaskellAdventOfCode2020#readme>
 homepage:       https://github.com/bionikspoon/HaskellAdventOfCode2020#readme
@@ -28,9 +28,12 @@ source-repository head
 library
   exposed-modules:
       Day01.Solution
+      Day02.Parser
+      Day02.Solution
+      Day02.Utils
       Template.Solution
   other-modules:
-      Paths_AdventOfCode
+      Paths_AdventOfCode2020
   hs-source-dirs:
       src
   build-tool-depends:
@@ -42,13 +45,16 @@ library
     , parsec
   default-language: Haskell2010
 
-test-suite AdventOfCode-test
+test-suite AdventOfCode2020-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
       Day01.SolutionSpec
+      Day02.ParserSpec
+      Day02.SolutionSpec
+      Day02.UtilsSpec
       Template.SolutionSpec
-      Paths_AdventOfCode
+      Paths_AdventOfCode2020
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
@@ -56,7 +62,7 @@ test-suite AdventOfCode-test
       hpc-lcov:hpc-lcov
     , implicit-hie:implicit-hie
   build-depends:
-      AdventOfCode
+      AdventOfCode2020
     , base >=4.7 && <5
     , containers
     , hspec

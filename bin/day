@@ -52,7 +52,7 @@ then
   log "Git add"
   git add -v "$new_day_src"
   git add -v "$new_day_test"
-  git add -v AdventOfCode.cabal
+  git add -v AdventOfCode2020.cabal
 
   log "Git Commit"
   git commit -v -m "Setup Day $D"
