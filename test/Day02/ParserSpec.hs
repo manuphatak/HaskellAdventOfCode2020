@@ -5,7 +5,7 @@ import Day02.Parser (PasswordPolicy (..), parseLine)
 import Test.Hspec
 
 spec :: Spec
-spec = do
+spec = parallel $ do
   describe "parseLine" $ do
     let cases =
           [ ("1-3 a: abcde", Just (PasswordPolicy 1 3 'a', "abcde")),

@@ -4,7 +4,7 @@ import Day01.Solution (goalSeek, part1, part2)
 import Test.Hspec
 
 spec :: Spec
-spec = do
+spec = parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day01/input.txt"
     part1 input `shouldBe` "299299"

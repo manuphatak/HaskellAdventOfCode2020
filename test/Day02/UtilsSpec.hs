@@ -5,7 +5,7 @@ import Day02.Utils (isBetween, occurrences, rightToMaybe, xor)
 import Test.Hspec
 
 spec :: Spec
-spec = do
+spec = parallel $ do
   describe "occurrences" $ do
     it "finds the number of occurrences in a list" $
       occurrences 'b' "abcdefabc" `shouldBe` 2
