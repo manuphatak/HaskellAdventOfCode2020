@@ -1,10 +1,13 @@
 module Day03.Solution (part1, part2, followSlope) where
 
 part1 :: String -> String
-part1 = followSlope 3 1
+part1 = show . followSlope 3 1
 
 part2 :: String -> String
-part2 = id
+part2 = show . candidateSlopes
+
+candidateSlopes :: String -> Int
+candidateSlopes input = product [followSlope 1 1 input, followSlope 3 1 input, followSlope 5 1 input, followSlope 7 1 input, followSlope 1 2 input]
 
 data Cell = T | E deriving (Eq, Show)
 
@@ -21,8 +24,8 @@ data Projection = Projection TreeCount Coordinates Grid
 instance Show Projection where
   show (Projection treeCount coordinates _) = "(Projection " ++ show treeCount ++ " (" ++ show coordinates ++ ") Grid)"
 
-followSlope :: Int -> Int -> String -> String
-followSlope slopeX slopY = show . projectionTreeCount . walk slopeX slopY . asProjection . map (map readCell) . lines
+followSlope :: Int -> Int -> String -> Int
+followSlope slopeX slopY = projectionTreeCount . walk slopeX slopY . asProjection . map (map readCell) . lines
 
 projectionTreeCount :: Projection -> TreeCount
 projectionTreeCount (Projection treeCount _ _) = treeCount
@@ -47,7 +50,3 @@ readCell :: Char -> Cell
 readCell '.' = E
 readCell '#' = T
 readCell _ = error "unknown Cell"
-
--- >>> input <- readFile "./test/Day03/example.txt"
--- >>> fn input
--- (Projection 7 (Coordinates 30 10) Grid)
