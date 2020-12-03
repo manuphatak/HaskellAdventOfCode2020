@@ -1,7 +1,7 @@
 module Day02.Solution (part1, part2, lineIsValidV1, lineIsValidV2) where
 
+import Advent.Utils (occurrences)
 import Data.Maybe (fromJust)
-import Data.Utils (occurrences)
 import Day02.Parser (Password, PasswordPolicy (..), parseLine)
 import Day02.Utils (isBetween, xor)
 

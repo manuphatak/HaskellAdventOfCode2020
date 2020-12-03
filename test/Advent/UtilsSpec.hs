@@ -1,6 +1,6 @@
-module Data.UtilsSpec (spec) where
+module Advent.UtilsSpec (spec) where
 
-import Data.Utils (occurrences)
+import Advent.Utils (occurrences)
 import Test.Hspec
 
 spec :: Spec

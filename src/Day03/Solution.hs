@@ -1,6 +1,6 @@
 module Day03.Solution (part1, part2, slopePath) where
 
-import Data.Utils (occurrences)
+import Advent.Utils (occurrences)
 
 part1 :: String -> String
 part1 = show . occurrences '#' . slopePath 3 1 . lines
