@@ -1,8 +1,5 @@
 module Day02.Utils where
 
-occurrences :: Eq a => a -> [a] -> Int
-occurrences target = length . filter (target ==)
-
 isBetween :: Ord a => a -> a -> a -> Bool
 isBetween lower upper target = target >= lower && target <= upper
 

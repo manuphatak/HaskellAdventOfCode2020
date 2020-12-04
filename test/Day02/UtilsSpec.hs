@@ -1,16 +1,11 @@
 module Day02.UtilsSpec (spec) where
 
 import Data.Foldable (for_)
-import Day02.Utils (isBetween, occurrences, rightToMaybe, xor)
+import Day02.Utils (isBetween, rightToMaybe, xor)
 import Test.Hspec
 
 spec :: Spec
-spec = do
-  describe "occurrences" $ do
-    it "finds the number of occurrences in a list" $
-      occurrences 'b' "abcdefabc" `shouldBe` 2
-    it "is 0 on an empty list" $
-      occurrences 42 ([] :: [Int]) `shouldBe` 0
+spec = parallel $ do
   describe "isBetween" $ do
     context "given a range of 1 and 13" $
       let lower = 1 :: Int
