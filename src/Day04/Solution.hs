@@ -117,7 +117,7 @@ isValidStrict = and . sequenceA validations
       | head value == '#' = length (tail value) == 6 && all (`elem` "abcdef0123456789") (tail value)
       | otherwise = False
     validPid :: String -> Bool
-    validPid = liftM2 (&&) ((== 9) . length) (all (`elem` "0123456789"))
+    validPid value = liftM2 (&&) ((== 9) . length) (all (`elem` "0123456789")) $ value
 
 -- >>> input <- readFile "./test/Day04/example.txt"
 -- >>> parse strictFieldParser "" "eyr:2031"

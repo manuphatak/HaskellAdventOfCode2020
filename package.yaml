@@ -35,6 +35,9 @@ tests:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -Wall
+    - -Wwarn
+
     dependencies:
     - AdventOfCode2020
     - hspec-discover
