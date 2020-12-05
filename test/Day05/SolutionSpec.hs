@@ -9,7 +9,7 @@ spec = parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day05/input.txt"
     part1 input `shouldBe` "998"
-  xit "solves Part 2" $ do
+  it "solves Part 2" $ do
     input <- readFile "./test/Day05/input.txt"
     part2 input `shouldBe` "676"
   describe "decode" $ do
