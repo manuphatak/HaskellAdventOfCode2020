@@ -1,13 +1,13 @@
 module Day05.Solution (part1, part2, Seat (..), decode) where
 
--- part1 :: String -> String
-
 import Data.Foldable (find)
 import Data.List (sort)
 import Data.Maybe (fromJust)
 
+part1 :: String -> String
 part1 = show . maximum . map (seatId . decode) . lines
 
+part2 :: String -> String
 part2 = show . missingSeatId . fromJust . find missingSeat . tripletWithNeighbors . sort . map (seatId . decode) . lines
   where
     tripletWithNeighbors ns = zip3 ns (drop 1 ns) (drop 2 ns)
