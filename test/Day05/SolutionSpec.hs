@@ -11,7 +11,7 @@ spec = parallel $ do
     part1 input `shouldBe` "998"
   xit "solves Part 2" $ do
     input <- readFile "./test/Day05/input.txt"
-    part2 input `shouldBe` "hello santa"
+    part2 input `shouldBe` "676"
   describe "decode" $ do
     let cases =
           [ ("BFFFBBFRRR", Seat {seatRow = 70, seatCol = 7, seatId = 567}),
