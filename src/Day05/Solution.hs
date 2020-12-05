@@ -26,7 +26,7 @@ decode = asSeat . (asInt 'B' *** asInt 'R') . splitAt 7
     asSeat :: (Int, Int) -> Seat
     asSeat (row, col) = Seat {seatRow = row, seatCol = col, seatId = row * 8 + col}
 
--- "BFFFBBF"
+-- asInt 'B' "BFFFBBF"
 --   == Binary 1000110
 --   == (1 x 2^6) + (0 x 2^5) + (0 x 2^4) + (0 x 2^3) + (1 x 2^2) + (1 x 2^1) + (0 x 2^0)
 --   == Int 70
