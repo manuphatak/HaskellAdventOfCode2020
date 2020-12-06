@@ -32,7 +32,7 @@ spec = parallel $ do
             (["a", "a", "a", "a"], "a"),
             (["b"], "b")
           ]
-        test (input, expected) = it ("is '" ++ expected ++ "' for group " ++ show input) $ do
+        test (input, expected) = it ("finds '" ++ expected ++ "' are answered 'yes' for ANY passengers within " ++ show input) $ do
           anyYes input `shouldBe` expected
      in for_ cases test
   describe "allYes" $ do
@@ -43,15 +43,15 @@ spec = parallel $ do
             (["a", "a", "a", "a"], "a"),
             (["b"], "b")
           ]
-        test (input, expected) = it ("is '" ++ expected ++ "' for group " ++ show input) $ do
+        test (input, expected) = it ("finds '" ++ expected ++ "' are answered 'yes' for ALL passengers within " ++ show input) $ do
           allYes input `shouldBe` expected
      in for_ cases test
   describe "groupCounts" $ do
-    context "when counting any 'yes's with in a group" $ do
-      it "parses the example into groups of passenger" $ do
+    context "when counting ANY 'yes's within a group" $ do
+      it "finds the count for each group" $ do
         input <- readFile "./test/Day06/example.txt"
         groupCounts anyYes input `shouldBe` Just [3, 3, 3, 1, 1]
-    context "when counting all 'yes's with in a group" $ do
-      it "parses the example into groups of passenger" $ do
+    context "when counting ALL 'yes's within a group" $ do
+      it "finds the count for each group" $ do
         input <- readFile "./test/Day06/example.txt"
         groupCounts allYes input `shouldBe` Just [3, 0, 1, 1, 1]
