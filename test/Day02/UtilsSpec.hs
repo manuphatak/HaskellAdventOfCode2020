@@ -1,7 +1,7 @@
 module Day02.UtilsSpec (spec) where
 
 import Data.Foldable (for_)
-import Day02.Utils (isBetween, rightToMaybe, xor)
+import Day02.Utils (isBetween, xor)
 import Test.Hspec
 
 spec :: Spec
@@ -22,11 +22,6 @@ spec = parallel $ do
               isBetween lower upper target `shouldBe` expected
        in for_ cases test
 
-  describe "rightToMaybe" $ do
-    it "is 'Just a value' when given a 'Right value'" $
-      rightToMaybe (Right 100 :: Either String Int) `shouldBe` Just 100
-    it "is 'Nothing' when given a 'Left value'" $
-      rightToMaybe (Left "Error" :: Either String Int) `shouldBe` Nothing
   describe "xor" $ do
     let cases =
           [ (True, True, False),
