@@ -1,4 +1,4 @@
-module Day06.Solution (part1, part2, parseGroups, combineGroup, groupCounts) where
+module Day06.Solution (part1, part2, parseGroups, anyYes, allYes, groupCounts) where
 
 import Advent.Utils (rightToMaybe)
 import Data.Maybe (fromJust)
@@ -6,10 +6,10 @@ import qualified Data.Set as Set
 import Text.Parsec
 
 part1 :: String -> String
-part1 = show . sum . fromJust . groupCounts
+part1 = show . sum . fromJust . groupCounts anyYes
 
 part2 :: String -> String
-part2 = id
+part2 = show . sum . fromJust . groupCounts allYes
 
 type Passenger = String
 
@@ -24,12 +24,11 @@ groupParser = passengerParser `sepEndBy1` newline
 passengerParser :: Parsec String () Passenger
 passengerParser = many1 letter
 
-combineGroup :: Group -> String
-combineGroup = Set.toList . Set.unions . map Set.fromList
+anyYes :: Group -> String
+anyYes = Set.toList . Set.unions . map Set.fromList
 
-groupCounts :: String -> Maybe [Int]
-groupCounts = fmap (map (length . combineGroup)) . rightToMaybe . parseGroups
+allYes :: Group -> String
+allYes group = filter (\char -> all (elem char) group) $ anyYes group
 
--- >>> input <- readFile "./test/Day06/example.txt"
--- >>> parseGroups input
--- Right [["abc"],["a","b","c"],["ab","ac"],["a","a","a","a"],["b"]]
+groupCounts :: (Group -> String) -> String -> Maybe [Int]
+groupCounts combineGroup = fmap (map (length . combineGroup)) . rightToMaybe . parseGroups
