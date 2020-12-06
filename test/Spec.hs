@@ -5,4 +5,4 @@ import Test.Hspec.Discover
     describe,
     hspec,
     postProcessSpec,
-)
+  )
