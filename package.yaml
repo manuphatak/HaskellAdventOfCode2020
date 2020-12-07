@@ -36,7 +36,6 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     - -Wall
-    - -Wwarn
 
     dependencies:
     - AdventOfCode2020
