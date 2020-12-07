@@ -14,7 +14,7 @@ part2 = show . missingSeatId . fromJust . find isMissingSeat . tripletWithNeighb
     tripletWithNeighbors :: [Int] -> [(Int, Int, Int)]
     tripletWithNeighbors ns = zip3 ns (drop 1 ns) (drop 2 ns)
     isMissingSeat :: (Int, Int, Int) -> Bool
-    isMissingSeat (a, b, c) = not (succ a == b && succ b == c)
+    isMissingSeat (a, b, c) = (succ a /= b) || (succ b /= c)
     missingSeatId :: (Int, Int, Int) -> Int
     missingSeatId (_, b, _) = succ b
 

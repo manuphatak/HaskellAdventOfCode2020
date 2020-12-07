@@ -37,6 +37,10 @@
 # Ban "module X(module X) where", to require a real export list
 - warn: { name: Use explicit module export list }
 #
+- group: { name: future, enabled: true }
+- group: { name: monomorphic, enabled: true }
+- group: { name: codeworld, enabled: true }
+- group: { name: teaching, enabled: true }
 # Replace a $ b $ c with a . b $ c
 # - group: { name: dollar, enabled: true }
 #
