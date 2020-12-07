@@ -1,6 +1,6 @@
 module Day02.Parser (parseLine, Password, PasswordPolicy (..)) where
 
-import Day02.Utils (rightToMaybe)
+import Advent.Utils (rightToMaybe)
 import Text.Parsec
 
 type Password = String
