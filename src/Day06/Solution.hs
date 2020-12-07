@@ -28,7 +28,7 @@ anyYes :: Group -> String
 anyYes = Set.toList . Set.unions . map Set.fromList
 
 allYes :: Group -> String
-allYes group = filter (\char -> all (elem char) group) $ anyYes group
+allYes group = filter (\c -> all (elem c) group) $ anyYes group
 
 groupCounts :: (Group -> String) -> String -> Maybe [Int]
 groupCounts combineGroup = fmap (map (length . combineGroup)) . rightToMaybe . parseGroups

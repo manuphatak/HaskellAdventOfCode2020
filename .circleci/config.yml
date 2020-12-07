@@ -31,10 +31,13 @@ jobs:
             - ".stack-work"
       - run:
           name: Run tests
-          command: stack --no-terminal test --coverage --pedantic
+          command: stack --no-terminal test --coverage
       - run:
           name: Generate lcov
           command: stack --no-terminal exec hpc-lcov
       - run:
           name: Publish coverage
           command: bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: Type checks
+          command: stack --no-terminal build --pedantic
