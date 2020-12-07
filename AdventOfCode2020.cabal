@@ -35,6 +35,7 @@ library
       Day03.Solution
       Day04.Solution
       Day05.Solution
+      Day06.Solution
       Template.Solution
   other-modules:
       Paths_AdventOfCode2020
@@ -62,6 +63,7 @@ test-suite AdventOfCode2020-test
       Day03.SolutionSpec
       Day04.SolutionSpec
       Day05.SolutionSpec
+      Day06.SolutionSpec
       Template.SolutionSpec
       Paths_AdventOfCode2020
   hs-source-dirs:
