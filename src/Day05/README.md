@@ -10,23 +10,23 @@ The first 7 characters will either be `F` or `B` ; these specify exactly one of 
 
 For example, consider just the first seven characters of `FBFBBFFRLR` :
 
-*   Start by considering the whole range, rows `0` through `127` .
-*   `F` means to take the _lower half_ , keeping rows `0` through `63` .
-*   `B` means to take the _upper half_ , keeping rows `32` through `63` .
-*   `F` means to take the _lower half_ , keeping rows `32` through `47` .
-*   `B` means to take the _upper half_ , keeping rows `40` through `47` .
-*   `B` keeps rows `44` through `47` .
-*   `F` keeps rows `44` through `45` .
-*   The final `F` keeps the lower of the two, _row `44`_ .
+- Start by considering the whole range, rows `0` through `127` .
+- `F` means to take the _lower half_ , keeping rows `0` through `63` .
+- `B` means to take the _upper half_ , keeping rows `32` through `63` .
+- `F` means to take the _lower half_ , keeping rows `32` through `47` .
+- `B` means to take the _upper half_ , keeping rows `40` through `47` .
+- `B` keeps rows `44` through `47` .
+- `F` keeps rows `44` through `45` .
+- The final `F` keeps the lower of the two, _row `44`_ .
 
 The last three characters will be either `L` or `R` ; these specify exactly one of the _8 columns_ of seats on the plane (numbered `0` through `7` ). The same process as above proceeds again, this time with only three steps. `L` means to keep the _lower half_ , while `R` means to keep the _upper half_ .
 
 For example, consider just the last 3 characters of `FBFBBFFRLR` :
 
-*   Start by considering the whole range, columns `0` through `7` .
-*   `R` means to take the _upper half_ , keeping columns `4` through `7` .
-*   `L` means to take the _lower half_ , keeping columns `4` through `5` .
-*   The final `R` keeps the upper of the two, _column `5`_ .
+- Start by considering the whole range, columns `0` through `7` .
+- `R` means to take the _upper half_ , keeping columns `4` through `7` .
+- `L` means to take the _lower half_ , keeping columns `4` through `5` .
+- The final `R` keeps the upper of the two, _column `5`_ .
 
 So, decoding `FBFBBFFRLR` reveals that it is the seat at _row `44` , column `5`_ .
 
@@ -34,9 +34,9 @@ Every seat also has a unique _seat ID_ : multiply the row by 8, then add the col
 
 Here are some other boarding passes:
 
-*   `BFFFBBFRRR` : row `70` , column `7` , seat ID `567` .
-*   `FFFBBBFRRR` : row `14` , column `7` , seat ID `119` .
-*   `BBFFBBFRLL` : row `102` , column `4` , seat ID `820` .
+- `BFFFBBFRRR` : row `70` , column `7` , seat ID `567` .
+- `FFFBBBFRRR` : row `14` , column `7` , seat ID `119` .
+- `BBFFBBFRLL` : row `102` , column `4` , seat ID `820` .
 
 As a sanity check, look through your list of boarding passes. _What is the highest seat ID on a boarding pass?_
 
