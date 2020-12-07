@@ -18,12 +18,14 @@ spec = parallel $ do
           ("1-3 b: cdefg", Just False, Just False),
           ("2-9 c: ccccccccc", Just True, Just False)
         ]
-      testV1 (line, expectedV1, _) = do
-        context ("given a line " ++ line) $ do
-          it ("validates as " ++ show expectedV1) $ lineIsValidV1 line `shouldBe` expectedV1
-      testV2 (line, _, expectedV2) = do
-        context ("given a line " ++ line) $ do
-          it ("validates as " ++ show expectedV2) $ lineIsValidV2 line `shouldBe` expectedV2
+      testV1 (line, expectedV1, _) =
+        context ("given a line " ++ line) $
+          it ("validates as " ++ show expectedV1) $
+            lineIsValidV1 line `shouldBe` expectedV1
+      testV2 (line, _, expectedV2) =
+        context ("given a line " ++ line) $
+          it ("validates as " ++ show expectedV2) $
+            lineIsValidV2 line `shouldBe` expectedV2
    in do
         describe "lineIsValidV1" $ for_ cases testV1
         describe "lineIsValidV2" $ for_ cases testV2

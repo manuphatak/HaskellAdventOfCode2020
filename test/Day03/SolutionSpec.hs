@@ -11,8 +11,8 @@ spec = parallel $ do
   it "solves Part 2" $ do
     input <- readFile "./test/Day03/input.txt"
     part2 input `shouldBe` "1666768320"
-  describe "slopePath" $ do
-    context "given the example input and slope" $ do
+  describe "slopePath" $
+    context "given the example input and slope" $
       it "should follow the input to build a path" $ do
         input <- readFile "./test/Day03/example.txt"
         let expected = ".#.##.####"

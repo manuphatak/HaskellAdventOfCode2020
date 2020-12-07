@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: acb5fb65de96acfaca90954821c4944e22734a252babf68284110ee26b1b9326
+-- hash: 82c50a29206ade6a1f35a9b072bd93d96bb67d3042caabc93bee04517e67e2de
 
 name:           AdventOfCode2020
 version:        2.0.2.0
@@ -42,7 +42,8 @@ library
   hs-source-dirs:
       src
   build-tool-depends:
-      hpc-lcov:hpc-lcov
+      hlint:hlint
+    , hpc-lcov:hpc-lcov
     , implicit-hie:implicit-hie
   build-depends:
       base >=4.7 && <5
@@ -69,7 +70,8 @@ test-suite AdventOfCode2020-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
   build-tool-depends:
-      hpc-lcov:hpc-lcov
+      hlint:hlint
+    , hpc-lcov:hpc-lcov
     , implicit-hie:implicit-hie
   build-depends:
       AdventOfCode2020

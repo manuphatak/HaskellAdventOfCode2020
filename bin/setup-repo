@@ -18,3 +18,12 @@ then
     echo ""
     echo ""
 fi
+
+if ! command -v prettier &> /dev/null
+then
+    echo "'prettier' could not be found"
+    echo ""
+    echo "  $ yarn global add prettier"
+    echo ""
+    echo ""
+fi

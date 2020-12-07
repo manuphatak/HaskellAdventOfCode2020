@@ -18,11 +18,11 @@ spec = parallel $ do
     it "is 'Nothing' when given a 'Left value'" $
       rightToMaybe (Left "Error" :: Either String Int) `shouldBe` Nothing
 
-  describe "readInt" $ do
+  describe "readInt" $
     it "is an int" $
       readInt "123" `shouldBe` 123
 
-  describe "isBetween" $ do
+  describe "isBetween" $
     context "given a range of 1 and 13" $
       let lower = 1 :: Int
           upper = 13 :: Int

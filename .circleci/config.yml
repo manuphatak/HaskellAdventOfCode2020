@@ -41,3 +41,8 @@ jobs:
       - run:
           name: Type checks
           command: stack --no-terminal build --pedantic
+      - run:
+          name: Lint
+          command: stack --no-terminal exec hlint  -- --git --report=hlint.html
+      - store_artifacts:
+          path: hlint.html
