@@ -113,5 +113,5 @@ rangeParser lo hi = do
   value <- many1 digit
 
   if isBetween lo hi (readInt value)
-    then return value
+    then pure value
     else unexpected ("value " ++ value ++ ", expected a value between " ++ show lo ++ " and " ++ show hi)

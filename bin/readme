@@ -29,3 +29,5 @@ echo "<h2>Link</h2>" >&3
 echo "<a href='$url'>$url</a>" >&3
 
 html-to-md <&4 > "src/Day${D}/README.md"
+
+prettier --write "src/Day${D}/README.md"

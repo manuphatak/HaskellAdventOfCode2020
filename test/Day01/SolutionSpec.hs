@@ -11,7 +11,7 @@ spec = parallel $ do
   it "solves Part 2" $ do
     input <- readFile "./test/Day01/input.txt"
     part2 input `shouldBe` "287730716"
-  describe "goalSeek" $ do
+  describe "goalSeek" $
     context "given a list of numbers" $
       let needle = 2020
           haystack = [1721, 979, 366, 299, 675, 1456]

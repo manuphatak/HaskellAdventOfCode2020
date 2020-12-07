@@ -41,34 +41,34 @@ spec = parallel $ do
           Map.fromList [("byr", "2007"), ("ecl", "zzz"), ("eyr", "2038"), ("hcl", "74454a"), ("hgt", "59cm"), ("iyr", "2023"), ("pid", "3556412378")]
         ]
   describe "parsePassports" $ do
-    context "given the file example.txt" $ do
+    context "given the file example.txt" $
       it "parses a list of Passports" $ do
         input <- readFile "./test/Day04/example.txt"
         parsePassports input `shouldBe` Right example
-    context "given the file strict-valid.txt" $ do
+    context "given the file strict-valid.txt" $
       it "parses a list of Passports" $ do
         input <- readFile "./test/Day04/strict-valid.txt"
         parsePassports input `shouldBe` Right strictValid
-    context "given the file strict-invalid.txt" $ do
+    context "given the file strict-invalid.txt" $
       it "parses a list of Passports" $ do
         input <- readFile "./test/Day04/strict-invalid.txt"
         parsePassports input `shouldBe` Right strictInvalid
 
-  describe "isValidLoose" $ do
-    context "given the example passports" $ do
-      it "parses a list of Passports" $ do
+  describe "isValidLoose" $
+    context "given the example passports" $
+      it "parses a list of Passports" $
         map isValidLoose example `shouldBe` [True, False, True, False]
 
-  describe "isValidStrict" $ do
-    context "given the strictValid passports" $ do
-      it "parses a list of Passports" $ do
+  describe "isValidStrict" $
+    context "given the strictValid passports" $
+      it "parses a list of Passports" $
         map isValidStrict strictValid `shouldBe` [True, True, True, True]
-  describe "isStrictInvalid" $ do
-    context "given the strictValid passports" $ do
-      it "parses a list of Passports" $ do
+  describe "isStrictInvalid" $
+    context "given the strictValid passports" $
+      it "parses a list of Passports" $
         map isValidStrict strictInvalid `shouldBe` [False, False, False, False]
 
-  describe "strictPassportValidations" $ do
+  describe "strictPassportValidations" $
     let cases =
           [ ( "byr",
               [ ("1920", True),
@@ -134,8 +134,8 @@ spec = parallel $ do
                   _ -> error ("unknown key " ++ key)
 
             let testContext (input, expected) =
-                  it ("is " ++ (show expected) ++ " for " ++ input) $
-                    (fn strictPassportValidations $ Just input) `shouldBe` expected
+                  it ("is " ++ show expected ++ " for " ++ input) $
+                    fn strictPassportValidations (Just input) `shouldBe` expected
 
             for_ contextCases testContext
      in for_ cases test
