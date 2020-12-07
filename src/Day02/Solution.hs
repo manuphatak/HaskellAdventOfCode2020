@@ -1,9 +1,9 @@
 module Day02.Solution (part1, part2, lineIsValidV1, lineIsValidV2) where
 
-import Advent.Utils (occurrences)
+import Advent.Utils (isBetween, occurrences)
 import Data.Maybe (fromJust)
 import Day02.Parser (Password, PasswordPolicy (..), parseLine)
-import Day02.Utils (isBetween, xor)
+import Day02.Utils (xor)
 
 part1 :: String -> String
 part1 = show . occurrences True . fromJust . mapM lineIsValidV1 . lines
