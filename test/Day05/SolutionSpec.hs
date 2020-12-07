@@ -12,7 +12,7 @@ spec = parallel $ do
   it "solves Part 2" $ do
     input <- readFile "./test/Day05/input.txt"
     part2 input `shouldBe` "676"
-  describe "decode" $ do
+  describe "decode" $
     let cases =
           [ ("BFFFBBFRRR", Seat {seatRow = 70, seatCol = 7, seatId = 567}),
             ("FFFBBBFRRR", Seat {seatRow = 14, seatCol = 7, seatId = 119}),
