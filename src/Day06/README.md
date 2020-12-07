@@ -36,11 +36,11 @@ b
 
 This list represents answers from five groups:
 
-*   The first group contains one person who answered "yes" to _`3`_ questions: `a` , `b` , and `c` .
-*   The second group contains three people; combined, they answered "yes" to _`3`_ questions: `a` , `b` , and `c` .
-*   The third group contains two people; combined, they answered "yes" to _`3`_ questions: `a` , `b` , and `c` .
-*   The fourth group contains four people; combined, they answered "yes" to only _`1`_ question, `a` .
-*   The last group contains one person who answered "yes" to only _`1`_ question, `b` .
+- The first group contains one person who answered "yes" to _`3`_ questions: `a` , `b` , and `c` .
+- The second group contains three people; combined, they answered "yes" to _`3`_ questions: `a` , `b` , and `c` .
+- The third group contains two people; combined, they answered "yes" to _`3`_ questions: `a` , `b` , and `c` .
+- The fourth group contains four people; combined, they answered "yes" to only _`1`_ question, `a` .
+- The last group contains one person who answered "yes" to only _`1`_ question, `b` .
 
 In this example, the sum of these counts is `3 + 3 + 3 + 1 + 1` \= _`11`_ .
 
@@ -74,11 +74,11 @@ b
 
 This list represents answers from five groups:
 
-*   In the first group, everyone (all 1 person) answered "yes" to _`3`_ questions: `a` , `b` , and `c` .
-*   In the second group, there is _no_ question to which everyone answered "yes".
-*   In the third group, everyone answered yes to only _`1`_ question, `a` . Since some people did not answer "yes" to `b` or `c` , they don't count.
-*   In the fourth group, everyone answered yes to only _`1`_ question, `a` .
-*   In the fifth group, everyone (all 1 person) answered "yes" to _`1`_ question, `b` .
+- In the first group, everyone (all 1 person) answered "yes" to _`3`_ questions: `a` , `b` , and `c` .
+- In the second group, there is _no_ question to which everyone answered "yes".
+- In the third group, everyone answered yes to only _`1`_ question, `a` . Since some people did not answer "yes" to `b` or `c` , they don't count.
+- In the fourth group, everyone answered yes to only _`1`_ question, `a` .
+- In the fifth group, everyone (all 1 person) answered "yes" to _`1`_ question, `b` .
 
 In this example, the sum of these counts is `3 + 0 + 1 + 1 + 1` \= _`6`_ .
 
