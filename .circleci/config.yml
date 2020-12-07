@@ -31,7 +31,7 @@ jobs:
             - ".stack-work"
       - run:
           name: Run tests
-          command: stack --no-terminal test --coverage
+          command: stack --no-terminal test --coverage --pedantic
       - run:
           name: Generate lcov
           command: stack --no-terminal exec hpc-lcov
