@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: fpco/stack-build:lts
         auth:
-          username: bionikspoon
+          username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
     working_directory: /app
     steps:
@@ -41,8 +41,10 @@ jobs:
       - run:
           name: Type checks
           command: stack --no-terminal build --pedantic
+          when: always
       - run:
           name: Lint
           command: stack --no-terminal exec hlint  -- --git --report=hlint.html
+          when: always
       - store_artifacts:
           path: hlint.html
