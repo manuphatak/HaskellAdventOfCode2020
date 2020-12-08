@@ -8,20 +8,21 @@ module Day08.Solution
     parseInstructions,
     runProgram,
     initialState,
+    fixedInstructions,
+    fixProgram,
   )
 where
 
-import Advent.Utils (readInt)
-import Data.Either (fromRight)
+import Advent.Utils (fromLeft', fromRight'', readInt)
+import Data.Either (isRight)
 import qualified Data.IntSet as IntSet
-import Debug.Trace
 import Text.Parsec
 
 part1 :: String -> String
-part1 = show . programAcc . runProgram initialState . fromRight [] . parseInstructions
+part1 = show . programAcc . fromLeft' . runProgram initialState . fromRight'' . parseInstructions
 
 part2 :: String -> String
-part2 = head . lines
+part2 = show . programAcc . fromRight'' . fixProgram initialState . fromRight'' . parseInstructions
 
 data Sign = Plus | Minus deriving (Show, Eq)
 
@@ -51,14 +52,15 @@ signParser = readSign <$> choice [char '+', char '-']
 intParser :: Parsec String () Int
 intParser = readInt <$> many1 digit
 
-data Program = Program {programAcc :: Int, programPointer :: Int, programVisited :: IntSet.IntSet} deriving (Show)
+data Program = Program {programAcc :: Int, programPointer :: Int, programVisited :: IntSet.IntSet} deriving (Show, Eq)
 
 initialState :: Program
 initialState = Program {programAcc = 0, programPointer = 0, programVisited = IntSet.empty}
 
-runProgram :: Program -> [Instruction] -> Program
+runProgram :: Program -> [Instruction] -> Either Program Program
 runProgram program instructions
-  | programPointer program `IntSet.member` programVisited program = program
+  | programPointer program `IntSet.member` programVisited program = Left program
+  | programPointer program == length instructions = Right program
   | otherwise = runProgram (go (instructions !! programPointer program)) instructions
   where
     nextProgram = program {programVisited = programPointer program `IntSet.insert` programVisited program}
@@ -76,3 +78,22 @@ runProgram program instructions
         { programPointer = (succ . programPointer) nextProgram,
           programAcc = (subtract n . programAcc) nextProgram
         }
+
+fixProgram :: Program -> [Instruction] -> Either Program Program
+fixProgram program = head . filter isRight . map (runProgram program) . fixedInstructions
+
+fixedInstructions :: [Instruction] -> [[Instruction]]
+fixedInstructions instructions = [adjust i swappedInstruction instructions | i <- [0 .. (length instructions)]]
+  where
+    swappedInstruction :: Instruction -> Instruction
+    swappedInstruction (Instruction NoOperation sign int) = Instruction Jump sign int
+    swappedInstruction (Instruction Jump sign int) = Instruction NoOperation sign int
+    swappedInstruction instruction = instruction
+
+adjust :: Int -> (a -> a) -> [a] -> [a]
+adjust n fn = go 0
+  where
+    go _ [] = []
+    go i (x : xs)
+      | i == n = fn x : go (succ i) xs
+      | otherwise = x : go (succ i) xs
