@@ -41,6 +41,7 @@ log "Fetching README.md"
 
 
 log "Update Stack"
+rm -v AdventOfCode2020.cabal
 stack setup
 
 if [ $# -eq 2 ] && [ "$2" = "commit" ]
