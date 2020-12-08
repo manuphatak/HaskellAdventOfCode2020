@@ -53,16 +53,11 @@ spec = parallel $ do
   describe "fixInstructions" $ do
     context "given instructions from example.txt" $ do
       let cases =
-            [ (0, Instruction Jump Plus 0),
-              (1, Instruction Accumulator Plus 1),
-              (2, Instruction NoOperation Plus 4),
-              (3, Instruction Accumulator Plus 3),
-              (4, Instruction NoOperation Minus 3),
-              (5, Instruction Accumulator Minus 99),
-              (6, Instruction Accumulator Plus 1),
-              (7, Instruction NoOperation Minus 4),
-              (8, Instruction Accumulator Plus 6)
+            [ (0, 0, Instruction Jump Plus 0),
+              (1, 2, Instruction NoOperation Plus 4),
+              (2, 4, Instruction NoOperation Minus 3),
+              (3, 7, Instruction NoOperation Minus 4)
             ]
-          test (index, expected) = it "fixes the instructions" $ do
-            fixedInstructions parsedExample !! index !! index `shouldBe` expected
+          test (x, y, expected) = it ("swaps the instructions to " ++ show expected) $ do
+            fixedInstructions parsedExample !! x !! y `shouldBe` expected
        in for_ cases test

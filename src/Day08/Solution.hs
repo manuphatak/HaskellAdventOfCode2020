@@ -16,6 +16,7 @@ where
 import Advent.Utils (fromLeft', fromRight'', readInt)
 import Data.Either (isRight)
 import qualified Data.IntSet as IntSet
+import Data.Maybe (catMaybes)
 import Text.Parsec
 
 part1 :: String -> String
@@ -85,17 +86,17 @@ fixProgram :: Program -> [Instruction] -> Either Program Program
 fixProgram program = head . filter isRight . map (runProgram program) . fixedInstructions
 
 fixedInstructions :: [Instruction] -> [[Instruction]]
-fixedInstructions instructions = [adjust i swappedInstruction instructions | i <- [0 .. (length instructions)]]
+fixedInstructions instructions = catMaybes $ [sequenceA (adjustOr i swappedInstruction Just instructions) | i <- [0 .. (length instructions)]]
   where
-    swappedInstruction :: Instruction -> Instruction
-    swappedInstruction (Instruction NoOperation sign int) = Instruction Jump sign int
-    swappedInstruction (Instruction Jump sign int) = Instruction NoOperation sign int
-    swappedInstruction instruction = instruction
+    swappedInstruction :: Instruction -> Maybe Instruction
+    swappedInstruction (Instruction NoOperation sign int) = Just $ Instruction Jump sign int
+    swappedInstruction (Instruction Jump sign int) = Just $ Instruction NoOperation sign int
+    swappedInstruction _ = Nothing
 
-adjust :: Int -> (a -> a) -> [a] -> [a]
-adjust n fn = go 0
-  where
-    go _ [] = []
-    go i (x : xs)
-      | i == n = fn x : go (succ i) xs
-      | otherwise = x : go (succ i) xs
+    adjustOr :: Int -> (a -> b) -> (a -> b) -> [a] -> [b]
+    adjustOr n fn fb = go 0
+      where
+        go _ [] = []
+        go i (x : xs)
+          | i == n = fn x : go (succ i) xs
+          | otherwise = fb x : go (succ i) xs
