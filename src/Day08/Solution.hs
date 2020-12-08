@@ -73,18 +73,19 @@ runProgram program instructions
   | otherwise = runProgram (go (instructions IntMap.! programPointer program)) instructions
   where
     nextProgram = program {programVisited = programPointer program `IntSet.insert` programVisited program}
+    nextProgramPointer = (succ . programPointer) program
     go :: Instruction -> Program
-    go (Instruction NoOperation _ _) = nextProgram {programPointer = (succ . programPointer) program}
-    go (Instruction Jump Plus n) = nextProgram {programPointer = ((+) n . programPointer) program}
-    go (Instruction Jump Minus n) = nextProgram {programPointer = (subtract n . programPointer) program}
+    go (Instruction NoOperation _ _) = nextProgram {programPointer = (succ . programPointer) nextProgram}
+    go (Instruction Jump Plus n) = nextProgram {programPointer = ((+) n . programPointer) nextProgram}
+    go (Instruction Jump Minus n) = nextProgram {programPointer = (subtract n . programPointer) nextProgram}
     go (Instruction Accumulator Plus n) =
       nextProgram
-        { programPointer = (succ . programPointer) nextProgram,
+        { programPointer = nextProgramPointer,
           programAcc = ((+) n . programAcc) nextProgram
         }
     go (Instruction Accumulator Minus n) =
       nextProgram
-        { programPointer = (succ . programPointer) nextProgram,
+        { programPointer = nextProgramPointer,
           programAcc = (subtract n . programAcc) nextProgram
         }
 
