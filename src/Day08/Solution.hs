@@ -42,12 +42,14 @@ operationParser = readOperation <$> many1 letter
     readOperation "nop" = NoOperation
     readOperation "acc" = Accumulator
     readOperation "jmp" = Jump
+    readOperation _ = error "this should never happen"
 
 signParser :: Parsec String () Sign
 signParser = readSign <$> choice [char '+', char '-']
   where
     readSign '+' = Plus
     readSign '-' = Minus
+    readSign _ = error "this should never happen"
 
 intParser :: Parsec String () Int
 intParser = readInt <$> many1 digit
