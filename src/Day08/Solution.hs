@@ -13,17 +13,18 @@ module Day08.Solution
   )
 where
 
-import Advent.Utils (fromLeft', fromRight'', readInt)
+import Advent.Utils (readInt)
 import Data.Either (isRight)
+import qualified Data.IntMap.Strict as IntMap
 import qualified Data.IntSet as IntSet
-import Data.Maybe (catMaybes)
+import Day08.Utils (asIntMap, fromLeftOrError, fromRightOrError')
 import Text.Parsec
 
 part1 :: String -> String
-part1 = show . programAcc . fromLeft' . runProgram initialState . fromRight'' . parseInstructions
+part1 = show . programAcc . fromLeftOrError . runProgram initialState . fromRightOrError' . parseInstructions
 
 part2 :: String -> String
-part2 = show . programAcc . fromRight'' . fixProgram initialState . fromRight'' . parseInstructions
+part2 = show . programAcc . fromRightOrError' . fixProgram initialState . fromRightOrError' . parseInstructions
 
 data Sign = Plus | Minus deriving (Show, Eq)
 
@@ -31,8 +32,13 @@ data Operation = NoOperation | Accumulator | Jump deriving (Show, Eq)
 
 data Instruction = Instruction Operation Sign Int deriving (Show, Eq)
 
-parseInstructions :: String -> Either ParseError [Instruction]
-parseInstructions = parse (instructionParser `sepEndBy1` endOfLine) ""
+type Instructions = IntMap.IntMap Instruction
+
+parseInstructions :: String -> Either ParseError Instructions
+parseInstructions = parse instructionsParser ""
+  where
+    instructionsParser :: Parsec String () Instructions
+    instructionsParser = asIntMap <$> instructionParser `sepEndBy1` endOfLine
 
 instructionParser :: Parsec String () Instruction
 instructionParser = Instruction <$> (operationParser <* space) <*> signParser <*> intParser
@@ -60,11 +66,11 @@ data Program = Program {programAcc :: Int, programPointer :: Int, programVisited
 initialState :: Program
 initialState = Program {programAcc = 0, programPointer = 0, programVisited = IntSet.empty}
 
-runProgram :: Program -> [Instruction] -> Either Program Program
+runProgram :: Program -> Instructions -> Either Program Program
 runProgram program instructions
   | programPointer program `IntSet.member` programVisited program = Left program
   | programPointer program == length instructions = Right program
-  | otherwise = runProgram (go (instructions !! programPointer program)) instructions
+  | otherwise = runProgram (go (instructions IntMap.! programPointer program)) instructions
   where
     nextProgram = program {programVisited = programPointer program `IntSet.insert` programVisited program}
     go :: Instruction -> Program
@@ -82,21 +88,18 @@ runProgram program instructions
           programAcc = (subtract n . programAcc) nextProgram
         }
 
-fixProgram :: Program -> [Instruction] -> Either Program Program
+fixProgram :: Program -> Instructions -> Either Program Program
 fixProgram program = head . filter isRight . map (runProgram program) . fixedInstructions
 
-fixedInstructions :: [Instruction] -> [[Instruction]]
-fixedInstructions instructions = catMaybes $ [sequenceA (adjustOr i swappedInstruction Just instructions) | i <- [0 .. (length instructions)]]
+fixedInstructions :: Instructions -> [Instructions]
+fixedInstructions instructions =
+  [ IntMap.adjust swappedInstruction i instructions
+    | i <- [0 .. (length instructions)],
+      let (Instruction op _ _) = instructions IntMap.! i,
+      op == NoOperation || op == Jump
+  ]
   where
-    swappedInstruction :: Instruction -> Maybe Instruction
-    swappedInstruction (Instruction NoOperation sign int) = Just $ Instruction Jump sign int
-    swappedInstruction (Instruction Jump sign int) = Just $ Instruction NoOperation sign int
-    swappedInstruction _ = Nothing
-
-    adjustOr :: Int -> (a -> b) -> (a -> b) -> [a] -> [b]
-    adjustOr n fn fb = go 0
-      where
-        go _ [] = []
-        go i (x : xs)
-          | i == n = fn x : go (succ i) xs
-          | otherwise = fb x : go (succ i) xs
+    swappedInstruction :: Instruction -> Instruction
+    swappedInstruction (Instruction NoOperation sign int) = Instruction Jump sign int
+    swappedInstruction (Instruction Jump sign int) = Instruction NoOperation sign int
+    swappedInstruction _ = error "this should never happen"

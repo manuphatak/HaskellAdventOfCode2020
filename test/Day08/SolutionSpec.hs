@@ -1,7 +1,7 @@
 module Day08.SolutionSpec (spec) where
 
-import Advent.Utils (fromLeft')
 import Data.Foldable (for_)
+import qualified Data.IntMap.Strict as IntMap
 import Day08.Solution
   ( Instruction (..),
     Operation (..),
@@ -15,6 +15,7 @@ import Day08.Solution
     part2,
     runProgram,
   )
+import Day08.Utils (asIntMap, fromLeftOrError)
 import Test.Hspec
 
 spec :: Spec
@@ -26,16 +27,17 @@ spec = parallel $ do
     input <- readFile "./test/Day08/input.txt"
     part2 input `shouldBe` "1033"
   let parsedExample =
-        [ Instruction NoOperation Plus 0,
-          Instruction Accumulator Plus 1,
-          Instruction Jump Plus 4,
-          Instruction Accumulator Plus 3,
-          Instruction Jump Minus 3,
-          Instruction Accumulator Minus 99,
-          Instruction Accumulator Plus 1,
-          Instruction Jump Minus 4,
-          Instruction Accumulator Plus 6
-        ]
+        asIntMap
+          [ Instruction NoOperation Plus 0,
+            Instruction Accumulator Plus 1,
+            Instruction Jump Plus 4,
+            Instruction Accumulator Plus 3,
+            Instruction Jump Minus 3,
+            Instruction Accumulator Minus 99,
+            Instruction Accumulator Plus 1,
+            Instruction Jump Minus 4,
+            Instruction Accumulator Plus 6
+          ]
   describe "parseInstructions" $ do
     it "parses the example into instructions" $ do
       input <- readFile "./test/Day08/example.txt"
@@ -44,7 +46,7 @@ spec = parallel $ do
   describe "runProgram" $ do
     context "given instructions from example.txt" $ do
       it "has an accumulator of 5" $ do
-        (programAcc . fromLeft' . runProgram initialState) parsedExample `shouldBe` 5
+        (programAcc . fromLeftOrError . runProgram initialState) parsedExample `shouldBe` 5
   describe "fixProgram" $ do
     context "given instructions from example.txt" $ do
       it "has an accumulator of 5" $ do
@@ -59,5 +61,5 @@ spec = parallel $ do
               (3, 7, Instruction NoOperation Minus 4)
             ]
           test (x, y, expected) = it ("swaps the instructions to " ++ show expected) $ do
-            fixedInstructions parsedExample !! x !! y `shouldBe` expected
+            fixedInstructions parsedExample !! x IntMap.! y `shouldBe` expected
        in for_ cases test
