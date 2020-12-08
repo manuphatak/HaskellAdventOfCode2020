@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: fpco/stack-build:lts
         auth:
-          username: bionikspoon
+          username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
     working_directory: /app
     steps:
