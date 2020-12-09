@@ -30,6 +30,7 @@ encryptionWeakness :: Int -> [Int] -> Int
 encryptionWeakness target = go 1
   where
     go :: Int -> [Int] -> Int
+    go _ [] = error "this should never happen"
     go size ns
       | sum contiguousRange < target = go (succ size) ns
       | sum contiguousRange == target = minimum contiguousRange + maximum contiguousRange
