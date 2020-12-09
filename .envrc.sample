@@ -2,3 +2,4 @@
 PATH_add bin
 
 export SESSION_ID=0000000000
+export GITHUB_USER=bionikspoon

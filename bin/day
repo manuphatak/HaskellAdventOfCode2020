@@ -62,7 +62,11 @@ then
   git push --verbose --set-upstream origin "day_$D"
 
   log "Create Pull Request"
-  hub pull-request -m "Solve Day $D"
+  hub pull-request \
+    --message "Solve Day $D" \
+    --file "$new_day_src/README.md" \
+    --assign "$GITHUB_USER" \
+    --labels solution
 fi
 
 
