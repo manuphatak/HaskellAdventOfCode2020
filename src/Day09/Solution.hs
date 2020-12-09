@@ -11,7 +11,7 @@ part2 :: String -> String
 part2 = show . (encryptionWeakness <$> (fromJust . xmasCypher 25) <*> parseNumbers)
 
 xmasCypher :: Int -> String -> Maybe Int
-xmasCypher n = fmap snd . find (uncurry followsPreamble) . rollingChunks n . parseNumbers
+xmasCypher size = fmap snd . find (uncurry followsPreamble) . rollingChunks size . parseNumbers
   where
     followsPreamble :: [Int] -> Int -> Bool
     followsPreamble preamble target = not $ any ((== target) . sum) (combinations 2 preamble)
@@ -21,12 +21,12 @@ parseNumbers = map readInt . lines
 
 -- >>> rollingChunks 2 "abcd"
 -- [("ab",'c'),("bc",'d')]
--- >>> rollingChunks 3 "abcde"
--- [("abc",'d'),("bcd",'e')]
-rollingChunks :: Int -> [b] -> [([b], b)]
-rollingChunks n xs =
-  [ (take n chunkStart, chunkStart !! max 0 n)
-    | i <- [0 .. (length xs - (n + 1))],
+-- >>> rollingChunks 3 "abcdef"
+-- [("abc",'d'),("bcd",'e'),("cde",'f')]
+rollingChunks :: Int -> [a] -> [([a], a)]
+rollingChunks size xs =
+  [ (take size chunkStart, chunkStart !! max 0 size)
+    | i <- [0 .. (length xs - (size + 1))],
       let chunkStart = drop i xs
   ]
 
@@ -34,9 +34,9 @@ encryptionWeakness :: Int -> [Int] -> Int
 encryptionWeakness target = go 1
   where
     go :: Int -> [Int] -> Int
-    go end ns
-      | sum contiguousRange < target = go (succ end) ns
+    go size ns
+      | sum contiguousRange < target = go (succ size) ns
       | sum contiguousRange == target = minimum contiguousRange + maximum contiguousRange
       | sum contiguousRange > target = go 1 (drop 1 ns)
       where
-        contiguousRange = take end ns
+        contiguousRange = take size ns
