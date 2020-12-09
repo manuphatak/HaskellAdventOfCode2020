@@ -19,10 +19,14 @@ xmasCypher n = fmap snd . find (uncurry followsPreamble) . rollingChunks n . par
 parseNumbers :: String -> [Int]
 parseNumbers = map readInt . lines
 
-rollingChunks :: Num b => Int -> [b] -> [([b], b)]
+-- >>> rollingChunks 2 "abcd"
+-- [("ab",'c'),("bc",'d')]
+-- >>> rollingChunks 3 "abcde"
+-- [("abc",'d'),("bcd",'e')]
+rollingChunks :: Int -> [b] -> [([b], b)]
 rollingChunks n xs =
   [ (take n chunkStart, chunkStart !! max 0 n)
-    | i <- [1 .. (length xs - (n + 1))],
+    | i <- [0 .. (length xs - (n + 1))],
       let chunkStart = drop i xs
   ]
 
