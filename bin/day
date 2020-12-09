@@ -59,7 +59,7 @@ then
   git commit -v -m "Setup Day $D"
 
   log "Push Branch"
-  git push --verbose --set-upstream origin "$(git-branch-current 2> /dev/null)"
+  git push --verbose --set-upstream origin "day_$D"
 
   log "Create Pull Request"
   hub pull-request -m "Solve Day $D"
