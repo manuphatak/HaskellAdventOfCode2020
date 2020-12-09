@@ -31,17 +31,13 @@ jobs:
             - ".stack-work"
       - run:
           name: Run tests
-          command: stack --no-terminal test --coverage
+          command: stack --no-terminal test --coverage --pedantic
       - run:
           name: Generate lcov
           command: stack --no-terminal exec hpc-lcov
       - run:
           name: Publish coverage
           command: bash <(curl -s https://codecov.io/bash)
-      - run:
-          name: Type checks
-          command: stack --no-terminal build --pedantic
-          when: always
       - run:
           name: Lint
           command: stack --no-terminal exec hlint  -- --git --report=hlint.html
