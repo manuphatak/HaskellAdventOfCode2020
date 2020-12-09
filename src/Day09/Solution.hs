@@ -1,4 +1,4 @@
-module Day09.Solution (part1, part2, xmasCypher, encryptionWeakness, parseNumbers) where
+module Day09.Solution (part1, part2, xmasCypher, encryptionWeakness, parseNumbers, rollingChunks) where
 
 import Advent.Utils (combinations, readInt)
 import Data.Foldable (find)
@@ -19,10 +19,6 @@ xmasCypher size = fmap snd . find (uncurry followsPreamble) . rollingChunks size
 parseNumbers :: String -> [Int]
 parseNumbers = map readInt . lines
 
--- >>> rollingChunks 2 "abcd"
--- [("ab",'c'),("bc",'d')]
--- >>> rollingChunks 3 "abcdef"
--- [("abc",'d'),("bcd",'e'),("cde",'f')]
 rollingChunks :: Int -> [a] -> [([a], a)]
 rollingChunks size xs =
   [ (take size chunkStart, chunkStart !! max 0 size)
