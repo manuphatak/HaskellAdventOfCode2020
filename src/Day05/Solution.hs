@@ -12,7 +12,7 @@ part2 :: String -> String
 part2 = show . missingSeatId . fromJust . find isMissingSeat . tripletWithNeighbors . sort . map (seatId . decode) . lines
   where
     tripletWithNeighbors :: [Int] -> [(Int, Int, Int)]
-    tripletWithNeighbors ns = zip3 ns (drop 1 ns) (drop 2 ns)
+    tripletWithNeighbors ns = zip3 ns (tail ns) (drop 2 ns)
     isMissingSeat :: (Int, Int, Int) -> Bool
     isMissingSeat (a, b, c) = (succ a /= b) || (succ b /= c)
     missingSeatId :: (Int, Int, Int) -> Int
