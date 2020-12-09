@@ -34,6 +34,6 @@ encryptionWeakness target = go 1
     go size ns
       | sum contiguousRange < target = go (succ size) ns
       | sum contiguousRange == target = minimum contiguousRange + maximum contiguousRange
-      | sum contiguousRange > target = go 1 (drop 1 ns)
+      | sum contiguousRange > target = go 1 (tail ns)
       where
         contiguousRange = take size ns
