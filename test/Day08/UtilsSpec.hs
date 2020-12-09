@@ -5,6 +5,8 @@ import qualified Data.IntMap.Strict as IntMap
 import Day08.Utils (asIntMap, fromLeftOrError, fromRightOrError, fromRightOrError')
 import Test.Hspec
 
+type TestType = Either Int Int
+
 spec :: Spec
 spec = parallel $ do
   describe "asIntMap" $ do
@@ -13,21 +15,21 @@ spec = parallel $ do
   describe "fromLeftOrError" $ do
     context "given a Left Value" $ do
       it "is the Left value" $ do
-        fromLeftOrError (Left 42) `shouldBe` 42
+        fromLeftOrError (Left 42 :: TestType) `shouldBe` 42
     context "given a Right Value" $ do
       it "is throws an exceptions" $ do
-        evaluate (fromLeftOrError (Right 42)) `shouldThrow` anyException
+        evaluate (fromLeftOrError (Right 42 :: TestType)) `shouldThrow` anyException
   describe "fromRightOrError" $ do
     context "given a Right Value" $ do
       it "is the Right value" $ do
-        fromRightOrError (Right 53) `shouldBe` 53
+        fromRightOrError (Right 53 :: TestType) `shouldBe` 53
     context "given a Left Value" $ do
       it "is throws an exceptions" $ do
-        evaluate (fromRightOrError (Left 21)) `shouldThrow` anyException
+        evaluate (fromRightOrError (Left 21 :: TestType)) `shouldThrow` anyException
   describe "fromRightOrError'" $ do
     context "given a Right Value" $ do
       it "is the Right value" $ do
-        fromRightOrError' (Right 92 :: Either Int Int) `shouldBe` 92
+        fromRightOrError' (Right 92 :: TestType) `shouldBe` 92
     context "given a Left Value" $ do
       it "is throws an exceptions" $ do
-        evaluate (fromRightOrError' (Left 14 :: Either Int Int)) `shouldThrow` anyException
+        evaluate (fromRightOrError' (Left 14 :: TestType)) `shouldThrow` anyException
