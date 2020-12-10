@@ -1,6 +1,6 @@
 module Advent.UtilsSpec (spec) where
 
-import Advent.Utils (isBetween, occurrences, readInt, rightToMaybe)
+import Advent.Utils (combinations, isBetween, occurrences, readInt, rightToMaybe)
 import Data.Foldable (for_)
 import Test.Hspec
 
@@ -37,3 +37,7 @@ spec = parallel $ do
             it ("is " ++ show expected ++ " for " ++ show target) $
               isBetween lower upper target `shouldBe` expected
        in for_ cases test
+
+  describe "combinations" $
+    it "is the combinations of a list" $ do
+      combinations 2 "abcd" `shouldBe` ["ab", "ac", "ad", "bc", "bd", "cd"]
