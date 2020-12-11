@@ -59,16 +59,18 @@ expandPath :: a -> [[a]] -> [[a]]
 expandPath item = map (item :)
 
 expandPaths :: [a] -> [[a]] -> [[a]]
-expandPaths [] = const []
-expandPaths (x : xs) = (++) <$> map (x :) <*> expandPaths xs
+expandPaths = foldr go (const [])
+  where
+    go :: a -> ([[a]] -> [[a]]) -> [[a]] -> [[a]]
+    go x = (<*>) ((++) <$> map (x :))
 
 pathsToTarget :: Bag -> Rules -> Map.Map Bag [[(Int, Bag)]]
-pathsToTarget target = Map.filter (/= []) . Map.map asPath . asTree target
+pathsToTarget target = Map.filter (not . null) . Map.map asPath . asTree target
 
 data Tree a = Tree [(a, Tree a)] | Leaf deriving (Show, Eq)
 
 asTree :: Bag -> Rules -> Map.Map Bag (Tree (Int, Bag))
-asTree target rules = Map.mapWithKey (\key _ -> fn key (Leaf)) rules
+asTree target rules = Map.mapWithKey (\key _ -> fn key Leaf) rules
   where
     fn :: Bag -> Tree (Int, Bag) -> Tree (Int, Bag)
     -- fn _ (Tree []) = (Tree [])
@@ -80,10 +82,10 @@ asTree target rules = Map.mapWithKey (\key _ -> fn key (Leaf)) rules
 
 asPath :: Tree a -> [[a]]
 asPath Leaf = []
-asPath (Tree nodes) = concat $ map walkNode nodes
+asPath (Tree nodes) = concatMap walkNode nodes
   where
     walkNode :: (a, Tree a) -> [[a]]
     walkNode (a, tree) = go [a] tree
     go :: [a] -> Tree a -> [[a]]
-    go history (Tree nodes') = concat $ map (\(a, tree) -> go (a : history) tree) nodes'
+    go history (Tree nodes') = concatMap (\(a, tree) -> go (a : history) tree) nodes'
     go history Leaf = [history]
