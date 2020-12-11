@@ -16,7 +16,3 @@ fromLeftOrError (Left x) = x
 fromRightOrError :: Either a b -> b
 fromRightOrError (Left _) = error "fromRightOrError: Argument takes form 'Left _'"
 fromRightOrError (Right x) = x
-
-fromRightOrError' :: Show a => Either a b -> b
-fromRightOrError' (Left x) = error (show x)
-fromRightOrError' (Right x) = x

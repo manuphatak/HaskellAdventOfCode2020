@@ -12,7 +12,7 @@ module Day07.Solution
   )
 where
 
-import Advent.Utils (readInt)
+import Advent.Utils (fromRightOrError', readInt)
 import qualified Data.Map.Strict as Map
 import Day08.Utils (fromRightOrError')
 import Debug.Trace

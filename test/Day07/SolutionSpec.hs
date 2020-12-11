@@ -1,5 +1,6 @@
 module Day07.SolutionSpec (spec) where
 
+import Advent.Utils (fromRightOrError')
 import qualified Data.Map.Strict as Map
 import Day07.Solution
   ( Rules,
@@ -13,7 +14,6 @@ import Day07.Solution
     part2,
     pathsToTarget,
   )
-import Day08.Utils (fromRightOrError')
 import Test.Hspec
 
 spec :: Spec
