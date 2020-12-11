@@ -14,8 +14,6 @@ where
 
 import Advent.Utils (fromRightOrError', readInt)
 import qualified Data.Map.Strict as Map
-import Day08.Utils (fromRightOrError')
-import Debug.Trace
 import Text.Parsec
 
 part1 :: String -> String
@@ -89,7 +87,7 @@ countBags target = go . (Map.! target)
   where
     go :: Tree (Int, Bag) -> Int
     go (Tree []) = 1
-    go (Tree nodes) = sum $ traceShowId $ map (uncurry go') nodes
+    go (Tree nodes) = sum $ map (uncurry go') nodes
     go' :: (Int, b) -> Tree (Int, Bag) -> Int
     go' node (Tree []) = fst node
-    go' node tree = traceShow (fst node, go tree) $ (fst node) * (go tree) + (fst node)
+    go' node tree = fst node + fst node * go tree
