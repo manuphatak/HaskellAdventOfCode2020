@@ -1,16 +1,14 @@
 module Day07.Solution
-  ( part1,
-    part2,
-    parseRules,
-    Rules,
-    expandPath,
-    expandPaths,
-    flattenPaths,
-    asTree,
+  ( Rules,
     Tree (..),
     asPath,
-    pathsToTarget,
+    asTree,
     countBags,
+    flattenPaths,
+    parseRules,
+    part1,
+    part2,
+    pathsToTarget,
   )
 where
 
@@ -29,6 +27,8 @@ part2 = show . countBags "shiny gold" . asTree . fromRightOrError' . parseRules
 type Bag = String
 
 type Rules = Map.Map Bag [(Int, Bag)]
+
+newtype Tree a = Tree [(a, Tree a)] deriving (Show, Eq)
 
 parseRules :: String -> Either ParseError Rules
 parseRules = parse (Map.fromList <$> try ruleParser `sepEndBy1` newline) ""
@@ -64,19 +64,8 @@ pathsToTarget target = Map.size . Map.filter containsTarget . flattenPaths
     containsTarget :: [[(Int, Bag)]] -> Bool
     containsTarget = any (any (\(_, bag) -> bag == target))
 
-expandPath :: a -> [[a]] -> [[a]]
-expandPath item = map (item :)
-
-expandPaths :: [a] -> [[a]] -> [[a]]
-expandPaths = foldr go (const [])
-  where
-    go :: a -> ([[a]] -> [[a]]) -> [[a]] -> [[a]]
-    go x = (<*>) ((++) <$> map (x :))
-
 flattenPaths :: Rules -> Map.Map Bag [[(Int, Bag)]]
 flattenPaths = Map.map asPath . asTree
-
-newtype Tree a = Tree [(a, Tree a)] deriving (Show, Eq)
 
 asTree :: Rules -> Map.Map Bag (Tree (Int, Bag))
 asTree rules = Map.mapWithKey (\key _ -> fn key (Tree [])) rules

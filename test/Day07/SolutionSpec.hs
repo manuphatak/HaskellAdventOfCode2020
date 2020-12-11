@@ -7,8 +7,6 @@ import Day07.Solution
     asPath,
     asTree,
     countBags,
-    expandPath,
-    expandPaths,
     flattenPaths,
     parseRules,
     part1,
@@ -64,12 +62,6 @@ spec = parallel $ do
         input <- asTree . fromRightOrError' . parseRules <$> readFile "./test/Day07/example-2.txt"
 
         countBags "shiny gold" input `shouldBe` 126
-  describe "expandPath" $ do
-    it "appends a value to each of it's children" $ do
-      expandPath 'a' ["bc", "cd"] `shouldBe` ["abc", "acd"]
-  describe "expandPaths" $ do
-    it "appends a value to each of it's children" $ do
-      expandPaths "ab" ["cd", "ef"] `shouldBe` ["acd", "aef", "bcd", "bef"]
 
   describe "flattenPaths" $ do
     context "given the parsedExample" $ do
