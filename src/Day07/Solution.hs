@@ -1,12 +1,24 @@
-module Day07.Solution (part1, part2, parseRules, Rules, pathsToTarget, Tree (..), asTree, expand) where
+module Day07.Solution
+  ( part1,
+    part2,
+    parseRules,
+    Rules,
+    expandPath,
+    expandPaths,
+    pathsToTarget,
+    asTree,
+    Tree (..),
+    asPath,
+  )
+where
 
 import Advent.Utils (readInt)
-import Control.Monad (join)
 import qualified Data.Map.Strict as Map
+import Day08.Utils (fromRightOrError')
 import Text.Parsec
 
 part1 :: String -> String
-part1 = head . lines
+part1 = show . Map.size . pathsToTarget "shiny gold" . fromRightOrError' . parseRules
 
 part2 :: String -> String
 part2 = head . lines
@@ -43,49 +55,35 @@ bagParser =
       lookAhead $
         string " bag"
 
-data Tree = Leaf (Int, Bag) | Tree (Int, Bag) (Maybe [Tree]) deriving (Show, Eq)
+expandPath :: a -> [[a]] -> [[a]]
+expandPath item = map (item :)
 
-pathsToTarget :: Bag -> Rules -> Map.Map Bag (Maybe [[(Int, Bag)]])
-pathsToTarget target = Map.map go
+expandPaths :: [a] -> [[a]] -> [[a]]
+expandPaths [] = const []
+expandPaths (x : xs) = (++) <$> map (x :) <*> expandPaths xs
+
+pathsToTarget :: Bag -> Rules -> Map.Map Bag [[(Int, Bag)]]
+pathsToTarget target = Map.filter (/= []) . Map.map asPath . asTree target
+
+data Tree a = Tree [(a, Tree a)] | Leaf deriving (Show, Eq)
+
+asTree :: Bag -> Rules -> Map.Map Bag (Tree (Int, Bag))
+asTree target rules = Map.mapWithKey (\key _ -> fn key (Leaf)) rules
   where
-    go :: [(Int, Bag)] -> Maybe [[(Int, Bag)]]
-    go x = Just [x]
+    fn :: Bag -> Tree (Int, Bag) -> Tree (Int, Bag)
+    -- fn _ (Tree []) = (Tree [])
+    fn key history
+      | key == target = history
+      | otherwise = Tree $ map (\kid@(_, nextKey) -> (kid, fn nextKey history)) kids
+      where
+        kids = rules Map.! key
 
-asTree :: Bag -> Rules -> Map.Map Bag [Tree]
-asTree target rules = Map.map go rules
+asPath :: Tree a -> [[a]]
+asPath Leaf = []
+asPath (Tree nodes) = concat $ map walkNode nodes
   where
-    go :: [(Int, Bag)] -> [Tree]
-    go [] = []
-    go (x@(_, bag) : xs)
-      | bag == target = (Leaf x) : go xs
-      | otherwise = Tree x (go <$> (Map.lookup bag rules)) : (go xs)
-
-expand :: Tree -> [[(Int, Bag)]]
-expand _t = go ([], _t)
-  where
-    go :: ([[(Int, Bag)]], Tree) -> [[(Int, Bag)]]
-    go ([], Leaf x) = [[x]]
-    go (acc, Leaf x) = map ((:) x) acc
-    go (acc, Tree x (Just trees)) =
-      let expanded = (join $ map (\_ -> go (acc, Leaf x)) trees)
-       in (join $ map (\tree -> go (expanded, tree)) trees)
-
--- expand (Tree x (Maybe trees)) =
-
--- pathsToTarget target rules = map (pathToTarget target rules) $ Map.keys rules
-
--- -- pathToTarget :: Bag -> Rules -> Bag -> [Maybe [(Int, Bag)]]
--- pathToTarget target rules key = go [] key
---   where
---     -- go :: [(Int, Bag)] -> Bag -> Maybe [(Int, Bag)]
---     go visited key
---       | key == target = Just visited
---       | otherwise = (\values -> (go (sequenceA (head values) : visited) key)) <$> Map.lookup target rules
-
--- temp = (map (\(v@(_, nextKey)) -> go (v : visited) nextKey))
-
--- [Maybe a] -> Maybe [a]
-
--- >>> input <- readFile "./test/Day07/example.txt"
--- >>> pathsToTarget "shiny gold" <$> (parseRules $ input)
--- Right (fromList [("bright white",Just [[(1,"shiny gold")]]),("dark olive",Nothing),("dark orange",Nothing),("dotted black",Nothing),("faded blue",Nothing),("light red",Nothing),("muted yellow",Just [[(2,"shiny gold")]]),("shiny gold",Nothing),("vibrant plum",Nothing)])
+    walkNode :: (a, Tree a) -> [[a]]
+    walkNode (a, tree) = go [a] tree
+    go :: [a] -> Tree a -> [[a]]
+    go history (Tree nodes') = concat $ map (\(a, tree) -> go (a : history) tree) nodes'
+    go history Leaf = [history]

@@ -1,15 +1,25 @@
 module Day07.SolutionSpec (spec) where
 
-import Data.Foldable (for_)
 import qualified Data.Map.Strict as Map
-import Day07.Solution (Rules, Tree (..), asTree, expand, parseRules, part1, part2, pathsToTarget)
+import Day07.Solution
+  ( Rules,
+    Tree (..),
+    asPath,
+    asTree,
+    expandPath,
+    expandPaths,
+    parseRules,
+    part1,
+    part2,
+    pathsToTarget,
+  )
 import Test.Hspec
 
 spec :: Spec
 spec = parallel $ do
-  xit "solves Part 1" $ do
+  it "solves Part 1" $ do
     input <- readFile "./test/Day07/input.txt"
-    part1 input `shouldBe` "hello santa"
+    part1 input `shouldBe` "192"
   xit "solves Part 2" $ do
     input <- readFile "./test/Day07/input.txt"
     part2 input `shouldBe` "hello santa"
@@ -34,107 +44,53 @@ spec = parallel $ do
         input <- readFile "./test/Day07/example.txt"
 
         parseRules input `shouldBe` Right parsedExample
+  describe "expandPath" $ do
+    it "appends a value to each of it's children" $ do
+      expandPath 'a' ["bc", "cd"] `shouldBe` ["abc", "acd"]
+  describe "expandPaths" $ do
+    it "appends a value to each of it's children" $ do
+      expandPaths "ab" ["cd", "ef"] `shouldBe` ["acd", "aef", "bcd", "bef"]
 
-  describe "asTree" $ do
-    context "given the parsedExample" $ do
-      it "builds a Tree" $ do
-        asTree "shiny gold" parsedExample
-          `shouldBe` Map.fromList
-            [ ( "bright white",
-                [ Leaf (1, "shiny gold")
-                ]
-              ),
-              ( "dark olive",
-                [ Tree (3, "faded blue") (Just []),
-                  Tree (4, "dotted black") (Just [])
-                ]
-              ),
-              ( "dark orange",
-                [ Tree (3, "bright white") (Just [Leaf (1, "shiny gold")]),
-                  Tree
-                    (4, "muted yellow")
-                    ( Just
-                        [ Leaf (2, "shiny gold"),
-                          Tree (9, "faded blue") (Just [])
-                        ]
-                    )
-                ]
-              ),
-              ("dotted black", []),
-              ("faded blue", []),
-              ( "light red",
-                [ Tree (1, "bright white") (Just [Leaf (1, "shiny gold")]),
-                  Tree
-                    (2, "muted yellow")
-                    ( Just
-                        [ Leaf (2, "shiny gold"),
-                          Tree (9, "faded blue") (Just [])
-                        ]
-                    )
-                ]
-              ),
-              ( "muted yellow",
-                [ Leaf (2, "shiny gold"),
-                  Tree (9, "faded blue") (Just [])
-                ]
-              ),
-              ( "shiny gold",
-                [ Tree
-                    (1, "dark olive")
-                    ( Just
-                        [ Tree (3, "faded blue") (Just []),
-                          Tree (4, "dotted black") (Just [])
-                        ]
-                    ),
-                  Tree
-                    (2, "vibrant plum")
-                    ( Just
-                        [ Tree (5, "faded blue") (Just []),
-                          Tree (6, "dotted black") (Just [])
-                        ]
-                    )
-                ]
-              ),
-              ( "vibrant plum",
-                [ Tree (5, "faded blue") (Just []),
-                  Tree (6, "dotted black") (Just [])
-                ]
-              )
-            ]
-
-  describe "expand" $ do
-    let cases =
-          [ ( Leaf (1, "shiny gold"),
-              [ [(1, "shiny gold")]
-              ]
-            ),
-            ( Tree
-                (4, "muted yellow")
-                ( Just
-                    [ Leaf (2, "shiny gold"),
-                      Tree (9, "faded blue") (Just [])
-                    ]
-                ),
-              [ [(4, "muted yellow"), (2, "shiny gold")],
-                [(4, "muted yellow"), (9, "faded blue")]
-              ]
-            )
-          ]
-        test (input, expected) = it "expands a Tree into a path" $ do
-          expand input `shouldBe` expected
-     in for_ cases test
-  xdescribe "pathsToTarget" $ do
+  describe "pathsToTarget" $ do
     context "given the parsedExample" $ do
       it "finds paths to the target" $ do
         pathsToTarget "shiny gold" parsedExample
           `shouldBe` Map.fromList
-            [ ("light red", Just [[(1, "bright white"), (1, "shiny gold")], [(2, "muted yellow"), (2, "shiny gold")]]),
-              ("dark orange", Just [[(3, "bright white"), (1, "shiny gold")], [(4, "muted yellow"), (2, "shiny gold")]]),
-              ("bright white", Just [[(1, "shiny gold")]]),
-              ("muted yellow", Just [[(2, "shiny gold")]]),
-              ("shiny gold", Just []),
-              ("dark olive", Nothing),
-              ("vibrant plum", Nothing),
-              ("faded blue", Nothing),
-              ("dotted black", Nothing)
+            [ ("bright white", [[(1, "shiny gold")]]),
+              ("dark orange", [[(1, "shiny gold"), (3, "bright white")], [(2, "shiny gold"), (4, "muted yellow")]]),
+              ("light red", [[(1, "shiny gold"), (1, "bright white")], [(2, "shiny gold"), (2, "muted yellow")]]),
+              ("muted yellow", [[(2, "shiny gold")]])
             ]
+  describe "asTree" $ do
+    context "given the parsedExample" $ do
+      it "creates a tree" $ do
+        asTree "shiny gold" parsedExample
+          `shouldBe` Map.fromList
+            [ ("bright white", Tree [((1, "shiny gold"), Leaf)]),
+              ("dark olive", Tree [((3, "faded blue"), Tree []), ((4, "dotted black"), Tree [])]),
+              ("dark orange", Tree [((3, "bright white"), Tree [((1, "shiny gold"), Leaf)]), ((4, "muted yellow"), Tree [((2, "shiny gold"), Leaf), ((9, "faded blue"), Tree [])])]),
+              ("dotted black", Tree []),
+              ("faded blue", Tree []),
+              ("light red", Tree [((1, "bright white"), Tree [((1, "shiny gold"), Leaf)]), ((2, "muted yellow"), Tree [((2, "shiny gold"), Leaf), ((9, "faded blue"), Tree [])])]),
+              ("muted yellow", Tree [((2, "shiny gold"), Leaf), ((9, "faded blue"), Tree [])]),
+              ("shiny gold", Leaf),
+              ( "vibrant plum",
+                Tree
+                  [ ((5, "faded blue"), Tree []),
+                    ((6, "dotted black"), Tree [])
+                  ]
+              )
+            ]
+
+  describe "asPath" $ do
+    it "flattens a tree into a list of paths for case 1" $ do
+      let tree = Tree [('a', Tree [('c', Leaf)])]
+      asPath tree `shouldBe` ["ca"]
+
+    it "flattens a tree into a list of paths for case 2" $ do
+      let tree = Tree [('b', Tree [('d', Leaf), ('e', Leaf)])]
+      asPath tree `shouldBe` ["db", "eb"]
+
+    it "flattens a tree into a list of paths for case 3" $ do
+      let tree = Tree [('a', Tree [('c', Leaf)]), ('b', Tree [('d', Tree [('f', Leaf)]), ('e', Leaf)])]
+      asPath tree `shouldBe` ["ca", "fdb", "eb"]
