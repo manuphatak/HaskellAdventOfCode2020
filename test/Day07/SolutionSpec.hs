@@ -66,13 +66,55 @@ spec = parallel $ do
       it "creates a tree" $ do
         asTree "shiny gold" parsedExample
           `shouldBe` Map.fromList
-            [ ("bright white", Tree [((1, "shiny gold"), Leaf)]),
-              ("dark olive", Tree [((3, "faded blue"), Tree []), ((4, "dotted black"), Tree [])]),
-              ("dark orange", Tree [((3, "bright white"), Tree [((1, "shiny gold"), Leaf)]), ((4, "muted yellow"), Tree [((2, "shiny gold"), Leaf), ((9, "faded blue"), Tree [])])]),
+            [ ( "bright white",
+                Tree
+                  [ ((1, "shiny gold"), Leaf)
+                  ]
+              ),
+              ( "dark olive",
+                Tree
+                  [ ((3, "faded blue"), Tree []),
+                    ((4, "dotted black"), Tree [])
+                  ]
+              ),
+              ( "dark orange",
+                Tree
+                  [ ( (3, "bright white"),
+                      Tree
+                        [ ((1, "shiny gold"), Leaf)
+                        ]
+                    ),
+                    ( (4, "muted yellow"),
+                      Tree
+                        [ ((2, "shiny gold"), Leaf),
+                          ((9, "faded blue"), Tree [])
+                        ]
+                    )
+                  ]
+              ),
               ("dotted black", Tree []),
               ("faded blue", Tree []),
-              ("light red", Tree [((1, "bright white"), Tree [((1, "shiny gold"), Leaf)]), ((2, "muted yellow"), Tree [((2, "shiny gold"), Leaf), ((9, "faded blue"), Tree [])])]),
-              ("muted yellow", Tree [((2, "shiny gold"), Leaf), ((9, "faded blue"), Tree [])]),
+              ( "light red",
+                Tree
+                  [ ( (1, "bright white"),
+                      Tree
+                        [ ((1, "shiny gold"), Leaf)
+                        ]
+                    ),
+                    ( (2, "muted yellow"),
+                      Tree
+                        [ ((2, "shiny gold"), Leaf),
+                          ((9, "faded blue"), Tree [])
+                        ]
+                    )
+                  ]
+              ),
+              ( "muted yellow",
+                Tree
+                  [ ((2, "shiny gold"), Leaf),
+                    ((9, "faded blue"), Tree [])
+                  ]
+              ),
               ("shiny gold", Leaf),
               ( "vibrant plum",
                 Tree
