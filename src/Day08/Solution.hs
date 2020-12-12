@@ -13,11 +13,11 @@ module Day08.Solution
   )
 where
 
-import Advent.Utils (readInt)
+import Advent.Utils (fromRightOrError', readInt)
 import Data.Either (isRight)
 import qualified Data.IntMap.Strict as IntMap
 import qualified Data.IntSet as IntSet
-import Day08.Utils (asIntMap, fromLeftOrError, fromRightOrError')
+import Day08.Utils (asIntMap, fromLeftOrError)
 import Text.Parsec
 
 part1 :: String -> String

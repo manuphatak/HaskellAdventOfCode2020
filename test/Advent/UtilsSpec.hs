@@ -1,8 +1,18 @@
 module Advent.UtilsSpec (spec) where
 
-import Advent.Utils (combinations, isBetween, occurrences, readInt, rightToMaybe)
+import Advent.Utils
+  ( combinations,
+    fromRightOrError',
+    isBetween,
+    occurrences,
+    readInt,
+    rightToMaybe,
+  )
+import Control.Exception (evaluate)
 import Data.Foldable (for_)
 import Test.Hspec
+
+type TestType = Either Int Int
 
 spec :: Spec
 spec = parallel $ do
@@ -41,3 +51,11 @@ spec = parallel $ do
   describe "combinations" $
     it "is the combinations of a list" $ do
       combinations 2 "abcd" `shouldBe` ["ab", "ac", "ad", "bc", "bd", "cd"]
+
+  describe "fromRightOrError'" $ do
+    context "given a Right Value" $ do
+      it "is the Right value" $ do
+        fromRightOrError' (Right 92 :: TestType) `shouldBe` 92
+    context "given a Left Value" $ do
+      it "is throws an exceptions" $ do
+        evaluate (fromRightOrError' (Left 14 :: TestType)) `shouldThrow` anyException
