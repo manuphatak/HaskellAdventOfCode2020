@@ -1,6 +1,6 @@
 module Day07.SolutionSpec (spec) where
 
-import Advent.Utils (fromRightOrError')
+import Advent.Utils (fromRightOrShowError)
 import qualified Data.Map.Strict as Map
 import Day07.Solution
   ( Rules,
@@ -54,12 +54,12 @@ spec = parallel $ do
   describe "countBags" $ do
     context "given the file example-1.txt" $ do
       it "counts all of the bags required to fill the target" $ do
-        input <- asTree . fromRightOrError' . parseRules <$> readFile "./test/Day07/example-1.txt"
+        input <- asTree . fromRightOrShowError . parseRules <$> readFile "./test/Day07/example-1.txt"
 
         countBags "shiny gold" input `shouldBe` 32
     context "given the file example-2.txt" $ do
       it "counts all of the bags required to fill the target" $ do
-        input <- asTree . fromRightOrError' . parseRules <$> readFile "./test/Day07/example-2.txt"
+        input <- asTree . fromRightOrShowError . parseRules <$> readFile "./test/Day07/example-2.txt"
 
         countBags "shiny gold" input `shouldBe` 126
 
