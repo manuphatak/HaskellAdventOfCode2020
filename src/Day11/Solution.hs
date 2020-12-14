@@ -14,7 +14,7 @@ where
 import Advent.Utils (fromRightOrShowError, occurrences)
 import Data.Bifunctor (Bifunctor (first))
 import qualified Data.Map.Strict as Map
-import Data.Maybe (catMaybes, mapMaybe)
+import Data.Maybe (catMaybes)
 import Text.Parsec
 
 part1 :: String -> String
@@ -43,8 +43,8 @@ nextSeatRulesFromAdjacentSeats waitingArea point = go
 
     adjacentSeats :: Point -> [Token]
     adjacentSeats (Point x y) =
-      mapMaybe (`Map.lookup` waitingArea) $
-        [ Point (x + i) (y + j)
+      catMaybes $
+        [ Point (x + i) (y + j) `Map.lookup` waitingArea
           | i <- [-1 .. 1],
             j <- [-1 .. 1],
             (i, j) /= (0, 0)
@@ -67,14 +67,14 @@ nextSeatRulesFromFirstVisible waitingArea point = go
             (dx, dy) /= (0, 0)
         ]
     nextToken :: Point -> Int -> Int -> Maybe Token
-    nextToken (Point x y) dx dy = nextPoint `Map.lookup` waitingArea >>= go'
+    nextToken (Point x y) dx dy = nextPoint `Map.lookup` waitingArea >>= dive
       where
         nextPoint :: Point
         nextPoint = Point (x + dx) (y + dy)
 
-        go' :: Token -> Maybe Token
-        go' Floor = nextToken nextPoint dx dy
-        go' token = pure token
+        dive :: Token -> Maybe Token
+        dive Floor = nextToken nextPoint dx dy
+        dive token = pure token
 
 type WaitingArea = Map.Map Point Token
 
