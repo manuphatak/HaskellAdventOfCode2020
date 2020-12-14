@@ -40,7 +40,30 @@ nextSeatRulesFromAdjacentSeats waitingArea point = go
         ]
 
 nextSeatRulesFromFirstVisible :: NextSeatRules
-nextSeatRulesFromFirstVisible = nextSeatRulesFromAdjacentSeats
+nextSeatRulesFromFirstVisible waitingArea point = go
+  where
+    go :: Token -> Token
+    go EmptySeat | OccupiedSeat `notElem` adjacentSeats point = OccupiedSeat
+    go OccupiedSeat | (>= 5) . occurrences OccupiedSeat $ adjacentSeats point = EmptySeat
+    go token = token
+
+    adjacentSeats :: Point -> [Token]
+    adjacentSeats point =
+      catMaybes $
+        [ nextToken point dx dy
+          | dx <- [-1 .. 1],
+            dy <- [-1 .. 1],
+            (dx, dy) /= (0, 0)
+        ]
+    nextToken :: Point -> Int -> Int -> Maybe Token
+    nextToken (Point x y) dx dy = nextPoint `Map.lookup` waitingArea >>= go'
+      where
+        nextPoint :: Point
+        nextPoint = Point (x + dx) (y + dy)
+
+        go' :: Token -> Maybe Token
+        go' Floor = nextToken nextPoint dx dy
+        go' token = pure token
 
 type WaitingArea = Map.Map Point Token
 
@@ -55,11 +78,9 @@ waitingAreaParser :: Parsec String () WaitingArea
 waitingAreaParser = asWaitingArea . zip [0 ..] <$> (zip [0 ..] <$> rowParser) `sepEndBy1` newline
   where
     asWaitingArea :: [(Int, [(Int, Token)])] -> WaitingArea
-    asWaitingArea = Map.fromList . filter rejectFloor . asPoints
+    asWaitingArea = Map.fromList . asPoints
     asPoints :: [(Int, [(Int, Token)])] -> [(Point, Token)]
     asPoints = concatMap (uncurry (map . first . Point))
-    rejectFloor :: (Point, Token) -> Bool
-    rejectFloor = (Floor /=) . snd
 
 rowParser :: Parsec String () [Token]
 rowParser = many1 tokenParser
