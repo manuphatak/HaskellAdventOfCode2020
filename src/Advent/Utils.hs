@@ -5,10 +5,12 @@ import Data.List (tails)
 isBetween :: Ord a => a -> a -> a -> Bool
 isBetween lower upper target = target >= lower && target <= upper
 
-occurrences :: (Foldable t, Num b, Eq a) => a -> t a -> b
-occurrences target = foldr fn 0
+occurrences :: (Foldable t, Eq a) => a -> t a -> Int
+occurrences target = foldr go 0
   where
-    fn value = if value == target then (+ 1) else (+ 0)
+    go value
+      | value == target = succ
+      | otherwise = id
 
 readInt :: String -> Int
 readInt n = read n :: Int
