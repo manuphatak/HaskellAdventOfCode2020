@@ -30,14 +30,6 @@ runSimulation waitingArea = if waitingArea == nextWaitingArea then nextWaitingAr
             (i, j) /= (0, 0)
         ]
 
-adjacentSeats waitingArea (Point x y) =
-  mapMaybe (`Map.lookup` waitingArea) $
-    [ Point (x + i) (y + j)
-      | i <- [-1 .. 1],
-        j <- [-1 .. 1],
-        (i, j) /= (0, 0)
-    ]
-
 type WaitingArea = Map.Map Point Token
 
 data Point = Point Int Int deriving (Show, Eq, Ord)
