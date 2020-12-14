@@ -1,9 +1,20 @@
-module Day11.Solution where
+module Day11.Solution
+  ( Point (..),
+    Token (..),
+    WaitingArea,
+    nextSeatRulesFromAdjacentSeats,
+    nextSeatRulesFromFirstVisible,
+    parseWaitingArea,
+    part1,
+    part2,
+    runSimulation,
+  )
+where
 
 import Advent.Utils (fromRightOrShowError, occurrences)
-import Data.Bifunctor
+import Data.Bifunctor (Bifunctor (first))
 import qualified Data.Map.Strict as Map
-import Data.Maybe
+import Data.Maybe (catMaybes, mapMaybe)
 import Text.Parsec
 
 part1 :: String -> String

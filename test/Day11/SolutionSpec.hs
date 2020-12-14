@@ -3,6 +3,16 @@ module Day11.SolutionSpec (spec) where
 import Advent.Utils (occurrences)
 import qualified Data.Map.Strict as Map
 import Day11.Solution
+  ( Point (..),
+    Token (..),
+    WaitingArea,
+    nextSeatRulesFromAdjacentSeats,
+    nextSeatRulesFromFirstVisible,
+    parseWaitingArea,
+    part1,
+    part2,
+    runSimulation,
+  )
 import Test.Hspec
 
 spec :: Spec
