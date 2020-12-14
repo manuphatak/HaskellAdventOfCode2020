@@ -22,6 +22,6 @@ combinations n xs =
       ys <- combinations (pred n) xs'
   ]
 
-fromRightOrError' :: Show a => Either a b -> b
-fromRightOrError' (Left x) = error (show x)
-fromRightOrError' (Right x) = x
+fromRightOrShowError :: Show a => Either a b -> b
+fromRightOrShowError (Left x) = error (show x)
+fromRightOrShowError (Right x) = x

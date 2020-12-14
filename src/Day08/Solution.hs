@@ -13,7 +13,7 @@ module Day08.Solution
   )
 where
 
-import Advent.Utils (fromRightOrError', readInt)
+import Advent.Utils (fromRightOrShowError, readInt)
 import Data.Either (isRight)
 import qualified Data.IntMap.Strict as IntMap
 import qualified Data.IntSet as IntSet
@@ -21,10 +21,10 @@ import Day08.Utils (asIntMap, fromLeftOrError)
 import Text.Parsec
 
 part1 :: String -> String
-part1 = show . programAcc . fromLeftOrError . runProgram initialState . fromRightOrError' . parseInstructions
+part1 = show . programAcc . fromLeftOrError . runProgram initialState . fromRightOrShowError . parseInstructions
 
 part2 :: String -> String
-part2 = show . programAcc . fromRightOrError' . fixProgram initialState . fromRightOrError' . parseInstructions
+part2 = show . programAcc . fromRightOrShowError . fixProgram initialState . fromRightOrShowError . parseInstructions
 
 data Sign = Plus | Minus deriving (Show, Eq)
 
