@@ -16,6 +16,14 @@ import Data.Bifunctor (Bifunctor (first))
 import qualified Data.Map.Strict as Map
 import Data.Maybe (catMaybes)
 import Text.Parsec
+  ( ParseError,
+    Parsec,
+    many1,
+    newline,
+    oneOf,
+    parse,
+    sepEndBy1,
+  )
 
 part1 :: String -> String
 part1 = show . occurrences OccupiedSeat . runSimulation nextSeatRulesFromAdjacentSeats . fromRightOrShowError . parseWaitingArea
@@ -59,9 +67,9 @@ nextSeatRulesFromFirstVisible waitingArea point = go
     go token = token
 
     adjacentSeats :: Point -> [Token]
-    adjacentSeats point =
+    adjacentSeats point' =
       catMaybes $
-        [ nextToken point dx dy
+        [ nextToken point' dx dy
           | dx <- [-1 .. 1],
             dy <- [-1 .. 1],
             (dx, dy) /= (0, 0)
