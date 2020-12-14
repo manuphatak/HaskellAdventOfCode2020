@@ -8,9 +8,9 @@ spec = parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day12/input.txt"
     part1 input `shouldBe` "1645"
-  xit "solves Part 2" $ do
+  it "solves Part 2" $ do
     input <- readFile "./test/Day12/input.txt"
-    part2 input `shouldBe` "hello santa"
+    part2 input `shouldBe` "35292"
   let exampleInstructions :: [Instruction]
       exampleInstructions = [(F, 10), (N, 3), (F, 7), (R, 90), (F, 11)]
   describe "parseInstructions" $ do
@@ -18,9 +18,12 @@ spec = parallel $ do
       it "parses a waiting area" $ do
         input <- readFile "./test/Day12/example.txt"
         parseInstructions input `shouldBe` Right exampleInstructions
-  describe "run" $ do
+  describe "runV1" $ do
     it "runs through the instructions" $ do
-      (getPosition . run initialState) exampleInstructions `shouldBe` Point 17 (-8)
+      runV1 exampleInstructions `shouldBe` Point 17 (-8)
+  describe "runV2" $ do
+    it "runs through the instructions" $ do
+      runV2 exampleInstructions `shouldBe` Point 214 (-72)
   describe "manhattanDistance" $ do
     it "finds the distance of a point" $ do
       manhattanDistance (Point 17 (-8)) `shouldBe` 25
