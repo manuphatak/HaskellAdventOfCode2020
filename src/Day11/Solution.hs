@@ -7,20 +7,29 @@ import Data.Maybe
 import Text.Parsec
 
 part1 :: String -> String
-part1 = show . occurrences OccupiedSeat . runSimulation . fromRightOrShowError . parseWaitingArea
+part1 = show . occurrences OccupiedSeat . runSimulation nextSeatRulesFromAdjacentSeats . fromRightOrShowError . parseWaitingArea
 
 part2 :: String -> String
-part2 = head . lines
+part2 = show . occurrences OccupiedSeat . runSimulation nextSeatRulesFromFirstVisible . fromRightOrShowError . parseWaitingArea
 
-runSimulation :: WaitingArea -> WaitingArea
-runSimulation waitingArea = if waitingArea == nextWaitingArea then nextWaitingArea else runSimulation nextWaitingArea
+type NextSeatRules = WaitingArea -> Point -> Token -> Token
+
+runSimulation :: NextSeatRules -> WaitingArea -> WaitingArea
+runSimulation nextSeatRules waitingArea
+  | waitingArea == nextWaitingArea = nextWaitingArea
+  | otherwise = runSimulation nextSeatRules nextWaitingArea
   where
     nextWaitingArea :: WaitingArea
-    nextWaitingArea = Map.mapWithKey nextSeat waitingArea
-    nextSeat :: Point -> Token -> Token
-    nextSeat point EmptySeat | OccupiedSeat `notElem` adjacentSeats point = OccupiedSeat
-    nextSeat point OccupiedSeat | (>= 4) . occurrences OccupiedSeat $ adjacentSeats point = EmptySeat
-    nextSeat _ token = token
+    nextWaitingArea = Map.mapWithKey (nextSeatRules waitingArea) waitingArea
+
+nextSeatRulesFromAdjacentSeats :: NextSeatRules
+nextSeatRulesFromAdjacentSeats waitingArea point = go
+  where
+    go :: Token -> Token
+    go EmptySeat | OccupiedSeat `notElem` adjacentSeats point = OccupiedSeat
+    go OccupiedSeat | (>= 4) . occurrences OccupiedSeat $ adjacentSeats point = EmptySeat
+    go token = token
+
     adjacentSeats :: Point -> [Token]
     adjacentSeats (Point x y) =
       mapMaybe (`Map.lookup` waitingArea) $
@@ -29,6 +38,9 @@ runSimulation waitingArea = if waitingArea == nextWaitingArea then nextWaitingAr
             j <- [-1 .. 1],
             (i, j) /= (0, 0)
         ]
+
+nextSeatRulesFromFirstVisible :: NextSeatRules
+nextSeatRulesFromFirstVisible = nextSeatRulesFromAdjacentSeats
 
 type WaitingArea = Map.Map Point Token
 

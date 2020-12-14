@@ -22,5 +22,9 @@ spec = parallel $ do
         parseWaitingArea input `shouldBe` Right parsedWaitingArea
   describe "runSimulation" $ do
     context "given a parseWaitingArea" $ do
-      it "runs the simulation until stabilization" $ do
-        (occurrences OccupiedSeat . runSimulation) parsedWaitingArea `shouldBe` (37 :: Int)
+      context "given nextSeatRules looking at adjacent seats" $ do
+        it "runs the simulation until stabilization" $ do
+          (occurrences OccupiedSeat . runSimulation nextSeatRulesFromAdjacentSeats) parsedWaitingArea `shouldBe` (37 :: Int)
+      context "given nextSeatRules looking at the first visible seats" $ do
+        it "runs the simulation until stabilization" $ do
+          (occurrences OccupiedSeat . runSimulation nextSeatRulesFromFirstVisible) parsedWaitingArea `shouldBe` (26 :: Int)
