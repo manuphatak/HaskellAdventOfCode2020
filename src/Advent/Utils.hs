@@ -5,8 +5,12 @@ import Data.List (tails)
 isBetween :: Ord a => a -> a -> a -> Bool
 isBetween lower upper target = target >= lower && target <= upper
 
-occurrences :: Eq a => a -> [a] -> Int
-occurrences target = length . filter (target ==)
+occurrences :: (Foldable t, Eq a) => a -> t a -> Int
+occurrences target = foldr go 0
+  where
+    go value
+      | value == target = succ
+      | otherwise = id
 
 readInt :: String -> Int
 readInt n = read n :: Int
@@ -22,6 +26,6 @@ combinations n xs =
       ys <- combinations (pred n) xs'
   ]
 
-fromRightOrError' :: Show a => Either a b -> b
-fromRightOrError' (Left x) = error (show x)
-fromRightOrError' (Right x) = x
+fromRightOrShowError :: Show a => Either a b -> b
+fromRightOrShowError (Left x) = error (show x)
+fromRightOrShowError (Right x) = x

@@ -12,15 +12,15 @@ module Day07.Solution
   )
 where
 
-import Advent.Utils (fromRightOrError', readInt)
+import Advent.Utils (fromRightOrShowError, readInt)
 import qualified Data.Map.Strict as Map
 import Text.Parsec
 
 part1 :: String -> String
-part1 = show . pathsToTarget "shiny gold" . fromRightOrError' . parseRules
+part1 = show . pathsToTarget "shiny gold" . fromRightOrShowError . parseRules
 
 part2 :: String -> String
-part2 = show . countBags "shiny gold" . asTree . fromRightOrError' . parseRules
+part2 = show . countBags "shiny gold" . asTree . fromRightOrShowError . parseRules
 
 type Bag = String
 
