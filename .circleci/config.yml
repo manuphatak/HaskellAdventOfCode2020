@@ -12,6 +12,7 @@ jobs:
       - restore_cache:
           name: Restore cache
           keys:
+            - v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}-success
             - v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
             - v1-{{ checksum "stack.yaml" }}
       - run:
@@ -44,3 +45,9 @@ jobs:
           when: always
       - store_artifacts:
           path: hlint.html
+      - save_cache:
+          name: Save Cache
+          key: v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}-success
+          paths:
+            - "/root/.stack"
+            - ".stack-work"
