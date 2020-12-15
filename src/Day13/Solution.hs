@@ -13,6 +13,17 @@ part1 = show . uncurry (*) . earliestBus . fromRightOrShowError . parseSchedule
 part2 :: String -> String
 part2 = show . busAlignment . snd . fromRightOrShowError . parseSchedule
 
+wolframAlphaQuery :: String -> String
+wolframAlphaQuery = intercalate ", " . map (uncurry asQuery) . foldr catSndMaybes [] . zip [0 ..] . snd . fromRightOrShowError . parseSchedule
+  where
+    catSndMaybes :: (Int, Maybe Int) -> [(Int, Int)] -> [(Int, Int)]
+    catSndMaybes (_, Nothing) xs = xs
+    catSndMaybes (i, Just bus) xs = (i, bus) : xs
+
+    -- ((x + index) mod bus) == 0
+    asQuery :: Int -> Int -> String
+    asQuery index bus = "(x + " ++ show index ++ ") mod " ++ show bus
+
 parseSchedule :: String -> Either ParseError (Int, [Maybe Int])
 parseSchedule = parse scheduleParser ""
   where
@@ -41,18 +52,16 @@ busAlignment :: [Maybe Int] -> Int
 busAlignment busIds = go (nextBus - offset)
   where
     busses :: [(Int, Int)]
-    busses = sortBy (flip compare `on` snd) . map (second fromJust) . filter (isJust . snd) . zip [0 ..] $ busIds
-
-    (offset, nextBus) = head busses
-
-    maximumIterations = 9999999999
-
-    -- maximumIterations = 999999999999999
-    -- maximumIterations = 100000000000000
+    (offset, nextBus) : busses =
+      sortBy
+        (flip compare `on` snd)
+        . map (second fromJust)
+        . filter (isJust . snd)
+        . zip [0 ..]
+        $ busIds
 
     go :: Int -> Int
     go t
-      | t > maximumIterations = error "timestamp is greater than maximumIterations"
       | all (match t) busses = t
       | otherwise = go (t + nextBus)
 
