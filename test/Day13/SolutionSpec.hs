@@ -2,6 +2,14 @@ module Day13.SolutionSpec (spec) where
 
 import Data.Foldable (for_)
 import Day13.Solution
+  ( busAlignment,
+    earliestBus,
+    parseBusIds,
+    parseSchedule,
+    part1,
+    part2,
+    wolframAlphaQuery,
+  )
 import Test.Hspec
 
 spec :: Spec

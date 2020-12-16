@@ -1,10 +1,19 @@
-module Day13.Solution where
+module Day13.Solution
+  ( busAlignment,
+    earliestBus,
+    parseBusIds,
+    parseSchedule,
+    part1,
+    part2,
+    wolframAlphaQuery,
+  )
+where
 
-import Advent.Utils
-import Data.Bifunctor
-import Data.Function
-import Data.List
-import Data.Maybe
+import Advent.Utils (fromRightOrShowError)
+import Data.Bifunctor (Bifunctor (second))
+import Data.Function (on)
+import Data.List (intercalate, minimumBy, sortBy)
+import Data.Maybe (catMaybes, fromJust, isJust)
 import Text.Parsec
 
 part1 :: String -> String
@@ -14,15 +23,17 @@ part2 :: String -> String
 part2 = show . busAlignment . snd . fromRightOrShowError . parseSchedule
 
 wolframAlphaQuery :: String -> String
-wolframAlphaQuery = intercalate ", " . map (uncurry asQuery) . foldr catSndMaybes [] . zip [0 ..] . snd . fromRightOrShowError . parseSchedule
+wolframAlphaQuery =
+  intercalate ", "
+    . foldr asQuery []
+    . zip [0 ..]
+    . snd
+    . fromRightOrShowError
+    . parseSchedule
   where
-    catSndMaybes :: (Int, Maybe Int) -> [(Int, Int)] -> [(Int, Int)]
-    catSndMaybes (_, Nothing) xs = xs
-    catSndMaybes (i, Just bus) xs = (i, bus) : xs
-
-    -- ((x + index) mod bus) == 0
-    asQuery :: Int -> Int -> String
-    asQuery index bus = "(x + " ++ show index ++ ") mod " ++ show bus
+    asQuery :: (Int, Maybe Int) -> [String] -> [String]
+    asQuery (_, Nothing) xs = xs
+    asQuery (index, Just bus) xs = ("(x + " ++ show index ++ ") mod " ++ show bus) : xs
 
 parseSchedule :: String -> Either ParseError (Int, [Maybe Int])
 parseSchedule = parse scheduleParser ""
