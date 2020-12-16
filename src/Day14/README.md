@@ -49,9 +49,73 @@ To initialize your ferry's docking program, you need the sum of all values left 
 
 Execute the initialization program. _What is the sum of all values left in memory after it completes?_
 
+## Part Two
+
+For some reason, the sea port's computer system still can't communicate with your ferry's docking program. It must be using _version 2_ of the decoder chip!
+
+A version 2 decoder chip doesn't modify the values being written at all. Instead, it acts as a [memory address decoder][2] . Immediately before a value is written to memory, each bit in the bitmask modifies the corresponding bit of the destination _memory address_ in the following way:
+
+- If the bitmask bit is `0` , the corresponding memory address bit is _unchanged_ .
+- If the bitmask bit is `1` , the corresponding memory address bit is _overwritten with `1`_ .
+- If the bitmask bit is `X` , the corresponding memory address bit is _floating_ .
+
+A _floating_ bit is not connected to anything and instead fluctuates unpredictably. In practice, this means the floating bits will take on _all possible values_ , potentially causing many memory addresses to be written all at once!
+
+For example, consider the following program:
+
+```
+mask = 000000000000000000000000000000X1001X
+mem[42] = 100
+mask = 00000000000000000000000000000000X0XX
+mem[26] = 1
+```
+
+When this program goes to write to memory address `42` , it first applies the bitmask:
+
+```
+address: 000000000000000000000000000000101010  (decimal 42)
+mask:    000000000000000000000000000000X1001X
+result:  000000000000000000000000000000X1101X
+```
+
+After applying the mask, four bits are overwritten, three of which are different, and two of which are _floating_ . Floating bits take on every possible combination of values; with two floating bits, four actual memory addresses are written:
+
+```
+000000000000000000000000000000011010  (decimal 26)
+000000000000000000000000000000011011  (decimal 27)
+000000000000000000000000000000111010  (decimal 58)
+000000000000000000000000000000111011  (decimal 59)
+```
+
+Next, the program is about to write to memory address `26` with a different bitmask:
+
+```
+address: 000000000000000000000000000000011010  (decimal 26)
+mask:    00000000000000000000000000000000X0XX
+result:  00000000000000000000000000000001X0XX
+```
+
+This results in an address with three floating bits, causing writes to _eight_ memory addresses:
+
+```
+000000000000000000000000000000010000  (decimal 16)
+000000000000000000000000000000010001  (decimal 17)
+000000000000000000000000000000010010  (decimal 18)
+000000000000000000000000000000010011  (decimal 19)
+000000000000000000000000000000011000  (decimal 24)
+000000000000000000000000000000011001  (decimal 25)
+000000000000000000000000000000011010  (decimal 26)
+000000000000000000000000000000011011  (decimal 27)
+```
+
+The entire 36-bit address space still begins initialized to the value 0 at every address, and you still need the sum of all values left in memory at the end of the program. In this example, the sum is _`208`_ .
+
+Execute the initialization program using an emulator for a version 2 decoder chip. _What is the sum of all values left in memory after it completes?_
+
 ## Link
 
-[https://adventofcode.com/2020/day/14][2]
+[https://adventofcode.com/2020/day/14][3]
 
 [1]: https://en.wikipedia.org/wiki/Mask_(computing)
-[2]: https://adventofcode.com/2020/day/14
+[2]: https://www.youtube.com/watch?v=PvfhANgLrm4
+[3]: https://adventofcode.com/2020/day/14
