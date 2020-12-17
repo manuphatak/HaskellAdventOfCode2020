@@ -23,12 +23,14 @@ import Text.Parsec
   )
 
 part1 :: String -> String
-part1 = show . sum . stateMemory . runProgram . fromRightOrShowError . parseInstructions
+part1 = show . sum . stateMemory . runProgram reducerV1 . fromRightOrShowError . parseInstructions
 
 part2 :: String -> String
 part2 = head . lines
 
-data Instruction = Memory Int Int | Mask [Maybe Bool] deriving (Show, Eq)
+data Mask a = X | B a deriving (Show, Eq)
+
+data Instruction = SetMemory Int Int | SetMask [Mask Bool] deriving (Show, Eq)
 
 parseInstructions :: String -> Either ParseError [Instruction]
 parseInstructions = parse (instructionParser `sepEndBy1` newline) ""
@@ -37,50 +39,56 @@ parseInstructions = parse (instructionParser `sepEndBy1` newline) ""
     instructionParser = choice [try maskParser, memoryParser]
 
     maskParser :: Parsec String () Instruction
-    maskParser = Mask <$> (string "mask = " *> count 36 maskBitParser)
+    maskParser = SetMask <$> (string "mask = " *> count 36 maskBitParser)
 
     memoryParser :: Parsec String () Instruction
-    memoryParser = Memory <$> (string "mem" *> between (char '[') (char ']') intParser <* spaces <* char '=' <* spaces) <*> intParser
+    memoryParser = SetMemory <$> (string "mem" *> between (char '[') (char ']') intParser <* spaces <* char '=' <* spaces) <*> intParser
 
-    maskBitParser :: Parsec String () (Maybe Bool)
+    maskBitParser :: Parsec String () (Mask Bool)
     maskBitParser = fromMask <$> oneOf ['X', '1', '0']
       where
-        fromMask :: Char -> Maybe Bool
-        fromMask '1' = Just True
-        fromMask '0' = Just False
-        fromMask _ = Nothing
+        fromMask :: Char -> Mask Bool
+        fromMask '1' = B True
+        fromMask '0' = B False
+        fromMask _ = X
 
     intParser :: Parsec String () Int
     intParser = readInt <$> many1 digit
 
 data State = State {stateMask :: [(Int, Bool)], stateMemory :: IntMap.IntMap Int} deriving (Show)
 
-runProgram :: [Instruction] -> State
-runProgram = foldl' go initialState
+type Reducer = State -> Instruction -> State
+
+reducerV1 :: Reducer
+reducerV1 state = go
   where
-    initialState :: State
-    initialState = State [] IntMap.empty
+    go :: Instruction -> State
+    go (SetMask mask) = state {stateMask = catBitsOnSnd . zip [0 ..] . reverse $ mask}
+    go (SetMemory address value) = state {stateMemory = IntMap.insert address (nextValue value) . stateMemory $ state}
 
-    go :: State -> Instruction -> State
-    go state (Mask mask) =
-      state
-        { stateMask = catMaybesOnSnd . zip [0 ..] . reverse $ mask
-        }
-    go state (Memory address value) =
-      state
-        { stateMemory = IntMap.insert address (setMemory (stateMask state) value) . stateMemory $ state
-        }
-
-    setMemory :: [(Int, Bool)] -> Int -> Int
-    setMemory ms b = foldr applyMask b ms
+    nextValue :: Int -> Int
+    nextValue b = foldr applyMask b (stateMask state)
 
     applyMask :: (Int, Bool) -> Int -> Int
     applyMask (i, True) x = x `setBit` i
     applyMask (i, False) x = x `clearBit` i
 
-catMaybesOnSnd :: [(Int, Maybe Bool)] -> [(Int, Bool)]
-catMaybesOnSnd = foldr go []
+reducerV2 :: Reducer
+reducerV2 state = go
   where
-    go :: (Int, Maybe Bool) -> [(Int, Bool)] -> [(Int, Bool)]
-    go (_, Nothing) xs = xs
-    go (a, Just b) xs = (a, b) : xs
+    go :: Instruction -> State
+    go (SetMask mask) = state {stateMask = catBitsOnSnd . zip [0 ..] . reverse $ mask}
+    go (SetMemory _ _) = error "TODO"
+
+runProgram :: Reducer -> [Instruction] -> State
+runProgram reducer = foldl' reducer initialState
+  where
+    initialState :: State
+    initialState = State [] IntMap.empty
+
+catBitsOnSnd :: [(Int, Mask Bool)] -> [(Int, Bool)]
+catBitsOnSnd = foldr go []
+  where
+    go :: (Int, Mask Bool) -> [(Int, Bool)] -> [(Int, Bool)]
+    go (_, X) xs = xs
+    go (a, B b) xs = (a, b) : xs
