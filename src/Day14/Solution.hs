@@ -4,6 +4,7 @@ import Advent.Utils (fromRightOrShowError, readInt)
 import Data.Bits
 import Data.Foldable
 import qualified Data.IntMap.Strict as IntMap
+import Data.List
 import Text.Parsec
   ( ParseError,
     Parsec,
@@ -26,11 +27,13 @@ part1 :: String -> String
 part1 = show . sum . stateMemory . runProgram reducerV1 . fromRightOrShowError . parseInstructions
 
 part2 :: String -> String
-part2 = head . lines
+part2 = show . sum . stateMemory . runProgram reducerV2 . fromRightOrShowError . parseInstructions
 
-data Mask a = X | B a deriving (Show, Eq)
+data Mask = X | B Bool deriving (Show, Eq)
 
-data Instruction = SetMemory Int Int | SetMask [Mask Bool] deriving (Show, Eq)
+data Instruction = SetMemory Int Int | SetMask [Mask] deriving (Show, Eq)
+
+type MaskBits = [(Int, Mask)]
 
 parseInstructions :: String -> Either ParseError [Instruction]
 parseInstructions = parse (instructionParser `sepEndBy1` newline) ""
@@ -44,10 +47,10 @@ parseInstructions = parse (instructionParser `sepEndBy1` newline) ""
     memoryParser :: Parsec String () Instruction
     memoryParser = SetMemory <$> (string "mem" *> between (char '[') (char ']') intParser <* spaces <* char '=' <* spaces) <*> intParser
 
-    maskBitParser :: Parsec String () (Mask Bool)
+    maskBitParser :: Parsec String () Mask
     maskBitParser = fromMask <$> oneOf ['X', '1', '0']
       where
-        fromMask :: Char -> Mask Bool
+        fromMask :: Char -> Mask
         fromMask '1' = B True
         fromMask '0' = B False
         fromMask _ = X
@@ -55,30 +58,34 @@ parseInstructions = parse (instructionParser `sepEndBy1` newline) ""
     intParser :: Parsec String () Int
     intParser = readInt <$> many1 digit
 
-data State = State {stateMask :: [(Int, Bool)], stateMemory :: IntMap.IntMap Int} deriving (Show)
+data State = State {stateMask :: MaskBits, stateMemory :: IntMap.IntMap Int} deriving (Show)
 
 type Reducer = State -> Instruction -> State
 
 reducerV1 :: Reducer
-reducerV1 state = go
+reducerV1 state (SetMask mask) = state {stateMask = zip [0 ..] . reverse $ mask}
+reducerV1 state (SetMemory address value) = state {stateMemory = IntMap.insert address (nextValue value) . stateMemory $ state}
   where
-    go :: Instruction -> State
-    go (SetMask mask) = state {stateMask = catBitsOnSnd . zip [0 ..] . reverse $ mask}
-    go (SetMemory address value) = state {stateMemory = IntMap.insert address (nextValue value) . stateMemory $ state}
-
     nextValue :: Int -> Int
-    nextValue b = foldr applyMask b (stateMask state)
+    nextValue b = foldr applyMask b (catBitsOnSnd $ stateMask state)
 
     applyMask :: (Int, Bool) -> Int -> Int
     applyMask (i, True) x = x `setBit` i
     applyMask (i, False) x = x `clearBit` i
 
+    catBitsOnSnd :: MaskBits -> [(Int, Bool)]
+    catBitsOnSnd = foldr go []
+      where
+        go :: (Int, Mask) -> [(Int, Bool)] -> [(Int, Bool)]
+        go (_, X) xs = xs
+        go (a, B b) xs = (a, b) : xs
+
 reducerV2 :: Reducer
-reducerV2 state = go
+reducerV2 state (SetMask mask) = state {stateMask = zip [0 ..] . reverse $ mask}
+reducerV2 state (SetMemory address value) = foldr (setMemory value) state (nextAddresses address)
   where
-    go :: Instruction -> State
-    go (SetMask mask) = state {stateMask = catBitsOnSnd . zip [0 ..] . reverse $ mask}
-    go (SetMemory _ _) = error "TODO"
+    nextAddresses :: Int -> [Int]
+    nextAddresses address = computedAddresses address (stateMask state)
 
 runProgram :: Reducer -> [Instruction] -> State
 runProgram reducer = foldl' reducer initialState
@@ -86,9 +93,13 @@ runProgram reducer = foldl' reducer initialState
     initialState :: State
     initialState = State [] IntMap.empty
 
-catBitsOnSnd :: [(Int, Mask Bool)] -> [(Int, Bool)]
-catBitsOnSnd = foldr go []
+computedAddresses :: Int -> MaskBits -> [Int]
+computedAddresses = foldr go . pure
   where
-    go :: (Int, Mask Bool) -> [(Int, Bool)] -> [(Int, Bool)]
-    go (_, X) xs = xs
-    go (a, B b) xs = (a, b) : xs
+    go :: (Int, Mask) -> [Int] -> [Int]
+    go (i, B True) = map (`setBit` i)
+    go (_, B False) = id
+    go (i, X) = nub . concatMap (\y -> [(`setBit` i), (`clearBit` i)] <*> pure y)
+
+setMemory :: Int -> Int -> State -> State
+setMemory value key state = state {stateMemory = IntMap.insert key value $ stateMemory state}
