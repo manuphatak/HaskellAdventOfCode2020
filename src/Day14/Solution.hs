@@ -67,18 +67,11 @@ reducerV1 state (SetMask mask) = state {stateMask = zip [0 ..] . reverse $ mask}
 reducerV1 state (SetMemory address value) = state {stateMemory = IntMap.insert address (nextValue value) . stateMemory $ state}
   where
     nextValue :: Int -> Int
-    nextValue b = foldr applyMask b (catBitsOnSnd $ stateMask state)
+    nextValue b = foldr applyMask b [(c, d) | (c, B d) <- stateMask state]
 
     applyMask :: (Int, Bool) -> Int -> Int
     applyMask (i, True) x = x `setBit` i
     applyMask (i, False) x = x `clearBit` i
-
-    catBitsOnSnd :: MaskBits -> [(Int, Bool)]
-    catBitsOnSnd = foldr go []
-      where
-        go :: (Int, Mask) -> [(Int, Bool)] -> [(Int, Bool)]
-        go (_, X) xs = xs
-        go (a, B b) xs = (a, b) : xs
 
 reducerV2 :: Reducer
 reducerV2 state (SetMask mask) = state {stateMask = zip [0 ..] . reverse $ mask}
