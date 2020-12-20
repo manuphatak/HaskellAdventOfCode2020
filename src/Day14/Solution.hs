@@ -85,7 +85,7 @@ reducerV2 state (SetMask mask) = state {stateMask = zip [0 ..] . reverse $ mask}
 reducerV2 state (SetMemory address value) = foldr (setMemory value) state (nextAddresses address)
   where
     nextAddresses :: Int -> [Int]
-    nextAddresses address = computedAddresses address (stateMask state)
+    nextAddresses = flip computedAddresses (stateMask state)
 
 runProgram :: Reducer -> [Instruction] -> State
 runProgram reducer = foldl' reducer initialState

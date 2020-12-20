@@ -63,6 +63,6 @@ spec = parallel $ do
             (26, [(3, X), (1, X), (0, X)], [16, 17, 18, 19, 24, 25, 26, 27])
           ]
     let test (address, mask, expected) = it ("is " ++ show expected ++ " given mask " ++ show mask ++ " and address " ++ show address) $ do
-          sort (computedAddresses address mask) `shouldBe` (expected)
+          sort (computedAddresses address mask) `shouldBe` expected
 
     for_ cases test
