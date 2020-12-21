@@ -13,6 +13,7 @@ spec = parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day15/input.txt"
     part1 input `shouldBe` "694"
+  -- TODO: this runs in ~40 seconds with production optimizations
   xit "solves Part 2" $ do
     input <- readFile "./test/Day15/input.txt"
     part2 input `shouldBe` "21768614"
@@ -51,6 +52,7 @@ spec = parallel $ do
           for_ cases test
 
     testContext cases2020
+    -- TODO: figure out how to make this not take 10 minutes
     xcontext "skip" $ testContext cases30000000
 
 -- 300
@@ -74,3 +76,6 @@ spec = parallel $ do
 -- Finished in 30.7137 seconds
 -- Finished in 26.4237 seconds
 -- Finished in 25.2911 seconds
+
+-- 30000000
+-- TODO: Need to get here!
