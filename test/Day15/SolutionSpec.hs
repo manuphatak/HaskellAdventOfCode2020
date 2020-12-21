@@ -4,10 +4,6 @@ import Data.Foldable (for_)
 import Day15.Solution (memoryGame, part1, part2)
 import Test.Hspec
 
-type ContextCase = (Int, [Case])
-
-type Case = ([Int], Int)
-
 spec :: Spec
 spec = parallel $ do
   it "solves Part 1" $ do
@@ -18,9 +14,9 @@ spec = parallel $ do
     input <- readFile "./test/Day15/input.txt"
     part2 input `shouldBe` "21768614"
   describe "memoryGame" $ do
-    let cases2020 :: ContextCase
-        cases2020 =
-          ( 2020,
+    context "when looking at the 2020th result" $ do
+      let n = 2020
+      let cases =
             [ ([0, 3, 6], 436),
               ([1, 3, 2], 1),
               ([2, 1, 3], 10),
@@ -29,10 +25,15 @@ spec = parallel $ do
               ([3, 2, 1], 438),
               ([3, 1, 2], 1836)
             ]
-          )
-    let cases30000000 :: ContextCase
-        cases30000000 =
-          ( 30000000,
+      let test (input, expected) = it ("is " ++ show expected ++ " for input " ++ show input) $ do
+            memoryGame n input `shouldBe` expected
+
+      for_ cases test
+
+    -- TODO: figure out how to make this not take 10 minutes
+    xcontext "when looking at the 30000000th result" $ do
+      let n = 30000000
+      let cases =
             [ ([0, 3, 6], 175594),
               ([1, 3, 2], 2578),
               ([2, 1, 3], 3544142),
@@ -41,19 +42,10 @@ spec = parallel $ do
               ([3, 2, 1], 18),
               ([3, 1, 2], 362)
             ]
-          )
+      let test (input, expected) = it ("is " ++ show expected ++ " for input " ++ show input) $ do
+            memoryGame n input `shouldBe` expected
 
-    let testContext :: ContextCase -> SpecWith ()
-        testContext (n, cases) = context ("when looking at the " ++ show n ++ "th result") $ do
-          let test :: Case -> SpecWith ()
-              test (input, expected) = it ("is " ++ show expected ++ " for input " ++ show input) $ do
-                memoryGame n input `shouldBe` expected
-
-          for_ cases test
-
-    testContext cases2020
-    -- TODO: figure out how to make this not take 10 minutes
-    xcontext "skip" $ testContext cases30000000
+      for_ cases test
 
 -- 300
 -- Finished in 0.0017 seconds
