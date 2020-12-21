@@ -1,7 +1,7 @@
 module Day15.SolutionSpec (spec) where
 
-import Data.Foldable
-import Day15.Solution
+import Data.Foldable (for_)
+import Day15.Solution (memoryGame, part1, part2)
 import Test.Hspec
 
 type ContextCase = (Int, [Case])

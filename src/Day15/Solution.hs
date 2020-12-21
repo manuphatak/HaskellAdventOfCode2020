@@ -1,9 +1,18 @@
-module Day15.Solution where
+module Day15.Solution (memoryGame, part1, part2) where
 
-import Advent.Utils
-import Control.Monad
+import Advent.Utils (fromRightOrShowError, readInt)
+import Control.Monad (liftM3)
 import qualified Data.IntMap.Lazy as IntMap
-import Text.Parsec hiding (State)
+import Text.Parsec
+  ( ParseError,
+    Parsec,
+    char,
+    digit,
+    endOfLine,
+    many1,
+    parse,
+    sepBy,
+  )
 
 part1 :: String -> String
 part1 = show . memoryGame 2020 . fromRightOrShowError . parseInts
