@@ -6,7 +6,7 @@ import Day16.Solution
 import Test.Hspec
 
 spec :: Spec
-spec =
+spec = focus $
   parallel $ do
     it "solves Part 1" $ do
       input <- readFile "./test/Day16/input.txt"
@@ -30,6 +30,7 @@ spec =
                   toIntMap [38, 6, 12]
                 ]
             }
+    let validDocument = exampleDocument {dNearbyTickets = [toIntMap [7, 3, 47]]}
     describe "parseDocument" $ do
       it "parses rules, your ticket, and nearby tickets" $ do
         input <- readFile "./test/Day16/example.txt"
@@ -40,3 +41,7 @@ spec =
         let output = ticketScanningErrors exampleDocument
         output `shouldBe` [4, 55, 12]
         sum output `shouldBe` 71
+
+    describe "rejectInvalid" $ do
+      it "selects only valid tickets" $ do
+        rejectInvalid exampleDocument `shouldBe` validDocument

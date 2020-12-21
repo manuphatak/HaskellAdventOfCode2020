@@ -46,7 +46,7 @@ fieldsParser = Map.fromList <$> fieldParser `sepEndBy1` newline
     rangeParser =
       IntSet.fromList <$> do
         a <- intParser
-        char '-'
+        _ <- char '-'
         b <- intParser
         pure [a .. b]
 
@@ -73,3 +73,15 @@ ticketScanningErrors
     } = filter (`IntSet.notMember` allFields) . concatMap (foldr (:) []) $ nearbyTickets
     where
       allFields = foldr1 IntSet.union fields
+
+rejectInvalid :: Document -> Document
+rejectInvalid
+  document@Document
+    { dFields = fields,
+      dNearbyTickets = nearbyTickets
+    } = document {dNearbyTickets = filter validTicket nearbyTickets}
+    where
+      allFields = foldr1 IntSet.union fields
+
+      validTicket :: Ticket -> Bool
+      validTicket = all (`IntSet.member` allFields)
