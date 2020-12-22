@@ -1,18 +1,16 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 8fed5561cfbd7ec02e1d7161aba7d34f6bf96fdf146af3749ba482dd2fe3905b
 
 name:           AdventOfCode2020
 version:        2.0.2.0
-description:    Please see the README on GitHub at <https://github.com/bionikspoon/HaskellAdventOfCode2020#readme>
-homepage:       https://github.com/bionikspoon/HaskellAdventOfCode2020#readme
-bug-reports:    https://github.com/bionikspoon/HaskellAdventOfCode2020/issues
+description:    Please see the README on GitHub at <https://github.com/manuphatak/HaskellAdventOfCode2020#readme>
+homepage:       https://github.com/manuphatak/HaskellAdventOfCode2020#readme
+bug-reports:    https://github.com/manuphatak/HaskellAdventOfCode2020/issues
 author:         Manu Phatak
-maintainer:     bionikspoon@gmail.com
+maintainer:     manu@phatak.io
 copyright:      2020 Manu Phatak
 license:        MIT
 license-file:   LICENSE
@@ -23,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/bionikspoon/HaskellAdventOfCode2020
+  location: https://github.com/manuphatak/HaskellAdventOfCode2020
 
 library
   exposed-modules:
@@ -43,6 +41,8 @@ library
       Day09.Utils
       Day10.Solution
       Day11.Solution
+      Day13.Solution
+      Day14.Solution
       Practice.Foldable
       Template.Solution
   other-modules:
@@ -79,6 +79,8 @@ test-suite AdventOfCode2020-test
       Day09.UtilsSpec
       Day10.SolutionSpec
       Day11.SolutionSpec
+      Day13.SolutionSpec
+      Day14.SolutionSpec
       Practice.FoldableSpec
       Template.SolutionSpec
       Paths_AdventOfCode2020
