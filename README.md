@@ -1,5 +1,5 @@
-[![bionikspoon](https://circleci.com/gh/bionikspoon/HaskellAdventOfCode2020.svg?style=svg)](https://circleci.com/gh/bionikspoon/HaskellAdventOfCode2020)
-[![codecov](https://codecov.io/gh/bionikspoon/HaskellAdventOfCode2020/branch/main/graph/badge.svg?token=TKOFLWZ1IE)](https://codecov.io/gh/bionikspoon/HaskellAdventOfCode2020)
+[![manuphatak](https://circleci.com/gh/manuphatak/HaskellAdventOfCode2020.svg?style=svg)](https://circleci.com/gh/manuphatak/HaskellAdventOfCode2020)
+[![codecov](https://codecov.io/gh/manuphatak/HaskellAdventOfCode2020/branch/main/graph/badge.svg?token=TKOFLWZ1IE)](https://codecov.io/gh/manuphatak/HaskellAdventOfCode2020)
 
 # AdventOfCode 2020
 
@@ -49,8 +49,8 @@ statement including part 2.
 
 - [`direnv`](https://direnv.net/) - used to add project specific env variables
 - `yarn global add @bionikspoon/html-to-md`
-- `yarn global add prettier"`
-- `go get github.com/ericchiang/pup"`
+- `yarn global add prettier`
+- `go get github.com/ericchiang/pup`
 - https://hub.docker.com/ API key for Circle CI
 - https://codecov.io/ project token for circle CI
 
