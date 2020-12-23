@@ -1,8 +1,10 @@
 module Day16.Solution where
 
 import Advent.Utils
+import Data.Bifunctor
 import qualified Data.IntMap.Strict as IntMap
 import qualified Data.IntSet as IntSet
+import Data.List
 import qualified Data.Map.Strict as Map
 import Text.Parsec
 
@@ -10,7 +12,7 @@ part1 :: String -> String
 part1 = show . sum . ticketScanningErrors . fromRightOrShowError . parseDocument
 
 part2 :: String -> String
-part2 = head . lines
+part2 = show . product . Map.filterWithKey (const . isPrefixOf "departure") . extractTicket . asValidDocument . fromRightOrShowError . parseDocument
 
 type Ticket = IntMap.IntMap Int
 
@@ -22,6 +24,8 @@ data Document = Document
     dNearbyTickets :: [Ticket]
   }
   deriving (Show, Eq)
+
+newtype ValidDocument = ValidDocument Document deriving (Show, Eq)
 
 parseDocument :: String -> Either ParseError Document
 parseDocument = parse documentParser ""
@@ -74,14 +78,46 @@ ticketScanningErrors
     where
       allFields = foldr1 IntSet.union fields
 
-rejectInvalid :: Document -> Document
-rejectInvalid
+asValidDocument :: Document -> ValidDocument
+asValidDocument
   document@Document
     { dFields = fields,
       dNearbyTickets = nearbyTickets
-    } = document {dNearbyTickets = filter validTicket nearbyTickets}
+    } = ValidDocument document {dNearbyTickets = filter validTicket nearbyTickets}
     where
       allFields = foldr1 IntSet.union fields
 
       validTicket :: Ticket -> Bool
       validTicket = all (`IntSet.member` allFields)
+
+extractTicket :: ValidDocument -> Map.Map String Int
+extractTicket (ValidDocument document@Document {dFields = fields, dYourTicket = yourTicket, dNearbyTickets = nearbyTickets}) = Map.map (yourTicket IntMap.!) fieldColumnMap
+  where
+    fieldColumnMap :: Map.Map String Int
+    fieldColumnMap =
+      resolveColumns $
+        Map.map
+          ( \fieldValues ->
+              filter
+                ( \i ->
+                    all (`IntSet.member` fieldValues) (pluck i nearbyTickets)
+                )
+                ticketIndices
+          )
+          fields
+
+    ticketIndices :: [Int]
+    ticketIndices = [0 .. (length yourTicket - 1)]
+
+pluck :: Int -> [Ticket] -> [Int]
+pluck i = map (IntMap.! i)
+
+resolveColumns :: Map.Map String [Int] -> Map.Map String Int
+resolveColumns input = snd $ go ((sortOn (length . snd) . Map.toList) input, Map.empty)
+  where
+    go :: ([(String, [Int])], Map.Map String Int) -> ([(String, [Int])], Map.Map String Int)
+    go result@([], _) = result
+    go (x : xs, output) = do
+      let (key, value) = second head x
+
+      go (sortOn (length . snd) $ map (second (filter (/= value))) xs, Map.insert key value output)
