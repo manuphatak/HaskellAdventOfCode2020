@@ -1,10 +1,22 @@
-module Day16.Solution where
+module Day16.Solution
+  ( Document (..),
+    ValidDocument (..),
+    asValidDocument,
+    extractTicket,
+    parseDocument,
+    part1,
+    part2,
+    resolvePossibilities,
+    ticketScanningErrors,
+    toIntMap,
+  )
+where
 
-import Advent.Utils
-import Data.Bifunctor
+import Advent.Utils (fromRightOrShowError, readInt)
+import Data.Bifunctor (Bifunctor (second))
 import qualified Data.IntMap.Strict as IntMap
 import qualified Data.IntSet as IntSet
-import Data.List
+import Data.List (isPrefixOf, sortOn)
 import qualified Data.Map.Strict as Map
 import Text.Parsec
 
@@ -91,33 +103,44 @@ asValidDocument
       validTicket = all (`IntSet.member` allFields)
 
 extractTicket :: ValidDocument -> Map.Map String Int
-extractTicket (ValidDocument document@Document {dFields = fields, dYourTicket = yourTicket, dNearbyTickets = nearbyTickets}) = Map.map (yourTicket IntMap.!) fieldColumnMap
+extractTicket
+  ( ValidDocument
+      Document
+        { dFields = fields,
+          dYourTicket = yourTicket,
+          dNearbyTickets = nearbyTickets
+        }
+    ) = Map.map (yourTicket IntMap.!) fieldColumnMap
+    where
+      fieldColumnMap :: Map.Map String Int
+      fieldColumnMap = resolvePossibilities . Map.map toPossibleColumns $ fields
+
+      toPossibleColumns :: IntSet.IntSet -> [Int]
+      toPossibleColumns fieldValues = filter (all (`IntSet.member` fieldValues) . valuesForColumn) allColumns
+
+      valuesForColumn :: Int -> [Int]
+      valuesForColumn i = pluck i nearbyTickets
+
+      allColumns :: [Int]
+      allColumns = [0 .. (length yourTicket - 1)]
+
+      pluck :: Int -> [Ticket] -> [Int]
+      pluck i = map (IntMap.! i)
+
+resolvePossibilities :: Map.Map String [Int] -> Map.Map String Int
+resolvePossibilities input = go ((sortByResolvability . Map.toList) input) Map.empty
   where
-    fieldColumnMap :: Map.Map String Int
-    fieldColumnMap =
-      resolveColumns $
-        Map.map
-          ( \fieldValues ->
-              filter
-                ( \i ->
-                    all (`IntSet.member` fieldValues) (pluck i nearbyTickets)
-                )
-                ticketIndices
-          )
-          fields
+    sortByResolvability :: [(String, [Int])] -> [(String, [Int])]
+    sortByResolvability = sortOn (length . snd)
 
-    ticketIndices :: [Int]
-    ticketIndices = [0 .. (length yourTicket - 1)]
+    go :: [(String, [Int])] -> Map.Map String Int -> Map.Map String Int
+    go [] output = output
+    go (x : unresolved) output = go nextUnresolved nextOutput
+      where
+        (key, value) = second head x
 
-pluck :: Int -> [Ticket] -> [Int]
-pluck i = map (IntMap.! i)
+        nextUnresolved :: [(String, [Int])]
+        nextUnresolved = sortByResolvability $ map (second (filter (/= value))) unresolved
 
-resolveColumns :: Map.Map String [Int] -> Map.Map String Int
-resolveColumns input = snd $ go ((sortOn (length . snd) . Map.toList) input, Map.empty)
-  where
-    go :: ([(String, [Int])], Map.Map String Int) -> ([(String, [Int])], Map.Map String Int)
-    go result@([], _) = result
-    go (x : xs, output) = do
-      let (key, value) = second head x
-
-      go (sortOn (length . snd) $ map (second (filter (/= value))) xs, Map.insert key value output)
+        nextOutput :: Map.Map String Int
+        nextOutput = Map.insert key value output
