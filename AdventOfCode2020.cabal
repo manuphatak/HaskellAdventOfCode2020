@@ -42,6 +42,9 @@ library
       Day11.Solution
       Day13.Solution
       Day14.Solution
+      Day16.Parser
+      Day16.Solution
+      Day16.Utils
       Practice.Foldable
       Template.Solution
   other-modules:
@@ -79,6 +82,8 @@ test-suite AdventOfCode2020-test
       Day11.SolutionSpec
       Day13.SolutionSpec
       Day14.SolutionSpec
+      Day16.SolutionSpec
+      Day16.UtilsSpec
       Practice.FoldableSpec
       Template.SolutionSpec
       Paths_AdventOfCode2020
