@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Advent.Parser
       Advent.Utils
       Day01.Solution
       Day02.Parser
@@ -65,6 +66,7 @@ test-suite AdventOfCode2020-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Advent.ParserSpec
       Advent.UtilsSpec
       Day01.SolutionSpec
       Day02.ParserSpec

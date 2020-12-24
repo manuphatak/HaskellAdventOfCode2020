@@ -1,9 +1,10 @@
 module Day16.Parser where
 
+import Advent.Parser (intParser)
 import qualified Data.IntMap.Strict as IntMap
 import qualified Data.IntSet as IntSet
 import qualified Data.Map.Strict as Map
-import Day16.Utils (intParser, toIntMap)
+import Day16.Utils (toIntMap)
 import Text.Parsec
 
 type Ticket = IntMap.IntMap Int

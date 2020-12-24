@@ -1,27 +1,12 @@
 module Day14.Solution where
 
-import Advent.Utils (fromRightOrShowError, readInt)
-import Data.Bits
-import Data.Foldable
+import Advent.Parser (intParser)
+import Advent.Utils (fromRightOrShowError)
+import Data.Bits (Bits (clearBit, setBit))
+import Data.Foldable (Foldable (foldl'))
 import qualified Data.IntMap.Strict as IntMap
-import Data.List
-import Text.Parsec
-  ( ParseError,
-    Parsec,
-    between,
-    char,
-    choice,
-    count,
-    digit,
-    many1,
-    newline,
-    oneOf,
-    parse,
-    sepEndBy1,
-    spaces,
-    string,
-    try,
-  )
+import Data.List (nub)
+import Text.Parsec hiding (State)
 
 part1 :: String -> String
 part1 = show . sum . stateMemory . runProgram reducerV1 . fromRightOrShowError . parseInstructions
@@ -54,9 +39,6 @@ parseInstructions = parse (instructionParser `sepEndBy1` newline) ""
         fromMask '1' = B True
         fromMask '0' = B False
         fromMask _ = X
-
-    intParser :: Parsec String () Int
-    intParser = readInt <$> many1 digit
 
 data State = State {stateMask :: MaskBits, stateMemory :: IntMap.IntMap Int} deriving (Show)
 
