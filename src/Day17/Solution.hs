@@ -1,9 +1,23 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Day17.Solution where
+module Day17.Solution
+  ( CubeState (..),
+    Point3D (..),
+    Point4D (..),
+    executeCycles,
+    parsePocketDimension3D,
+    parsePocketDimension4D,
+    part1,
+    part2,
+  )
+where
 
 import Advent.Utils
-import Data.Function
+  ( fromRightOrShowError,
+    isBetween,
+    occurrences,
+  )
+import Data.Function ((&))
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
 import Text.Parsec

@@ -3,6 +3,15 @@ module Day17.SolutionSpec (spec) where
 import Advent.Utils (occurrences)
 import qualified Data.Map.Strict as Map
 import Day17.Solution
+  ( CubeState (..),
+    Point3D (..),
+    Point4D (..),
+    executeCycles,
+    parsePocketDimension3D,
+    parsePocketDimension4D,
+    part1,
+    part2,
+  )
 import Test.Hspec
 
 spec :: Spec
