@@ -13,50 +13,51 @@ spec = parallel $ do
   it "solves Part 2" $ do
     input <- readFile "./test/Day17/input.txt"
     part2 input `shouldBe` "1728"
-  let examplePocketDimension =
+  let examplePocketDimension3D =
         Map.fromList
-          [ ((0, 0, 0), Inactive),
-            ((0, 1, 0), Inactive),
-            ((0, 2, 0), Active),
-            ((1, 0, 0), Active),
-            ((1, 1, 0), Inactive),
-            ((1, 2, 0), Active),
-            ((2, 0, 0), Inactive),
-            ((2, 1, 0), Active),
-            ((2, 2, 0), Active)
+          [ (Point3D (0, 0, 0), Inactive),
+            (Point3D (0, 1, 0), Inactive),
+            (Point3D (0, 2, 0), Active),
+            (Point3D (1, 0, 0), Active),
+            (Point3D (1, 1, 0), Inactive),
+            (Point3D (1, 2, 0), Active),
+            (Point3D (2, 0, 0), Inactive),
+            (Point3D (2, 1, 0), Active),
+            (Point3D (2, 2, 0), Active)
           ]
-  let examplePocketDimensionV2 =
+  let examplePocketDimension4D =
         Map.fromList
-          [ ((0, 0, 0, 0), Inactive),
-            ((0, 1, 0, 0), Inactive),
-            ((0, 2, 0, 0), Active),
-            ((1, 0, 0, 0), Active),
-            ((1, 1, 0, 0), Inactive),
-            ((1, 2, 0, 0), Active),
-            ((2, 0, 0, 0), Inactive),
-            ((2, 1, 0, 0), Active),
-            ((2, 2, 0, 0), Active)
+          [ (Point4D (0, 0, 0, 0), Inactive),
+            (Point4D (0, 1, 0, 0), Inactive),
+            (Point4D (0, 2, 0, 0), Active),
+            (Point4D (1, 0, 0, 0), Active),
+            (Point4D (1, 1, 0, 0), Inactive),
+            (Point4D (1, 2, 0, 0), Active),
+            (Point4D (2, 0, 0, 0), Inactive),
+            (Point4D (2, 1, 0, 0), Active),
+            (Point4D (2, 2, 0, 0), Active)
           ]
 
-  describe "parsePocketDimension" $ do
+  describe "parsePocketDimension3D" $ do
     it "parses input" $ do
       input <- readFile "./test/Day17/example.txt"
-      parsePocketDimension input `shouldBe` Right examplePocketDimension
-  describe "parsePocketDimensionV2" $ do
+      parsePocketDimension3D input `shouldBe` Right examplePocketDimension3D
+  describe "parsePocketDimension4D" $ do
     it "parses input" $ do
       input <- readFile "./test/Day17/example.txt"
-      parsePocketDimensionV2 input `shouldBe` Right examplePocketDimensionV2
+      parsePocketDimension4D input `shouldBe` Right examplePocketDimension4D
 
   describe "executeCycles" $ do
-    let cycles = 6 :: Int
-    let expected = 112 :: Int
-    context ("when running " ++ show cycles ++ " cycles") $ do
-      it ("has " ++ show expected ++ " active cubes") $ do
-        (occurrences Active . executeCycles cycles) examplePocketDimension `shouldBe` expected
+    context "given 3D pockets" $ do
+      let cycles = 6 :: Int
+      let expected = 112 :: Int
+      context ("when running " ++ show cycles ++ " cycles") $ do
+        it ("has " ++ show expected ++ " active cubes") $ do
+          (occurrences Active . executeCycles cycles) examplePocketDimension3D `shouldBe` expected
 
-  describe "executeCyclesV2" $ do
-    let cycles = 6 :: Int
-    let expected = 848 :: Int
-    context ("when running " ++ show cycles ++ " cycles") $ do
-      it ("has " ++ show expected ++ " active cubes") $ do
-        (occurrences Active . executeCyclesV2 cycles) examplePocketDimensionV2 `shouldBe` expected
+    context "given 4D pockets" $ do
+      let cycles = 6 :: Int
+      let expected = 848 :: Int
+      context ("when running " ++ show cycles ++ " cycles") $ do
+        it ("has " ++ show expected ++ " active cubes") $ do
+          (occurrences Active . executeCycles cycles) examplePocketDimension4D `shouldBe` expected
