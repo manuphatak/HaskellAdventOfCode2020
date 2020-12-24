@@ -25,7 +25,7 @@ parseSchedule :: String -> Either ParseError (Integer, [Maybe Integer])
 parseSchedule = parse scheduleParser ""
   where
     scheduleParser :: Parsec String () (Integer, [Maybe Integer])
-    scheduleParser = (,) <$> (intParser <* endOfLine) <*> busIdsParser
+    scheduleParser = (,) <$> (integerParser <* endOfLine) <*> busIdsParser
 
 parseBusIds :: String -> Either ParseError [Maybe Integer]
 parseBusIds = parse busIdsParser ""
@@ -34,10 +34,10 @@ busIdsParser :: Parsec String () [Maybe Integer]
 busIdsParser = busIdParser `sepBy1` char ','
   where
     busIdParser :: Parsec String () (Maybe Integer)
-    busIdParser = choice [Nothing <$ try (char 'x'), Just <$> intParser]
+    busIdParser = choice [Nothing <$ try (char 'x'), Just <$> integerParser]
 
-intParser :: Parsec String () Integer
-intParser = read <$> many digit
+integerParser :: Parsec String () Integer
+integerParser = read <$> many1 digit
 
 earliestBus :: (Integer, [Maybe Integer]) -> (Integer, Integer)
 earliestBus (start, busIds) = minimumBy (compare `on` fst) . map nextDeparture . catMaybes $ busIds
