@@ -10,7 +10,7 @@ spec = parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day17/input.txt"
     part1 input `shouldBe` "215"
-  fit "solves Part 2" $ do
+  it "solves Part 2" $ do
     input <- readFile "./test/Day17/input.txt"
     part2 input `shouldBe` "1728"
   let examplePocketDimension =
