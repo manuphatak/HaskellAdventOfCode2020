@@ -15,118 +15,125 @@ spec = parallel $ do
 
   describe "parseExpression" $ do
     let cases =
-          [ ("1 + 2", 3, Binary (Number 1) Plus (Number 2)),
+          [ ( "1 + 2",
+              3,
+              BinaryOp (Number 1, Plus, Number 2)
+            ),
             ( "1 + 2 * 3 + 4 * 5 + 6",
               71,
-              Binary
-                ( Binary
-                    ( Binary
-                        ( Binary
-                            (Binary (Number 1) Plus (Number 2))
-                            Times
-                            (Number 3)
-                        )
-                        Plus
-                        (Number 4)
-                    )
-                    Times
-                    (Number 5)
+              BinaryOp
+                ( BinaryOp
+                    ( BinaryOp
+                        ( BinaryOp
+                            ( BinaryOp (Number 1, Plus, Number 2),
+                              Times,
+                              Number 3
+                            ),
+                          Plus,
+                          Number 4
+                        ),
+                      Times,
+                      Number 5
+                    ),
+                  Plus,
+                  Number 6
                 )
-                Plus
-                (Number 6)
             ),
             ( "2 * 3 + (4 * 5)",
               26,
-              Binary
-                (Binary (Number 2) Times (Number 3))
-                Plus
-                (Binary (Number 4) Times (Number 5))
+              BinaryOp
+                ( BinaryOp (Number 2, Times, Number 3),
+                  Plus,
+                  BinaryOp (Number 4, Times, Number 5)
+                )
             ),
             ( "5 + (8 * 3 + 9 + 3 * 4 * 3)",
               437,
-              Binary
-                (Number 5)
-                Plus
-                ( Binary
-                    ( Binary
-                        ( Binary
-                            ( Binary
-                                (Binary (Number 8) Times (Number 3))
-                                Plus
-                                (Number 9)
-                            )
-                            Plus
-                            (Number 3)
-                        )
-                        Times
-                        (Number 4)
+              BinaryOp
+                ( Number 5,
+                  Plus,
+                  BinaryOp
+                    ( BinaryOp
+                        ( BinaryOp
+                            ( BinaryOp
+                                ( BinaryOp (Number 8, Times, Number 3),
+                                  Plus,
+                                  Number 9
+                                ),
+                              Plus,
+                              Number 3
+                            ),
+                          Times,
+                          Number 4
+                        ),
+                      Times,
+                      Number 3
                     )
-                    Times
-                    (Number 3)
                 )
             ),
             ( "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))",
               12240,
-              Binary
-                ( Binary (Number 5) Times (Number 9)
-                )
-                Times
-                ( Binary
-                    ( Binary
-                        ( Binary
-                            ( Binary
-                                (Binary (Number 7) Times (Number 3))
-                                Times
-                                (Number 3)
-                            )
-                            Plus
-                            (Number 9)
+              BinaryOp
+                ( BinaryOp (Number 5, Times, Number 9),
+                  Times,
+                  BinaryOp
+                    ( BinaryOp
+                        ( BinaryOp
+                            ( BinaryOp
+                                ( BinaryOp (Number 7, Times, Number 3),
+                                  Times,
+                                  Number 3
+                                ),
+                              Plus,
+                              Number 9
+                            ),
+                          Times,
+                          Number 3
+                        ),
+                      Plus,
+                      BinaryOp
+                        ( BinaryOp (Number 8, Plus, Number 6),
+                          Times,
+                          Number 4
                         )
-                        Times
-                        (Number 3)
-                    )
-                    Plus
-                    ( Binary
-                        (Binary (Number 8) Plus (Number 6))
-                        Times
-                        (Number 4)
                     )
                 )
             ),
             ( "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2",
               13632,
-              Binary
-                ( Binary
-                    ( Binary
-                        ( Binary
-                            ( Binary
-                                ( Binary
-                                    (Binary (Number 2) Plus (Number 4))
-                                    Times
-                                    (Number 9)
-                                )
-                                Times
-                                ( Binary
-                                    ( Binary
-                                        (Binary (Number 6) Plus (Number 9))
-                                        Times
-                                        (Number 8)
+              BinaryOp
+                ( BinaryOp
+                    ( BinaryOp
+                        ( BinaryOp
+                            ( BinaryOp
+                                ( BinaryOp
+                                    ( BinaryOp (Number 2, Plus, Number 4),
+                                      Times,
+                                      Number 9
+                                    ),
+                                  Times,
+                                  BinaryOp
+                                    ( BinaryOp
+                                        ( BinaryOp (Number 6, Plus, Number 9),
+                                          Times,
+                                          Number 8
+                                        ),
+                                      Plus,
+                                      Number 6
                                     )
-                                    Plus
-                                    (Number 6)
-                                )
-                            )
-                            Plus
-                            (Number 6)
-                        )
-                        Plus
-                        (Number 2)
-                    )
-                    Plus
-                    (Number 4)
+                                ),
+                              Plus,
+                              Number 6
+                            ),
+                          Plus,
+                          Number 2
+                        ),
+                      Plus,
+                      Number 4
+                    ),
+                  Times,
+                  Number 2
                 )
-                Times
-                (Number 2)
             )
           ]
     let test (input, evaluated, parsed) = context ("given an expression of " ++ show input) $ do

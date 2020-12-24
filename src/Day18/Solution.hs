@@ -13,7 +13,7 @@ part2 = head . lines
 data Operator = Plus | Times deriving (Show, Eq)
 
 data Expression
-  = Binary Expression Operator Expression
+  = BinaryOp (Expression, Operator, Expression)
   | Number Int
   deriving (Show, Eq)
 
@@ -33,10 +33,10 @@ expressionParser = (parensParser <|> numberExpressionParser) `chainl1` operatorP
     operatorParser = readOperator <$> (space *> oneOf ['+', '*'] <* space)
 
     readOperator :: Char -> Expression -> Expression -> Expression
-    readOperator '+' a b = Binary a Plus b
-    readOperator '*' a b = Binary a Times b
+    readOperator '+' a b = BinaryOp (a, Plus, b)
+    readOperator '*' a b = BinaryOp (a, Times, b)
 
 evaluateExpression :: Expression -> Int
 evaluateExpression (Number n) = n
-evaluateExpression (Binary a Plus b) = evaluateExpression a + evaluateExpression b
-evaluateExpression (Binary a Times b) = evaluateExpression a * evaluateExpression b
+evaluateExpression (BinaryOp (a, Plus, b)) = evaluateExpression a + evaluateExpression b
+evaluateExpression (BinaryOp (a, Times, b)) = evaluateExpression a * evaluateExpression b
