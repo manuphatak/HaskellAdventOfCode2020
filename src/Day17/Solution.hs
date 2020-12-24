@@ -41,9 +41,7 @@ instance Pocket Point3D where
   neighbors point =
     Set.fromList
       [ point `offset` Point3D (x, y, z)
-        | x <- [-1 .. 1],
-          y <- [-1 .. 1],
-          z <- [-1 .. 1],
+        | (x, y, z) <- offsets3D,
           (x, y, z) /= (0, 0, 0)
       ]
 
@@ -55,12 +53,24 @@ instance Pocket Point4D where
   neighbors point =
     Set.fromList
       [ point `offset` Point4D (x, y, z, w)
-        | x <- [-1 .. 1],
-          y <- [-1 .. 1],
-          z <- [-1 .. 1],
-          w <- [-1 .. 1],
+        | (x, y, z, w) <- offsets4D,
           (x, y, z, w) /= (0, 0, 0, 0)
       ]
+
+offsets3D :: [(Int, Int, Int)]
+offsets3D =
+  [ (x, y, z)
+    | x <- [-1 .. 1],
+      y <- [-1 .. 1],
+      z <- [-1 .. 1]
+  ]
+
+offsets4D :: [(Int, Int, Int, Int)]
+offsets4D =
+  [ (x, y, z, w)
+    | (x, y, z) <- offsets3D,
+      w <- [-1 .. 1]
+  ]
 
 data CubeState = Inactive | Active deriving (Show, Eq)
 
