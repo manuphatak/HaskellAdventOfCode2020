@@ -12,8 +12,8 @@ import Day16.Solution
     part2,
     resolvePossibilities,
     ticketScanningErrors,
-    toIntMap,
   )
+import Day16.Utils (toIntMap)
 import Test.Hspec
 
 spec :: Spec
