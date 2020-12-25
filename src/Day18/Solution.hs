@@ -1,8 +1,17 @@
-module Day18.Solution where
+module Day18.Solution
+  ( Expression (..),
+    advancedTable,
+    basicTable,
+    evaluateExpression,
+    parseExpression,
+    part1,
+    part2,
+  )
+where
 
-import Advent.Parser
-import Advent.Utils
-import Data.Functor.Identity
+import Advent.Parser (intParser)
+import Advent.Utils (fromRightOrShowError)
+import Data.Functor.Identity (Identity)
 import Text.Parsec
 import Text.Parsec.Expr
 
@@ -60,4 +69,3 @@ advancedTable =
 readOperator :: Char -> Expression -> Expression -> Expression
 readOperator '+' a b = BinaryOp (a, Plus, b)
 readOperator '*' a b = BinaryOp (a, Times, b)
-

@@ -3,8 +3,15 @@
 module Day18.SolutionSpec (spec) where
 
 import Data.Foldable (for_)
-import Day18.Internal
+import Day18.Internal (drawExpression)
 import Day18.Solution
+  ( advancedTable,
+    basicTable,
+    evaluateExpression,
+    parseExpression,
+    part1,
+    part2,
+  )
 import Test.Hspec
 import Test.Hspec.Golden (defaultGolden)
 

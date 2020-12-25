@@ -1,6 +1,6 @@
 module Day18.Internal (drawExpression) where
 
-import Day18.Solution
+import Day18.Solution (Expression (..))
 
 -- inspired by drawTree in the `containers` package
 -- https://hackage.haskell.org/package/containers-0.6.4.1/docs/src/Data.Tree.html#drawTree
