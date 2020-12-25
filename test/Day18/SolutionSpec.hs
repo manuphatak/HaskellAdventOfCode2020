@@ -3,6 +3,7 @@
 module Day18.SolutionSpec (spec) where
 
 import Data.Foldable (for_)
+import Day18.Internal
 import Day18.Solution
 import Test.Hspec
 import Test.Hspec.Golden (defaultGolden)
@@ -21,7 +22,7 @@ spec = parallel $ do
           it "can be parsed" $ do
             let filename = show 'parseExpression ++ "_" ++ prefix ++ "_" ++ show i
             let Right output = parseExpression table input
-            defaultGolden filename (show output)
+            defaultGolden filename (drawExpression output)
 
           it ("evaluates to " ++ show expected) $ do
             (fmap evaluateExpression . parseExpression table) input `shouldBe` Right expected

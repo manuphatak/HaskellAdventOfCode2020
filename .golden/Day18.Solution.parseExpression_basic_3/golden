@@ -1,1 +1,13 @@
-BinaryOp (BinaryOp (Number 2,Times,Number 3),Plus,BinaryOp (Number 4,Times,Number 5))
+BinaryOp
+  ( BinaryOp
+      ( Number 2
+      , Times
+      , Number 3
+      )
+  , Plus
+  , BinaryOp
+      ( Number 4
+      , Times
+      , Number 5
+      )
+  )

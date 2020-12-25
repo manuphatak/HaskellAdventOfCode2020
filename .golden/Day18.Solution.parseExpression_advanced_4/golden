@@ -1,1 +1,25 @@
-BinaryOp (Number 5,Plus,BinaryOp (BinaryOp (BinaryOp (Number 8,Times,BinaryOp (BinaryOp (Number 3,Plus,Number 9),Plus,Number 3)),Times,Number 4),Times,Number 3))
+BinaryOp
+  ( Number 5
+  , Plus
+  , BinaryOp
+      ( BinaryOp
+          ( BinaryOp
+              ( Number 8
+              , Times
+              , BinaryOp
+                  ( BinaryOp
+                      ( Number 3
+                      , Plus
+                      , Number 9
+                      )
+                  , Plus
+                  , Number 3
+                  )
+              )
+          , Times
+          , Number 4
+          )
+      , Times
+      , Number 3
+      )
+  )

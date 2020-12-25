@@ -1,1 +1,5 @@
-BinaryOp (Number 1,Plus,Number 2)
+BinaryOp
+  ( Number 1
+  , Plus
+  , Number 2
+  )

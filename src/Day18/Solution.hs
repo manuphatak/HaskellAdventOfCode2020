@@ -61,21 +61,3 @@ readOperator :: Char -> Expression -> Expression -> Expression
 readOperator '+' a b = BinaryOp (a, Plus, b)
 readOperator '*' a b = BinaryOp (a, Times, b)
 
--- drawExpression :: Expression -> String
--- drawExpression (BinaryOp (a, b, c)) = unlines ["  ( " ++ show a, "    " ++ show b, "    " ++ show c, "  )"]
--- drawExpression expression = show expression
-
--- temp =
---   BinaryOp
---     ( Number 2,
---       Times,
---       BinaryOp
---         ( Number 3,
---           Plus,
---           BinaryOp
---             ( Number 4,
---               Times,
---               Number 5
---             )
---         )
---     )

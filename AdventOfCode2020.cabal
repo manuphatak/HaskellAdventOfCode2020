@@ -47,6 +47,7 @@ library
       Day16.Solution
       Day16.Utils
       Day17.Solution
+      Day18.Internal
       Day18.Solution
       Practice.Foldable
       Template.Solution
