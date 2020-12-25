@@ -69,3 +69,4 @@ advancedTable =
 readOperator :: Char -> Expression -> Expression -> Expression
 readOperator '+' a b = BinaryOp (a, Plus, b)
 readOperator '*' a b = BinaryOp (a, Times, b)
+readOperator _ _ _ = error "This should never happen"
