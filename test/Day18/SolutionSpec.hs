@@ -20,7 +20,7 @@ spec = parallel $ do
   describe "parseExpression" $ do
     let test prefix table (i, (input, expected)) = context ("given an expression of " ++ show input) $ do
           it "can be parsed" $ do
-            let filename = show 'parseExpression ++ "_" ++ prefix ++ "_" ++ show i
+            let filename = show 'parseExpression ++ "_example_" ++ prefix ++ "_" ++ show i
             let Right output = parseExpression table input
             defaultGolden filename (drawExpression output)
 
