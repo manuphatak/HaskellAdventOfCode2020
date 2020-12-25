@@ -106,5 +106,6 @@ test-suite AdventOfCode2020-test
     , containers
     , hspec
     , hspec-discover
+    , hspec-golden
     , parsec
   default-language: Haskell2010

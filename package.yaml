@@ -41,6 +41,7 @@ tests:
     - AdventOfCode2020
     - hspec-discover
     - hspec
+    - hspec-golden
 
 build-tools:
  - implicit-hie

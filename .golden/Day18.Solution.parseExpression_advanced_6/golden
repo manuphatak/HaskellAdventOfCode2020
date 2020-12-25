@@ -1,0 +1,1 @@
+BinaryOp (BinaryOp (BinaryOp (BinaryOp (BinaryOp (BinaryOp (Number 2,Plus,Number 4),Times,Number 9),Times,BinaryOp (BinaryOp (BinaryOp (Number 6,Plus,Number 9),Times,BinaryOp (Number 8,Plus,Number 6)),Plus,Number 6)),Plus,Number 2),Plus,Number 4),Times,Number 2)
