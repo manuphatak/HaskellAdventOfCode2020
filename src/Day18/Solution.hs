@@ -41,6 +41,7 @@ parseExpression table = parse (expressionParser table) ""
 expressionParser :: ExpressionOpTable -> Parsec String () Expression
 expressionParser table = buildExpressionParser table termParser
   where
+    termParser :: Parsec String () Expression
     termParser = parensParser <|> numberExpressionParser
 
     parensParser :: Parsec String () Expression
@@ -53,7 +54,7 @@ basicTable :: ExpressionOpTable
 basicTable = [[Infix operatorParser AssocLeft]]
   where
     operatorParser :: Parsec String () (Expression -> Expression -> Expression)
-    operatorParser = readOperator <$> (space *> oneOf ['+', '*'] <* space)
+    operatorParser = readOp <$> (space *> oneOf ['+', '*'] <* space)
 
 advancedTable :: ExpressionOpTable
 advancedTable =
@@ -62,11 +63,11 @@ advancedTable =
   ]
   where
     timesParser :: Parsec String () (Expression -> Expression -> Expression)
-    timesParser = readOperator <$> (space *> char '*' <* space)
+    timesParser = readOp <$> (space *> char '*' <* space)
     plusParser :: Parsec String () (Expression -> Expression -> Expression)
-    plusParser = readOperator <$> (space *> char '+' <* space)
+    plusParser = readOp <$> (space *> char '+' <* space)
 
-readOperator :: Char -> Expression -> Expression -> Expression
-readOperator '+' a b = BinaryOp (a, Plus, b)
-readOperator '*' a b = BinaryOp (a, Times, b)
-readOperator _ _ _ = error "This should never happen"
+readOp :: Char -> Expression -> Expression -> Expression
+readOp '+' a b = BinaryOp (a, Plus, b)
+readOp '*' a b = BinaryOp (a, Times, b)
+readOp _ _ _ = error "This should never happen"
