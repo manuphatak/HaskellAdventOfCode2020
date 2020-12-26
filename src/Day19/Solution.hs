@@ -10,7 +10,7 @@ part1 :: String -> String
 part1 = show . length . validMessages . fromRightOrShowError . parseDocument
 
 part2 :: String -> String
-part2 = head . lines
+part2 = show . length . validMessages . withNewRules . fromRightOrShowError . parseDocument
 
 data Rule = Ref [[Int]] | Val Char deriving (Show, Eq)
 
@@ -49,45 +49,27 @@ parseDocument = parse documentParser ""
     betweenDblQuotes = between (char '"') (char '"')
 
 buildDynamicParser :: Rules -> String -> Either ParseError String
-buildDynamicParser rules = parse dynamicParser ""
+buildDynamicParser rules = parse (go 0 <* eof) ""
   where
-    dynamicParser :: Parsec String () String
-    dynamicParser = go (rules IntMap.! 0) <* eof
-      where
-        go :: Rule -> Parsec String () String
-        go (Ref options) = choice . map (try . mconcat . map (go . (rules IntMap.!))) $ options
-        go (Val c) = string [c]
+    go :: Int -> Parsec String () String
+    go i = rulesMap IntMap.! i
 
--- parseTemp :: String -> Either ParseError String
--- parseTemp = parse tempParser ""
---   where
---     tempParser :: Parsec String () String
---     tempParser =
---       string "a"
---         <> choice
---           [ try
---               ( choice
---                   [ try (string "a" <> string "a"),
---                     try (string "b" <> string "b")
---                   ]
---                   <> choice
---                     [ try (string "a" <> string "b"),
---                       try (string "b" <> string "a")
---                     ]
---               ),
---             try
---               ( choice
---                   [ try (string "a" <> string "b"),
---                     try (string "b" <> string "a")
---                   ]
---                   <> choice
---                     [ try (string "a" <> string "a"),
---                       try (string "b" <> string "b")
---                     ]
---               )
---           ]
---         <> string "b"
---         <* eof
+    rulesMap :: IntMap.IntMap (Parsec String () String)
+    rulesMap = IntMap.map asParser rules
+
+    asParser :: Rule -> Parsec String () String
+    asParser (Val c) = string [c]
+    asParser (Ref options) = choice . map (try . mconcat . map go) $ options
+
+withNewRules :: Document -> Document
+withNewRules document@Document {dRules = rules} = document {dRules = IntMap.union newRules rules}
+  where
+    newRules :: Rules
+    newRules =
+      IntMap.fromList
+        [ (8, Ref [[42], [42, 8]]),
+          (11, Ref [[42, 31], [42, 11, 31]])
+        ]
 
 validMessages :: Document -> [String]
 validMessages (Document rules messages) = filter (isRight . parseDynamic) messages
