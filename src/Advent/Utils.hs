@@ -15,6 +15,9 @@ occurrences target = foldr go 0
 readInt :: String -> Int
 readInt n = read n :: Int
 
+parseInts :: String -> [Int]
+parseInts = map readInt . lines
+
 rightToMaybe :: Either a b -> Maybe b
 rightToMaybe = either (const Nothing) Just
 
