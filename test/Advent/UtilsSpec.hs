@@ -5,6 +5,7 @@ import Advent.Utils
     fromRightOrShowError,
     isBetween,
     occurrences,
+    parseInts,
     readInt,
     rightToMaybe,
   )
@@ -31,6 +32,10 @@ spec = parallel $ do
   describe "readInt" $
     it "is an int" $
       readInt "123" `shouldBe` 123
+
+  describe "parseInts" $ do
+    it "parses a string into numbers" $
+      parseInts "1\n3\n5\n7\n11\n13\n17\n" `shouldBe` [1, 3, 5, 7, 11, 13, 17]
 
   describe "isBetween" $
     context "given a range of 1 and 13" $
