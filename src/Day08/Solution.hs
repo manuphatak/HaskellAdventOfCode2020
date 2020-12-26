@@ -13,7 +13,8 @@ module Day08.Solution
   )
 where
 
-import Advent.Utils (fromRightOrShowError, readInt)
+import Advent.Parser (intParser)
+import Advent.Utils (fromRightOrShowError)
 import Data.Either (isRight)
 import qualified Data.IntMap.Strict as IntMap
 import qualified Data.IntSet as IntSet
@@ -57,9 +58,6 @@ signParser = readSign <$> choice [char '+', char '-']
     readSign '+' = Plus
     readSign '-' = Minus
     readSign _ = error "this should never happen"
-
-intParser :: Parsec String () Int
-intParser = readInt <$> many1 digit
 
 data Program = Program {programAcc :: Int, programPointer :: Int, programVisited :: IntSet.IntSet} deriving (Show, Eq)
 

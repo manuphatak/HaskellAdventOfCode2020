@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Advent.Parser
       Advent.Utils
       Day01.Solution
       Day02.Parser
@@ -43,6 +44,12 @@ library
       Day11.Solution
       Day13.Solution
       Day14.Solution
+      Day16.Parser
+      Day16.Solution
+      Day16.Utils
+      Day17.Solution
+      Day18.Internal
+      Day18.Solution
       Practice.Foldable
       Template.Solution
   other-modules:
@@ -63,6 +70,7 @@ test-suite AdventOfCode2020-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Advent.ParserSpec
       Advent.UtilsSpec
       Day01.SolutionSpec
       Day02.ParserSpec
@@ -81,6 +89,10 @@ test-suite AdventOfCode2020-test
       Day11.SolutionSpec
       Day13.SolutionSpec
       Day14.SolutionSpec
+      Day16.SolutionSpec
+      Day16.UtilsSpec
+      Day17.SolutionSpec
+      Day18.SolutionSpec
       Practice.FoldableSpec
       Template.SolutionSpec
       Paths_AdventOfCode2020
@@ -97,5 +109,6 @@ test-suite AdventOfCode2020-test
     , containers
     , hspec
     , hspec-discover
+    , hspec-golden
     , parsec
   default-language: Haskell2010
