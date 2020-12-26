@@ -1,49 +1,59 @@
-module Day10.Solution (joltageJumps, part1, part2, possibilitiesTree) where
+module Day10.Solution
+  ( joltageJumps,
+    parseAdapters,
+    part1,
+    part2,
+    possibleArrangements,
+  )
+where
 
 import Advent.Utils (parseInts)
-import Data.List (sort)
-import Data.Tree (Tree, unfoldTree)
+import Data.Function ((&))
+import Data.Sequence
 
 part1 :: String -> String
-part1 = show . (\(a, _, c) -> a * c) . joltageJumps
+part1 = show . (\(a, _, c) -> a * c) . joltageJumps . parseAdapters
 
 part2 :: String -> String
-part2 = show . succ . sum . possibilitiesTree
+part2 = show . possibleArrangements . parseAdapters
 
-joltageJumps :: String -> (Int, Int, Int)
-joltageJumps = go (0, 0, 0) . sort . withMinMax . parseInts
+parseAdapters :: String -> Seq Int
+parseAdapters = withLast . withZero . sort . fromList . parseInts
   where
-    go :: (Int, Int, Int) -> [Int] -> (Int, Int, Int)
-    go jumps [_] = jumps
-    go (a, b, c) (x : x' : xs) = go nextJumps (x' : xs)
+    withZero :: Seq Int -> Seq Int
+    withZero = (0 <|)
+    withLast :: Seq Int -> Seq Int
+    withLast (xs :|> x) = xs |> x |> x + 3
+    withLast Empty = empty |> 3
+
+joltageJumps :: Seq Int -> (Int, Int, Int)
+joltageJumps = go (0, 0, 0)
+  where
+    go :: (Int, Int, Int) -> Seq Int -> (Int, Int, Int)
+    go (a, b, c) (x :<| x' :<| xs) = go nextJumps (x' <| xs)
       where
         nextJumps = case x' - x of
           1 -> (succ a, b, c)
           2 -> (a, succ b, c)
           3 -> (a, b, succ c)
+          _ -> error "Missing an adapter"
+    go jumps _ = jumps
 
-possibilitiesTree :: String -> Tree Int
-possibilitiesTree = unfoldTree go . sort . withMinMax . parseInts
+possibleArrangements :: Seq Int -> Int
+possibleArrangements xs = countArrangements (xs, empty)
+
+countArrangements :: (Seq Int, Seq (Int, Int)) -> Int
+countArrangements (Empty, b :<| _) = snd b
+countArrangements (Empty, Empty) = 0
+countArrangements (0 :<| xs, bs) = countArrangements (xs, (0, 1) <| bs)
+countArrangements (x :<| xs, bs) = countArrangements (xs, (x, cumulativePaths) <| bs)
   where
-    go :: [Int] -> (Int, [[Int]])
-    go [] = (0, [])
-    go [_] = (0, [])
-    go (x : xs) =
-      (pred $ length possibilities, possibilities)
-      where
-        possibilities :: [[Int]]
-        possibilities =
-          [ xs'
-            | i <- [0 .. 2],
-              let xs' = next x (drop i xs),
-              not (null xs')
-          ]
+    cumulativePaths :: Int
+    cumulativePaths =
+      bs
+        & takeWhileL (canReachCurrentAdapter . fst)
+        & fmap snd
+        & sum
 
-    next :: Int -> [Int] -> [Int]
-    next _ [] = []
-    next y ys
-      | head ys - y <= 3 = ys
-      | otherwise = []
-
-withMinMax :: [Int] -> [Int]
-withMinMax = (0 :) . ((:) =<< (3 +) . maximum)
+    canReachCurrentAdapter :: Int -> Bool
+    canReachCurrentAdapter b = x - b <= 3
