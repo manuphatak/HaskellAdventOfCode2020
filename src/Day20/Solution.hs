@@ -2,11 +2,10 @@ module Day20.Solution where
 
 import Advent.Parser
 import Advent.Utils
-import Control.Monad
 import Data.Foldable (find)
 import Data.Function
 import Data.Functor
-import Data.List (minimumBy, transpose)
+import Data.List (transpose)
 import qualified Data.Map.Strict as Map
 import Data.Maybe
 import Data.Sequence hiding (reverse, take)
@@ -50,6 +49,7 @@ type Point = (Int, Int)
 type Grid = Map.Map Point Tile
 
 buildGrid :: Seq Tile -> Grid
+buildGrid Empty = Map.empty
 buildGrid (x :<| xs) = go (xs, Map.fromList [((0, 0), x)])
   where
     go :: (Seq Tile, Grid) -> Grid
@@ -120,7 +120,7 @@ tileFitsPoint grid point tile =
     ]
   where
     isMatchOn :: Eq a => (t -> a) -> t -> Maybe a -> Bool
-    isMatchOn _ t Nothing = True
+    isMatchOn _ _ Nothing = True
     isMatchOn fn t (Just s) = fn t == s
 
 orientations :: [[a]] -> [[[a]]]
