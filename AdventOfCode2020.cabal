@@ -40,6 +40,7 @@ library
       Day08.Utils
       Day09.Solution
       Day09.Utils
+      Day10.Solution
       Day11.Solution
       Day13.Solution
       Day14.Solution
@@ -84,6 +85,7 @@ test-suite AdventOfCode2020-test
       Day08.UtilsSpec
       Day09.SolutionSpec
       Day09.UtilsSpec
+      Day10.SolutionSpec
       Day11.SolutionSpec
       Day13.SolutionSpec
       Day14.SolutionSpec
