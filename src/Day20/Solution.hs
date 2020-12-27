@@ -1,17 +1,34 @@
-module Day20.Solution where
+module Day20.Solution
+  ( Grid,
+    Image,
+    Point,
+    Tile (..),
+    boundingBox,
+    buildGrid,
+    combineImages,
+    cornerIds,
+    countSeaMonsters,
+    maxSeaMonsterCount,
+    orientations,
+    parseTiles,
+    part1,
+    part2,
+    stitchedImage,
+    stripEdges,
+    tileFit,
+  )
+where
 
-import Advent.Parser
-import Advent.Utils
-import Control.Arrow
+import Advent.Parser (intParser)
+import Advent.Utils (fromRightOrShowError, occurrences)
 import Data.Foldable (find)
-import Data.Function
-import Data.Functor
+import Data.Function ((&))
+import Data.Functor ((<&>))
 import Data.List (transpose)
 import qualified Data.Map.Strict as Map
-import Data.Maybe
+import Data.Maybe (catMaybes, isJust)
 import Data.Sequence (Seq (Empty, (:<|)), fromList, (|>))
 import qualified Data.Set as Set
-import Day09.Utils
 import Text.Parsec hiding (Empty)
 
 part1 :: String -> String

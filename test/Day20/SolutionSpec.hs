@@ -1,8 +1,26 @@
 module Day20.SolutionSpec (spec) where
 
 import qualified Data.Map.Strict as Map
-import Data.Sequence
+import Data.Sequence (fromList)
 import Day20.Solution
+  ( Grid,
+    Image,
+    Point,
+    Tile (..),
+    boundingBox,
+    buildGrid,
+    combineImages,
+    cornerIds,
+    countSeaMonsters,
+    maxSeaMonsterCount,
+    orientations,
+    parseTiles,
+    part1,
+    part2,
+    stitchedImage,
+    stripEdges,
+    tileFit,
+  )
 import Test.Hspec
 
 spec :: Spec
