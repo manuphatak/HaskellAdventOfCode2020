@@ -171,6 +171,113 @@ To check that you've assembled the image correctly, multiply the IDs of the four
 
 Assemble the tiles into an image. _What do you get if you multiply together the IDs of the four corner tiles?_
 
+## Part Two
+
+Now, you're ready to _check the image for sea monsters_ .
+
+The borders of each tile are not part of the actual image; start by removing them.
+
+In the example above, the tiles become:
+
+```
+.#.#..#. ##...#.# #..#####
+###....# .#....#. .#......
+##.##.## #.#.#..# #####...
+###.#### #...#.## ###.#..#
+##.#.... #.##.### #...#.##
+...##### ###.#... .#####.#
+....#..# ...##..# .#.###..
+.####... #..#.... .#......
+
+#..#.##. .#..###. #.##....
+#.####.. #.####.# .#.###..
+###.#.#. ..#.#### ##.#..##
+#.####.. ..##..## ######.#
+##..##.# ...#...# .#.#.#..
+...#..#. .#.#.##. .###.###
+.#.#.... #.##.#.. .###.##.
+###.#... #..#.##. ######..
+
+.#.#.### .##.##.# ..#.##..
+.####.## #.#...## #.#..#.#
+..#.#..# ..#.#.#. ####.###
+#..####. ..#.#.#. ###.###.
+#####..# ####...# ##....##
+#.##..#. .#...#.. ####...#
+.#.###.. ##..##.. ####.##.
+...###.. .##...#. ..#..###
+```
+
+Remove the gaps to form the actual image:
+
+```
+.#.#..#.##...#.##..#####
+###....#.#....#..#......
+##.##.###.#.#..######...
+###.#####...#.#####.#..#
+##.#....#.##.####...#.##
+...########.#....#####.#
+....#..#...##..#.#.###..
+.####...#..#.....#......
+#..#.##..#..###.#.##....
+#.####..#.####.#.#.###..
+###.#.#...#.######.#..##
+#.####....##..########.#
+##..##.#...#...#.#.#.#..
+...#..#..#.#.##..###.###
+.#.#....#.##.#...###.##.
+###.#...#..#.##.######..
+.#.#.###.##.##.#..#.##..
+.####.###.#...###.#..#.#
+..#.#..#..#.#.#.####.###
+#..####...#.#.#.###.###.
+#####..#####...###....##
+#.##..#..#...#..####...#
+.#.###..##..##..####.##.
+...###...##...#...#..###
+```
+
+Now, you're ready to search for sea monsters! Because your image is monochrome, a sea monster will look like this:
+
+```
+                  #
+#    ##    ##    ###
+ #  #  #  #  #  #
+```
+
+When looking for this pattern in the image, _the spaces can be anything_ ; only the `#` need to match. Also, you might need to rotate or flip your image before it's oriented correctly to find sea monsters. In the above image, _after flipping and rotating it_ to the appropriate orientation, there are _two_ sea monsters (marked with `_O_` ):
+
+```
+.####...#####..#...###..
+#####..#..#.#.####..#.#.
+.#.#...#.###...#.##.O#..
+#.O.##.OO#.#.OO.##.OOO##
+..#O.#O#.O##O..O.#O##.##
+...#.#..##.##...#..#..##
+#.##.#..#.#..#..##.#.#..
+.###.##.....#...###.#...
+#.####.#.#....##.#..#.#.
+##...#..#....#..#...####
+..#.##...###..#.#####..#
+....#.##.#.#####....#...
+..##.##.###.....#.##..#.
+#...#...###..####....##.
+.#.##...#.##.#.#.###...#
+#.###.#..####...##..#...
+#.###...#.##...#.##O###.
+.O##.#OO.###OO##..OOO##.
+..O#.O..O..O.#O##O##.###
+#.#..##.########..#..##.
+#.#####..#.#...##..#....
+#....##..#.#########..##
+#...#.....#..##...###.##
+#..###....##.#...##.##.#
+```
+
+Determine how rough the waters are in the sea monsters' habitat by counting the number of `#` that are _not_ part of a sea monster. In the above example, the habitat's water roughness is _`273`_ .
+
+_How many `#` are not part of a sea monster?_
+
 ## Link
 
 [https://adventofcode.com/2020/day/20][1]
