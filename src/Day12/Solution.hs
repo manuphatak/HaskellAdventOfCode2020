@@ -102,9 +102,9 @@ parseInstructions = parse (instructionParser `sepEndBy1` newline) ""
     rotateActionParser :: Parsec String () Instruction
     rotateActionParser = do
       direction <- asRotateDirection <$> oneOf ['R', 'L']
-      count <- (`div` 90) <$> intParser
+      rotations <- (`div` 90) <$> intParser
 
-      pure . RotateAction $ replicate count direction
+      pure . RotateAction $ replicate rotations direction
 
     forwardActionParser :: Parsec String () Instruction
     forwardActionParser = ForwardAction <$> (char 'F' *> intParser)
