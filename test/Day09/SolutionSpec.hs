@@ -1,7 +1,7 @@
 module Day09.SolutionSpec (spec) where
 
+import Advent.Utils (parseInts)
 import Day09.Solution (encryptionWeakness, part1, part2, rollingChunks', xmasCypher)
-import Day09.Utils (parseNumbers)
 import Test.Hspec
 
 spec :: Spec
@@ -18,7 +18,7 @@ spec = parallel $ do
       xmasCypher 5 input `shouldBe` Just 127
   describe "encryptionWeakness" $ do
     it "finds the contiguous set of numbers that sum to the target" $ do
-      input <- parseNumbers <$> readFile "./test/Day09/example.txt"
+      input <- parseInts <$> readFile "./test/Day09/example.txt"
       encryptionWeakness 127 input `shouldBe` 62
   describe "rollingChunks'" $ do
     it "iterates through a list for case 1" $ do

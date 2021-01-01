@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 PATH_add bin
+PATH_add bin/stack
 
 export SESSION_ID=0000000000
 export GITHUB_USER=manuphatak

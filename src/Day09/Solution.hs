@@ -1,18 +1,18 @@
 module Day09.Solution (part1, part2, xmasCypher, encryptionWeakness, rollingChunks') where
 
-import Advent.Utils (combinations)
+import Advent.Utils (combinations, parseInts)
 import Data.Foldable (find)
 import Data.Maybe (fromJust)
-import Day09.Utils (parseNumbers, rollingChunks)
+import Day09.Utils (rollingChunks)
 
 part1 :: String -> String
 part1 = show . fromJust . xmasCypher 25
 
 part2 :: String -> String
-part2 = show . (encryptionWeakness <$> (fromJust . xmasCypher 25) <*> parseNumbers)
+part2 = show . (encryptionWeakness <$> (fromJust . xmasCypher 25) <*> parseInts)
 
 xmasCypher :: Int -> String -> Maybe Int
-xmasCypher size = fmap snd . find (uncurry followsPreamble) . rollingChunks' size . parseNumbers
+xmasCypher size = fmap snd . find (uncurry followsPreamble) . rollingChunks' size . parseInts
   where
     followsPreamble :: [Int] -> Int -> Bool
     followsPreamble preamble target = not $ any ((== target) . sum) (combinations 2 preamble)
