@@ -1,3 +1,5 @@
+{-# LANGUAGE TypeApplications #-}
+
 module Advent.Utils where
 
 import Data.List (tails)
@@ -13,7 +15,7 @@ occurrences target = foldr go 0
       | otherwise = id
 
 readInt :: String -> Int
-readInt n = read n :: Int
+readInt = read @Int
 
 parseInts :: String -> [Int]
 parseInts = map readInt . lines

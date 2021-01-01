@@ -1,12 +1,12 @@
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Day17.Solution
   ( CubeState (..),
     Point3D (..),
     Point4D (..),
     executeCycles,
-    parsePocketDimension3D,
-    parsePocketDimension4D,
+    parsePocketDimension,
     part1,
     part2,
   )
@@ -23,10 +23,10 @@ import qualified Data.Set as Set
 import Text.Parsec
 
 part1 :: String -> String
-part1 = show . occurrences Active . executeCycles 6 . fromRightOrShowError . parsePocketDimension3D
+part1 = show . occurrences Active . executeCycles 6 . fromRightOrShowError . parsePocketDimension @Point3D
 
 part2 :: String -> String
-part2 = show . occurrences Active . executeCycles 6 . fromRightOrShowError . parsePocketDimension4D
+part2 = show . occurrences Active . executeCycles 6 . fromRightOrShowError . parsePocketDimension @Point4D
 
 class Pocket a where
   from2D :: (Int, Int) -> a
@@ -75,12 +75,6 @@ offsets4D =
 data CubeState = Inactive | Active deriving (Show, Eq)
 
 type PocketDimension a = Map.Map a CubeState
-
-parsePocketDimension3D :: String -> Either ParseError (PocketDimension Point3D)
-parsePocketDimension3D = parsePocketDimension
-
-parsePocketDimension4D :: String -> Either ParseError (PocketDimension Point4D)
-parsePocketDimension4D = parsePocketDimension
 
 parsePocketDimension :: (Ord a, Pocket a) => String -> Either ParseError (PocketDimension a)
 parsePocketDimension = parse pocketDimensionParser ""

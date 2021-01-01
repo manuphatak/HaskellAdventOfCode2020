@@ -7,8 +7,7 @@ import Day17.Solution
     Point3D (..),
     Point4D (..),
     executeCycles,
-    parsePocketDimension3D,
-    parsePocketDimension4D,
+    parsePocketDimension,
     part1,
     part2,
   )
@@ -47,14 +46,15 @@ spec = parallel $ do
             (Point4D (2, 2, 0, 0), Active)
           ]
 
-  describe "parsePocketDimension3D" $ do
-    it "parses input" $ do
-      input <- readFile "./test/Day17/example.txt"
-      parsePocketDimension3D input `shouldBe` Right examplePocketDimension3D
-  describe "parsePocketDimension4D" $ do
-    it "parses input" $ do
-      input <- readFile "./test/Day17/example.txt"
-      parsePocketDimension4D input `shouldBe` Right examplePocketDimension4D
+  describe "parsePocketDimension" $ do
+    context "parsing 3D pockets" $ do
+      it "parses input" $ do
+        input <- readFile "./test/Day17/example.txt"
+        parsePocketDimension input `shouldBe` Right examplePocketDimension3D
+    context "parsing 4D pockets" $ do
+      it "parses input" $ do
+        input <- readFile "./test/Day17/example.txt"
+        parsePocketDimension input `shouldBe` Right examplePocketDimension4D
 
   describe "executeCycles" $ do
     context "given 3D pockets" $ do
