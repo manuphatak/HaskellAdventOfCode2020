@@ -1,3 +1,5 @@
+{-# LANGUAGE TypeApplications #-}
+
 module Day12.SolutionSpec (spec) where
 
 import Day12.Solution
@@ -8,7 +10,7 @@ spec = focus . parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day12/input.txt"
     part1 input `shouldBe` "1645"
-  xit "solves Part 2" $ do
+  it "solves Part 2" $ do
     input <- readFile "./test/Day12/input.txt"
     part2 input `shouldBe` "35292"
   let exampleInstructions :: [Instruction]
@@ -20,8 +22,10 @@ spec = focus . parallel $ do
         parseInstructions input `shouldBe` Right exampleInstructions
 
   describe "run" $ do
-    it "runs through the instructions" $ do
-      run exampleInstructions `shouldBe` ((17, -8), South)
+    it "runs through the instructions using the heading as state" $ do
+      run @Heading exampleInstructions `shouldBe` ((17, -8), South)
+    it "runs through the instructions using the waypoint as state" $ do
+      run @Waypoint exampleInstructions `shouldBe` ((214, -72), Waypoint (4, -10))
 
   describe "manhattanDistance" $ do
     it "finds the distance of a point" $ do
