@@ -20,41 +20,11 @@ data Heading = North | East | South | West deriving (Show, Eq, Enum, Bounded)
 
 data RotateDirection = L | R deriving (Show, Eq)
 
+rotate :: RotateDirection -> Heading -> Heading
+rotate R = cycleSucc
+rotate L = cyclePred
+
 data Instruction = MoveAction Heading Int | RotateAction [RotateDirection] | ForwardAction Int deriving (Show, Eq)
-
-parseInstructions :: String -> Either ParseError [Instruction]
-parseInstructions = parse (instructionParser `sepEndBy1` newline) ""
-  where
-    instructionParser :: Parsec String () Instruction
-    instructionParser = choice [try moveActionParser, try rotateActionParser, try forwardActionParser]
-
-    moveActionParser :: Parsec String () Instruction
-    moveActionParser = MoveAction <$> headingParser <*> intParser
-
-    headingParser :: Parsec String () Heading
-    headingParser = asHeading <$> oneOf ['N', 'E', 'S', 'W']
-
-    rotateActionParser :: Parsec String () Instruction
-    rotateActionParser = do
-      direction <- asRotateDirection <$> oneOf ['R', 'L']
-      count <- (`div` 90) <$> intParser
-
-      pure . RotateAction $ replicate count direction
-
-    forwardActionParser :: Parsec String () Instruction
-    forwardActionParser = ForwardAction <$> (char 'F' *> intParser)
-
-    asHeading :: Char -> Heading
-    asHeading 'N' = North
-    asHeading 'E' = East
-    asHeading 'S' = South
-    asHeading 'W' = West
-    asHeading _ = undefined
-
-    asRotateDirection :: Char -> RotateDirection
-    asRotateDirection 'L' = L
-    asRotateDirection 'R' = R
-    asRotateDirection _ = undefined
 
 type Point = (Int, Int)
 
@@ -108,9 +78,39 @@ instance StateReducer Waypoint where
 run :: StateReducer a => [Instruction] -> State a
 run = foldl' (flip reducer) initial
 
-rotate :: RotateDirection -> Heading -> Heading
-rotate R = cycleSucc
-rotate L = cyclePred
+parseInstructions :: String -> Either ParseError [Instruction]
+parseInstructions = parse (instructionParser `sepEndBy1` newline) ""
+  where
+    instructionParser :: Parsec String () Instruction
+    instructionParser = choice [try moveActionParser, try rotateActionParser, try forwardActionParser]
+
+    moveActionParser :: Parsec String () Instruction
+    moveActionParser = MoveAction <$> headingParser <*> intParser
+
+    headingParser :: Parsec String () Heading
+    headingParser = asHeading <$> oneOf ['N', 'E', 'S', 'W']
+
+    rotateActionParser :: Parsec String () Instruction
+    rotateActionParser = do
+      direction <- asRotateDirection <$> oneOf ['R', 'L']
+      count <- (`div` 90) <$> intParser
+
+      pure . RotateAction $ replicate count direction
+
+    forwardActionParser :: Parsec String () Instruction
+    forwardActionParser = ForwardAction <$> (char 'F' *> intParser)
+
+    asHeading :: Char -> Heading
+    asHeading 'N' = North
+    asHeading 'E' = East
+    asHeading 'S' = South
+    asHeading 'W' = West
+    asHeading _ = undefined
+
+    asRotateDirection :: Char -> RotateDirection
+    asRotateDirection 'L' = L
+    asRotateDirection 'R' = R
+    asRotateDirection _ = undefined
 
 cycleSucc :: (Eq p, Bounded p, Enum p) => p -> p
 cycleSucc e
