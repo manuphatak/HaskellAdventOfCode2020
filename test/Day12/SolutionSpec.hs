@@ -30,13 +30,5 @@ spec = focus . parallel $ do
   describe "manhattanDistance" $ do
     it "finds the distance of a point" $ do
       manhattanDistance (17, -8) `shouldBe` 25
-
--- describe "runV1" $ do
---   it "runs through the instructions" $ do
---     runV1 exampleInstructions `shouldBe` Point 17 (-8)
--- describe "runV2" $ do
---   it "runs through the instructions" $ do
---     runV2 exampleInstructions `shouldBe` Point 214 (-72)
--- describe "manhattanDistance" $ do
---   it "finds the distance of a point" $ do
---     manhattanDistance (Point 17 (-8)) `shouldBe` 25
+    it "finds the distance of a point" $ do
+      manhattanDistance (214, -72) `shouldBe` 286
