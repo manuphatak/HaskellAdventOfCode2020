@@ -1,13 +1,22 @@
 {-# LANGUAGE TypeApplications #-}
 
-module Day12.Solution where
+module Day12.Solution
+  ( Heading (..),
+    Instruction (..),
+    RotateDirection (..),
+    Waypoint (..),
+    manhattanDistance,
+    parseInstructions,
+    part1,
+    part2,
+    run,
+  )
+where
 
-import Advent.Parser
-import Advent.Utils
-import Data.Bifunctor
-import Data.Foldable
-import Data.Function
-import Debug.Trace
+import Advent.Parser (intParser)
+import Advent.Utils (fromRightOrShowError)
+import Data.Bifunctor (Bifunctor (first, second))
+import Data.Foldable (Foldable (foldl'))
 import Text.Parsec hiding (State)
 
 part1 :: String -> String

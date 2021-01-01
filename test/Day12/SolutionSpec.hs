@@ -3,6 +3,16 @@
 module Day12.SolutionSpec (spec) where
 
 import Day12.Solution
+  ( Heading (..),
+    Instruction (..),
+    RotateDirection (..),
+    Waypoint (..),
+    manhattanDistance,
+    parseInstructions,
+    part1,
+    part2,
+    run,
+  )
 import Test.Hspec
 
 spec :: Spec
