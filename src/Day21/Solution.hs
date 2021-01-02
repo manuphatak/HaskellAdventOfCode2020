@@ -1,12 +1,20 @@
 {-# LANGUAGE TupleSections #-}
 
-module Day21.Solution where
+module Day21.Solution
+  ( Food (..),
+    asFoodAllergenMap,
+    asKnowledgeGroup,
+    parseFoods,
+    part1,
+    part2,
+  )
+where
 
-import Advent.Utils
-import Control.Monad
-import Data.Function
-import Data.Functor
-import Data.List
+import Advent.Utils (fromRightOrShowError)
+import Control.Monad (ap)
+import Data.Function ((&))
+import Data.Functor ((<&>))
+import Data.List (intercalate, sortOn)
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
 import Text.Parsec

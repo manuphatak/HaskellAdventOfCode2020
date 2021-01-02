@@ -3,6 +3,13 @@ module Day21.SolutionSpec (spec) where
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
 import Day21.Solution
+  ( Food (..),
+    asFoodAllergenMap,
+    asKnowledgeGroup,
+    parseFoods,
+    part1,
+    part2,
+  )
 import Test.Hspec
 
 spec :: Spec
