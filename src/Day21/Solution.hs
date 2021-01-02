@@ -6,6 +6,7 @@ import Advent.Utils
 import Control.Monad
 import Data.Function
 import Data.Functor
+import Data.List
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
 import Text.Parsec
@@ -14,7 +15,7 @@ part1 :: String -> String
 part1 = show . ap allergenFreeCount (asFoodAllergenMap . asKnowledgeGroup) . fromRightOrShowError . parseFoods
 
 part2 :: String -> String
-part2 = head . lines
+part2 = asCanonicalDangerousIngredientList . asFoodAllergenMap . asKnowledgeGroup . fromRightOrShowError . parseFoods
 
 type Ingredient = String
 
@@ -77,3 +78,6 @@ allergenFreeCount foods allergenMap = map countIngredients ingredientSets & sum
     countIngredients :: Ingredients -> Int
 
     countIngredients foodIngredients = Set.intersection foodIngredients allergenFree & Set.size
+
+asCanonicalDangerousIngredientList :: FoodAllergenMap -> String
+asCanonicalDangerousIngredientList = intercalate "," . map fst . sortOn snd . Map.toList
