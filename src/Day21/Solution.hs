@@ -2,6 +2,8 @@
 
 module Day21.Solution
   ( Food (..),
+    allergenFreeCount,
+    asCanonicalDangerousIngredientList,
     asFoodAllergenMap,
     asKnowledgeGroup,
     parseFoods,
@@ -16,14 +18,15 @@ import Data.Function ((&))
 import Data.Functor ((<&>))
 import Data.List (intercalate, sortOn)
 import qualified Data.Map.Strict as Map
+import Data.Maybe (fromJust)
 import qualified Data.Set as Set
 import Text.Parsec
 
 part1 :: String -> String
-part1 = show . ap allergenFreeCount (asFoodAllergenMap . asKnowledgeGroup) . fromRightOrShowError . parseFoods
+part1 = show . ap allergenFreeCount (fromJust . asFoodAllergenMap . asKnowledgeGroup) . fromRightOrShowError . parseFoods
 
 part2 :: String -> String
-part2 = asCanonicalDangerousIngredientList . asFoodAllergenMap . asKnowledgeGroup . fromRightOrShowError . parseFoods
+part2 = asCanonicalDangerousIngredientList . fromJust . asFoodAllergenMap . asKnowledgeGroup . fromRightOrShowError . parseFoods
 
 type Ingredient = String
 
@@ -58,15 +61,23 @@ asKnowledgeGroup =
 
 type FoodAllergenMap = Map.Map Ingredient Allergen
 
-asFoodAllergenMap :: FoodAllergenKnowledge -> FoodAllergenMap
-asFoodAllergenMap knowledge = head . filter (\m -> Map.size m == Map.size knowledge) . map (invertMap . Map.fromList) . foldr (go . expandPair) [] . Map.toList $ knowledge
+asFoodAllergenMap :: FoodAllergenKnowledge -> Maybe FoodAllergenMap
+asFoodAllergenMap knowledge =
+  knowledge
+    & Map.toList
+    & foldr (permutations . expandPair) []
+    & map (invertMap . Map.fromList)
+    & filter (`eqLength` knowledge)
+    & safeHead
   where
-    go :: [(Allergen, Ingredient)] -> [[(Ingredient, Allergen)]] -> [[(Ingredient, Allergen)]]
-    go ps [] = map (: []) ps
-    go xs ys = [x : y | x <- xs, y <- ys]
+    permutations :: [(Allergen, Ingredient)] -> [[(Ingredient, Allergen)]] -> [[(Ingredient, Allergen)]]
+    permutations ps [] = map (: []) ps
+    permutations xs ys = [x : y | x <- xs, y <- ys]
 
     expandPair :: (Allergen, Ingredients) -> [(Allergen, Ingredient)]
-    expandPair (allergen, ingredientSet) = map (allergen,) . Set.toList $ ingredientSet
+    expandPair (allergen, ingredientSet) = ingredientSet & Set.toList & map (allergen,)
+
+    eqLength l r = length l == length r
 
 invertMap :: Ord k => Map.Map a k -> Map.Map k a
 invertMap = Map.foldrWithKey invert Map.empty
@@ -84,8 +95,11 @@ allergenFreeCount foods allergenMap = map countIngredients ingredientSets & sum
     ingredientSets = foods & map fIngredients
 
     countIngredients :: Ingredients -> Int
-
-    countIngredients foodIngredients = Set.intersection foodIngredients allergenFree & Set.size
+    countIngredients foodIngredients = Set.intersection foodIngredients allergenFree & length
 
 asCanonicalDangerousIngredientList :: FoodAllergenMap -> String
 asCanonicalDangerousIngredientList = intercalate "," . map fst . sortOn snd . Map.toList
+
+safeHead :: [a] -> Maybe a
+safeHead [] = Nothing
+safeHead (x : _) = Just x
