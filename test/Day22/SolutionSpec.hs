@@ -5,7 +5,7 @@ import Day22.Solution
 import Test.Hspec
 
 spec :: Spec
-spec = focus . parallel $ do
+spec = parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day22/input.txt"
     part1 input `shouldBe` "30197"
