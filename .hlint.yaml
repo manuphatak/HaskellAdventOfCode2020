@@ -12,11 +12,8 @@
     - { name: [Data.Map, Data.Map.Strict], as: Map }
 
 - error: { lhs: fit, rhs: it }
-- error: { lhs: xit, rhs: it }
 - error: { lhs: fdescribe, rhs: describe }
-- error: { lhs: xdescribe, rhs: describe }
 - error: { lhs: fcontext, rhs: context }
-- error: { lhs: xcontext, rhs: context }
 - error: { lhs: focus $ a, rhs: a }
 - error: { lhs: focus . a, rhs: a }
 
