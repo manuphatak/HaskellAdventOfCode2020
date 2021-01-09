@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.2.
+-- This file has been generated from package.yaml by hpack version 0.34.3.
 --
 -- see: https://github.com/sol/hpack
 
@@ -53,6 +53,7 @@ library
       Day18.Solution
       Day20.Solution
       Day21.Solution
+      Day23.CircularList
       Day23.Solution
       Practice.Foldable
       Template.Solution
@@ -100,6 +101,7 @@ test-suite AdventOfCode2020-test
       Day18.SolutionSpec
       Day20.SolutionSpec
       Day21.SolutionSpec
+      Day23.CircularListSpec
       Day23.SolutionSpec
       Practice.FoldableSpec
       Template.SolutionSpec
