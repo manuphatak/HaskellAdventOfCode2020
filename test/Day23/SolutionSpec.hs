@@ -12,7 +12,7 @@ spec = parallel $ do
     part1 input `shouldBe` "98752463"
 
   it "solves Part 2" $ do
-    pendingWith "takes about 2 minutes to run"
+    pendingWith "takes about 105 seconds to run"
 
     input <- readFile "./test/Day23/input.txt"
     part2 input `shouldBe` "2000455861"
@@ -20,7 +20,21 @@ spec = parallel $ do
   let exampleCircularList = fromList [3, 8, 9, 1, 2, 5, 4, 6, 7]
   describe "fromList" $ do
     it "creates a circular list" $ do
-      exampleCircularList `shouldBe` (3, IntMap.fromList [(3, 8), (8, 9), (9, 1), (1, 2), (2, 5), (5, 4), (4, 6), (6, 7), (7, 3)])
+      let expected =
+            ( 3,
+              IntMap.fromList
+                [ (3, 8),
+                  (8, 9),
+                  (9, 1),
+                  (1, 2),
+                  (2, 5),
+                  (5, 4),
+                  (4, 6),
+                  (6, 7),
+                  (7, 3)
+                ]
+            )
+      exampleCircularList `shouldBe` expected
 
   describe "toUniqList" $ do
     it "creates a flat list" $ do
@@ -56,11 +70,26 @@ spec = parallel $ do
 
   describe "fillCups" $ do
     it "creates a million cups" $ do
-      exampleCircularListFilled `shouldBe` (3, IntMap.fromList [(3, 8), (8, 9), (9, 1), (1, 2), (2, 5), (5, 4), (4, 6), (6, 7), (7, 10), (oneMillion, 3)])
+      let expected =
+            ( 3,
+              IntMap.fromList
+                [ (3, 8),
+                  (8, 9),
+                  (9, 1),
+                  (1, 2),
+                  (2, 5),
+                  (5, 4),
+                  (4, 6),
+                  (6, 7),
+                  (7, 10),
+                  (oneMillion, 3)
+                ]
+            )
+      exampleCircularListFilled `shouldBe` expected
 
   describe "adjacentTo" $ do
     context "when running 10 000 000 rounds" $ do
       it "get's the pair next to 1" $ do
-        pendingWith "takes about 2 minutes to run"
+        pendingWith "takes too long to run"
 
         (adjacentTo 1 . moves (10 * oneMillion)) exampleCircularListFilled `shouldBe` [934001, 159792]
