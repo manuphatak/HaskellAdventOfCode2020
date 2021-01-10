@@ -4,16 +4,16 @@
 #   https://docs.haskellstack.org/en/stable/lock_files
 
 packages:
-  - completed:
-      hackage: implicit-hie-0.1.2.4@sha256:963fcc1b1136ccfd814bc7182bcb841cc51db18b38f5d45860195aed0ca94ab6,2998
-      pantry-tree:
-        size: 844
-        sha256: 25ca5d85e30d0a5a7a1f34420848ab163221b53198dbf2e54090f5ae9050d5b1
-    original:
-      hackage: implicit-hie-0.1.2.5
+- completed:
+    hackage: implicit-hie-0.1.2.5@sha256:517a98ef72f92f0a1617495222774fed3a751a64b0c06fbfc7b858d7aa5de279,2998
+    pantry-tree:
+      size: 844
+      sha256: 9bf2645187637b647dfaebf37a45a57e221b3527592ce3b1cfd9faf90339dac3
+  original:
+    hackage: implicit-hie-0.1.2.5
 snapshots:
-  - completed:
-      size: 533053
-      url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/28.yaml
-      sha256: a9c01d860ac8dfb3a1b6f7ec4a36dd9504a95392b89c99b0877da63fa36a8e97
-    original: lts-16.28
+- completed:
+    size: 533053
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/28.yaml
+    sha256: a9c01d860ac8dfb3a1b6f7ec4a36dd9504a95392b89c99b0877da63fa36a8e97
+  original: lts-16.28
