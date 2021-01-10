@@ -28,3 +28,6 @@ moves n
 
 cupOrder :: CircularList Int -> String
 cupOrder = concatMap show . tail . toList . skipWhileR (/= 1)
+
+fillCups :: [Int] -> [Int]
+fillCups xs = xs ++ [(maximum xs + 1) .. 1000000]

@@ -43,3 +43,11 @@ spec = parallel $ do
       (cupOrder . moves 10) exampleCList `shouldBe` "92658374"
     it "is 92658374 after 100 moves" $ do
       (cupOrder . moves 100) exampleCList `shouldBe` "67384529"
+
+  describe "fillCups" $ do
+    it "creats a million cups" $ do
+      length (fillCups [3, 8, 9, 1, 2, 5, 4, 6, 7]) `shouldBe` length [1 :: Int .. 1000000]
+
+  context "when running 10 000 000 rounds" $ do
+    it "works" $ do
+      (takeR 2 . skipR 1 . skipWhileR (/= 1) . moves 1 . fromList . fillCups) [3, 8, 9, 1, 2, 5, 4, 6, 7] `shouldBe` [934001, 159792]
