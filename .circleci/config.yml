@@ -21,7 +21,7 @@ jobs:
           command: stack --no-terminal setup
       - run:
           name: Install executable
-          command: stack --no-terminal install
+          command: stack --no-terminal install --jobs 1
       - run:
           name: Clean any cached coverage data
           command: rm -rfv $(stack --no-terminal path --local-hpc-root)
