@@ -1,0 +1,13 @@
+BinaryOp
+  ( Number 2
+  , Times
+  , BinaryOp
+      ( Number 3
+      , Plus
+      , BinaryOp
+          ( Number 4
+          , Times
+          , Number 5
+          )
+      )
+  )
