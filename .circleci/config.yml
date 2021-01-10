@@ -12,7 +12,8 @@ jobs:
       - restore_cache:
           name: Restore cache
           keys:
-            - v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}-success
+            - v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}-{{ checksum "AdventOfCode2020.cabal" }}-success
+            - v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}-{{ checksum "AdventOfCode2020.cabal" }}
             - v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
             - v1-{{ checksum "stack.yaml" }}
       - run:
@@ -20,13 +21,13 @@ jobs:
           command: stack --no-terminal setup
       - run:
           name: Install executable
-          command: stack --no-terminal install
+          command: stack --no-terminal install --jobs 1
       - run:
           name: Clean any cached coverage data
           command: rm -rfv $(stack --no-terminal path --local-hpc-root)
       - save_cache:
           name: Save Cache
-          key: v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
+          key: v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}-{{ checksum "AdventOfCode2020.cabal" }}
           paths:
             - "/root/.stack"
             - ".stack-work"
@@ -47,7 +48,7 @@ jobs:
           path: hlint.html
       - save_cache:
           name: Save Cache
-          key: v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}-success
+          key: v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}-{{ checksum "AdventOfCode2020.cabal" }}-success
           paths:
             - "/root/.stack"
             - ".stack-work"

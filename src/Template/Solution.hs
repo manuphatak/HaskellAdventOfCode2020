@@ -1,4 +1,4 @@
-module Template.Solution (part1, part2) where
+module Template.Solution where
 
 part1 :: String -> String
 part1 = head . lines
