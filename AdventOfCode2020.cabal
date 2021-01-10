@@ -67,7 +67,6 @@ library
   build-depends:
       base >=4.7 && <5
     , containers
-    , mtl
     , parsec
   default-language: Haskell2010
 
@@ -119,6 +118,5 @@ test-suite AdventOfCode2020-test
     , hspec
     , hspec-discover
     , hspec-golden
-    , mtl
     , parsec
   default-language: Haskell2010
