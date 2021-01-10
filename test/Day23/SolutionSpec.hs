@@ -1,7 +1,7 @@
 module Day23.SolutionSpec (spec) where
 
 import Data.Foldable (for_)
-import Day23.CircularList
+import qualified Data.IntMap.Lazy as IntMap
 import Day23.Solution
 import Test.Hspec
 
@@ -11,14 +11,22 @@ spec = parallel $ do
     input <- readFile "./test/Day23/input.txt"
     part1 input `shouldBe` "98752463"
 
-  xit "solves Part 2" $ do
-    input <- readFile "./test/Day23/input.txt"
-    part2 input `shouldBe` "hello_santa"
+  it "solves Part 2" $ do
+    pendingWith "takes about 2 minutes to run"
 
-  let exampleCList = fromList [3, 8, 9, 1, 2, 5, 4, 6, 7]
-  describe "parseCircularList" $ do
-    it "reads a list of int characters" $ do
-      parseCircularList "389125467" `shouldBe` exampleCList
+    input <- readFile "./test/Day23/input.txt"
+    part2 input `shouldBe` "2000455861"
+
+  let exampleCircularList = fromList [3, 8, 9, 1, 2, 5, 4, 6, 7]
+  describe "fromList" $ do
+    it "creates a circular list" $ do
+      exampleCircularList `shouldBe` (3, IntMap.fromList [(3, 8), (8, 9), (9, 1), (1, 2), (2, 5), (5, 4), (4, 6), (6, 7), (7, 3)])
+
+  describe "toUniqList" $ do
+    it "creates a flat list" $ do
+      toUniqList exampleCircularList `shouldBe` [3, 8, 9, 1, 2, 5, 4, 6, 7]
+    it "can be wrapped" $ do
+      (toUniqList . goTo 1) exampleCircularList `shouldBe` [1, 2, 5, 4, 6, 7, 3, 8, 9]
 
   describe "moves" $ do
     let cases =
@@ -34,20 +42,25 @@ spec = parallel $ do
             (10, [8, 3, 7, 4, 1, 9, 2, 6, 5])
           ]
     let test (input, expected) = it ("walks through move " ++ show input) $ do
-          (toList . moves input) exampleCList `shouldBe` expected
+          (toUniqList . moves input) exampleCircularList `shouldBe` expected
 
     for_ cases test
 
   describe "cupOrder" $ do
     it "is 92658374 after 10 moves" $ do
-      (cupOrder . moves 10) exampleCList `shouldBe` "92658374"
-    it "is 92658374 after 100 moves" $ do
-      (cupOrder . moves 100) exampleCList `shouldBe` "67384529"
+      (cupOrder . moves 10) exampleCircularList `shouldBe` "92658374"
+    it "is 67384529 after 100 moves" $ do
+      (cupOrder . moves 100) exampleCircularList `shouldBe` "67384529"
+
+  let exampleCircularListFilled = fillCups [3, 8, 9, 1, 2, 5, 4, 6, 7]
 
   describe "fillCups" $ do
-    it "creats a million cups" $ do
-      length (fillCups [3, 8, 9, 1, 2, 5, 4, 6, 7]) `shouldBe` length [1 :: Int .. 1000000]
+    it "creates a million cups" $ do
+      exampleCircularListFilled `shouldBe` (3, IntMap.fromList [(3, 8), (8, 9), (9, 1), (1, 2), (2, 5), (5, 4), (4, 6), (6, 7), (7, 10), (oneMillion, 3)])
 
-  context "when running 10 000 000 rounds" $ do
-    it "works" $ do
-      (takeR 2 . skipR 1 . skipWhileR (/= 1) . moves 1 . fromList . fillCups) [3, 8, 9, 1, 2, 5, 4, 6, 7] `shouldBe` [934001, 159792]
+  describe "adjacentTo" $ do
+    context "when running 10 000 000 rounds" $ do
+      it "get's the pair next to 1" $ do
+        pendingWith "takes about 2 minutes to run"
+
+        (adjacentTo 1 . moves (10 * oneMillion)) exampleCircularListFilled `shouldBe` [934001, 159792]

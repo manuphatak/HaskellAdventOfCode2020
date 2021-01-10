@@ -1,33 +1,72 @@
 module Day23.Solution where
 
-import Advent.Utils
-import Day23.CircularList
+import Advent.Utils (readInt)
+import Data.Bifunctor (Bifunctor (first))
+import qualified Data.IntMap.Lazy as IntMap
 
 part1 :: String -> String
-part1 = cupOrder . moves 100 . parseCircularList
+part1 = cupOrder . moves 100 . fromList . parseInts
 
 part2 :: String -> String
-part2 = head . lines
+part2 = show . product . adjacentTo 1 . moves (10 * oneMillion) . fillCups . parseInts
 
-parseCircularList :: String -> CircularList Int
-parseCircularList = fromList . map (readInt . pure) . head . lines
+oneMillion :: Int
+oneMillion = 1000000
 
-move :: CircularList Int -> CircularList Int
-move = putAtDestination . skipL 1 . yankR 3 . skipR 1
-  where
-    putAtDestination cl =
-      let current = peek cl
-          destination = (peek . skipL 1 . sort) cl
-       in skipR 1 . skipWhileR (/= current) . putR . skipR 1 . skipWhileR (/= destination) $ cl
+type CircularList = (Int, IntMap.IntMap Int)
 
-moves :: Int -> CircularList Int -> CircularList Int
+moves :: Int -> CircularList -> CircularList
 moves n
   | n < 0 = undefined
   | n == 0 = id
   | otherwise = moves (pred n) . move
 
-cupOrder :: CircularList Int -> String
-cupOrder = concatMap show . tail . toList . skipWhileR (/= 1)
+move :: CircularList -> CircularList
+move xss@(pointer, xs) = (d, (IntMap.insert c cNext . IntMap.insert destination a . IntMap.insert pointer d) xs)
+  where
+    [a, b, c, d] = take 4 . drop 1 . toList $ xss
+    cNext = xs ! destination
+    destination = findDestination (pred pointer)
 
-fillCups :: [Int] -> [Int]
-fillCups xs = xs ++ [(maximum xs + 1) .. 1000000]
+    findDestination candidate
+      | candidate == 0 = (findDestination . maximum . IntMap.keys) xs
+      | candidate `elem` [a, b, c] = findDestination (pred candidate)
+      | otherwise = candidate
+
+fromList :: [Int] -> CircularList
+fromList xss@(x : xs) = (x, IntMap.fromList (zip xss (xs ++ [x])))
+fromList _ = undefined
+
+toUniqList :: CircularList -> [Int]
+toUniqList = takeWhileUniq . toList
+  where
+    takeWhileUniq :: Eq a => [a] -> [a]
+    takeWhileUniq = foldr (\x r -> x : takeWhile (/= x) r) []
+
+toList :: CircularList -> [Int]
+toList = map fst . iterate next
+  where
+    next :: CircularList -> CircularList
+    next (pointer, cl) = (cl ! pointer, cl)
+
+(!) :: IntMap.IntMap Int -> Int -> Int
+m ! k = IntMap.findWithDefault (succ k) k m
+
+parseInts :: String -> [Int]
+parseInts = map (readInt . pure) . head . lines
+
+cupOrder :: CircularList -> String
+cupOrder = concatMap show . tail . toUniqList . first (const 1)
+
+fillCups :: [Int] -> CircularList
+fillCups xs = (pointer, (IntMap.insert oneMillion pointer . IntMap.insert lastKey (succ maxKey)) xs')
+  where
+    (pointer, xs') = fromList xs
+    maxKey = maximum xs
+    lastKey = last xs
+
+goTo :: Int -> CircularList -> CircularList
+goTo n = first (const n)
+
+adjacentTo :: Int -> CircularList -> [Int]
+adjacentTo n = take 2 . drop 1 . toList . goTo n
