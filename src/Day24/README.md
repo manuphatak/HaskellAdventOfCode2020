@@ -43,6 +43,46 @@ In the above example, 10 tiles are flipped once (to black), and 5 more are flipp
 
 Go through the renovation crew's list and determine which tiles they need to flip. After all of the instructions have been followed, _how many tiles are left with the black side up?_
 
+## Part Two
+
+The tile floor in the lobby is meant to be a living art exhibit . Every day, the tiles are all flipped according to the following rules:
+
+- Any _black_ tile with _zero_ or _more than 2_ black tiles immediately adjacent to it is flipped to _white_ .
+- Any _white_ tile with _exactly 2_ black tiles immediately adjacent to it is flipped to _black_ .
+
+Here, _tiles immediately adjacent_ means the six tiles directly touching the tile in question.
+
+The rules are applied _simultaneously_ to every tile; put another way, it is first determined which tiles need to be flipped, then they are all flipped at the same time.
+
+In the above example, the number of black tiles that are facing up after the given number of days has passed is as follows:
+
+```
+Day 1: 15
+Day 2: 12
+Day 3: 25
+Day 4: 14
+Day 5: 23
+Day 6: 28
+Day 7: 41
+Day 8: 37
+Day 9: 49
+Day 10: 37
+
+Day 20: 132
+Day 30: 259
+Day 40: 406
+Day 50: 566
+Day 60: 788
+Day 70: 1106
+Day 80: 1373
+Day 90: 1844
+Day 100: 2208
+```
+
+After executing this process a total of 100 times, there would be _`2208`_ black tiles facing up.
+
+_How many tiles will be black after 100 days?_
+
 ## Link
 
 [https://adventofcode.com/2020/day/24][2]
