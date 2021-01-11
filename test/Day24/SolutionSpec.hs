@@ -70,7 +70,7 @@ spec = parallel $ do
       asCoordinates [] `shouldBe` Coordinates (0, 0, 0)
 
     it "works on the example" $ do
-      (map asCoordinates) exampleTilePaths `shouldBe` coordinates
+      map asCoordinates exampleTilePaths `shouldBe` coordinates
 
   let exampleTileMap =
         Map.fromList
