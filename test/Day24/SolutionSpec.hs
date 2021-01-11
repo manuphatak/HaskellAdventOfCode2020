@@ -1,6 +1,7 @@
 module Day24.SolutionSpec (spec) where
 
 import Advent.Utils (occurrences)
+import Data.Foldable (for_)
 import qualified Data.Map.Strict as Map
 import Day24.Solution
 import Test.Hspec
@@ -11,9 +12,10 @@ spec = parallel $ do
     input <- readFile "./test/Day24/input.txt"
     part1 input `shouldBe` "275"
 
-  xit "solves Part 2" $ do
+  it "solves Part 2" $ do
+    pendingWith "needs performance boost"
     input <- readFile "./test/Day24/input.txt"
-    part2 input `shouldBe` "hello_santa"
+    part2 input `shouldBe` "3537"
 
   let exampleTilePaths =
         [ [SE, SE, NW, NE, NE, NE, W, SE, E, SW, W, SW, SW, W, NE, NE, W, SE, W, SW],
@@ -93,6 +95,34 @@ spec = parallel $ do
   describe "asTileMap" $ do
     it "is the result of flipping tiles" $ do
       asTileMap coordinates `shouldBe` exampleTileMap
-  describe "occurrences" $ do
-    it "counts the occurrences" $ do
+    it "has 10 Black tiles" $ do
       occurrences Black exampleTileMap `shouldBe` 10
+  describe "livingArtDay" $ do
+    -- TODO: build this with accumulator to make this test faster
+    let cases =
+          [ (0, 10),
+            (1, 15),
+            (2, 12),
+            (3, 25),
+            (4, 14),
+            (5, 23),
+            (6, 28),
+            (7, 41),
+            (8, 37),
+            (9, 49),
+            (10, 37),
+            (20, 132),
+            (30, 259),
+            (40, 406),
+            (50, 566),
+            (60, 788),
+            (70, 1106),
+            (80, 1373),
+            (90, 1844),
+            (100, 2208)
+          ] ::
+            [(Int, Int)]
+    let test (n, expected) = it ("Day " ++ show n ++ ": " ++ show expected) $ do
+          (occurrences Black . livingArtDay n) exampleTileMap `shouldBe` expected
+
+    for_ cases test
