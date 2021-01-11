@@ -53,6 +53,8 @@ library
       Day18.Solution
       Day20.Solution
       Day21.Solution
+      Practice.ArrowCircuit
+      Practice.ArrowSimpleFunc
       Practice.Foldable
       Template.Solution
   other-modules:
@@ -99,6 +101,8 @@ test-suite AdventOfCode2020-test
       Day18.SolutionSpec
       Day20.SolutionSpec
       Day21.SolutionSpec
+      Practice.ArrowCircuitSpec
+      Practice.ArrowSimpleFuncSpec
       Practice.FoldableSpec
       Template.SolutionSpec
       Paths_AdventOfCode2020
