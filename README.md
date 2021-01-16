@@ -5,7 +5,7 @@
 
 Solutions to adventofcode.com/2020
 
-## [Solutions](https://github.com/manuphatak/HaskellAdventOfCode2020/pulls?q=is%3Apr++label%3Asolution+)
+## [Solutions](https://github.com/manuphatak/HaskellAdventOfCode2020/pulls?q=is%3Apr+label%3Asolution+sort%3Acreated-asc)
 
 | PR  | Problem                         | Solution                                       | Specs                                                    |
 | --- | ------------------------------- | ---------------------------------------------- | -------------------------------------------------------- |
