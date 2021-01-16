@@ -28,12 +28,12 @@ spec = parallel $ do
   describe "crack" $ do
     context "given cardsPublicKey" $
       it "is cardsPrivateKey" $ do
-        crack 7 11 cardsPublicKey `shouldBe` cardsPrivateKey
+        crack 7 cardsPrivateKey cardsPublicKey `shouldBe` cardsPrivateKey
     context "given doorsPublicKey" $
       it "is doorsPrivateKey" $ do
-        crack 7 11 doorsPublicKey `shouldBe` doorsPrivateKey
+        crack 7 doorsPrivateKey doorsPublicKey `shouldBe` doorsPrivateKey
   describe "findEncryptionKey" $ do
     it "is the encryptionKey" $ do
-      findEncryptionKey 7 11 (doorsPublicKey, cardsPublicKey) `shouldBe` encryptionKey
+      findEncryptionKey 7 doorsPrivateKey (doorsPublicKey, cardsPublicKey) `shouldBe` encryptionKey
     it "is the encryptionKey" $ do
-      findEncryptionKey 7 11 (cardsPublicKey, doorsPublicKey) `shouldBe` encryptionKey
+      findEncryptionKey 7 cardsPrivateKey (cardsPublicKey, doorsPublicKey) `shouldBe` encryptionKey
