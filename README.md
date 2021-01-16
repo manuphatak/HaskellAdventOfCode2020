@@ -5,6 +5,14 @@
 
 Solutions to adventofcode.com/2020
 
+## Solutions
+
+[Solutions](https://github.com/manuphatak/HaskellAdventOfCode2020/pulls?q=is%3Apr++label%3Asolution+)
+
+| PR  | Problem              | Solution              | Specs                      |
+| --- | -------------------- | --------------------- | -------------------------- |
+| #2  | Day 1: Report Repair | src/Day01/Solution.hs | test/Day01/SolutionSpec.hs |
+
 ## Run tests
 
 ```sh
