@@ -5,18 +5,16 @@ import Data.Char
 import Data.Function
 import Data.IntMap.Strict (IntMap)
 import qualified Data.IntMap.Strict as IntMap
-import Data.Map.Strict (Map)
-import qualified Data.Map.Strict as Map
 import Data.Set (Set)
 import qualified Data.Set as Set
 import Text.Parsec
 import Prelude hiding (lookup)
 
 part1 :: String -> String
-part1 = show . occurrences Black . asTileMap . map asCoordinates . fromRightOrShowError . parseTilePaths
+part1 = show . length . asFlippedTileSet . map asCoordinates . fromRightOrShowError . parseTilePaths
 
 part2 :: String -> String
-part2 = show . occurrences Black . (IntMap.! 100) . livingArtDay 100 . asTileMap . map asCoordinates . fromRightOrShowError . parseTilePaths
+part2 = show . length . (IntMap.! 100) . livingArtDay 100 . asFlippedTileSet . map asCoordinates . fromRightOrShowError . parseTilePaths
 
 data Neighbor = E | SE | SW | W | NW | NE deriving (Show, Eq, Read)
 
@@ -29,10 +27,6 @@ instance Semigroup Coordinates where
 
 instance Monoid Coordinates where
   mempty = Coordinates (0, 0, 0)
-
-data TileState = White | Black deriving (Show, Eq)
-
-type TileMap = Map Coordinates TileState
 
 parseTilePaths :: String -> Either ParseError [TilePath]
 parseTilePaths = parse (tilePathParser `sepEndBy1` newline) ""
@@ -63,64 +57,65 @@ asCoordinates = mconcat . map go
     go NW = Coordinates (0, 1, -1)
     go NE = Coordinates (1, 0, -1)
 
-asTileMap :: [Coordinates] -> TileMap
-asTileMap = foldr go Map.empty
-  where
-    go :: Coordinates -> TileMap -> TileMap
-    go c m = Map.insertWith flipTile c Black m
+asFlippedTileSet :: [Coordinates] -> Set Coordinates
+asFlippedTileSet = foldr toggle Set.empty
 
-    flipTile :: TileState -> TileState -> TileState
-    flipTile _ White = Black
-    flipTile _ Black = White
-
-livingArtDay :: Int -> TileMap -> IntMap TileMap
+livingArtDay :: Int -> Set Coordinates -> IntMap (Set Coordinates)
 livingArtDay d = go IntMap.empty 0
   where
-    go :: IntMap TileMap -> Int -> TileMap -> IntMap TileMap
-    go history n tileMap
+    go :: IntMap (Set Coordinates) -> Int -> Set Coordinates -> IntMap (Set Coordinates)
+    go history n flippedTileSet
       | n < 0 = undefined
       | n > d = history
-      | n == 0 = go (IntMap.insert n tileMap history) (n + 1) tileMap
-      | otherwise = go (IntMap.insert n nextTileMap history) (n + 1) nextTileMap
+      | n == 0 = go (IntMap.insert n flippedTileSet history) (n + 1) flippedTileSet
+      | otherwise = go (IntMap.insert n nextFlippedTileSet history) (n + 1) nextFlippedTileSet
       where
-        nextTileMap :: TileMap
-        nextTileMap = foldr foldNext tileMap candidateTiles
+        nextFlippedTileSet :: Set Coordinates
+        nextFlippedTileSet = foldr nextTileState flippedTileSet candidateTiles
 
-        foldNext :: Coordinates -> TileMap -> TileMap
-        foldNext coordinates = insert coordinates (nextTile currentTile neighborTiles)
+        nextTileState :: Coordinates -> Set Coordinates -> Set Coordinates
+        nextTileState point
+          | isMember && (neighborTiles & length & ((||) <$> (0 ==) <*> (> 2))) = Set.delete point
+          | isMember = Set.insert point
+          | not isMember && (neighborTiles & length & (== 2)) = Set.insert point
+          | not isMember = Set.delete point
+          | otherwise = undefined
           where
-            currentTile :: TileState
-            currentTile = lookup coordinates tileMap
-            neighborTiles :: [TileState]
-            neighborTiles = map (`lookup` tileMap) (neighbors' coordinates)
+            isMember :: Bool
+            isMember = Set.member point flippedTileSet
+            neighborTiles :: Set Coordinates
+            neighborTiles = Set.filter (`Set.member` flippedTileSet) $ candidates point
 
-        nextTile :: TileState -> [TileState] -> TileState
-        nextTile Black neighborTiles
-          | neighborTiles & occurrences Black & ((||) <$> (0 ==) <*> (> 2)) = White
-          | otherwise = Black
-        nextTile White neighborTiles
-          | neighborTiles & occurrences Black & (== 2) = Black
-          | otherwise = White
+        -- nextTileState :: Bool -> Set Coordinates -> Bool
+        -- nextTileState = undefined
+        -- nextTileState Black neighborTiles
+        --   | neighborTiles & occurrences Black & ((||) <$> (0 ==) <*> (> 2)) = White
+        --   | otherwise = Black
+        -- nextTileState White neighborTiles
+        --   | neighborTiles & occurrences Black & (== 2) = Black
+        --   | otherwise = White
 
         candidateTiles :: Set Coordinates
-        candidateTiles = Set.union (Map.keysSet tileMap) . Set.unions . Set.map (Set.fromList . neighbors') . Map.keysSet $ tileMap
+        candidateTiles = Set.union flippedTileSet . Set.unions . Set.map candidates $ flippedTileSet
 
-insert :: Ord k => k -> TileState -> Map k TileState -> Map k TileState
-insert k White = Map.delete k
-insert k Black = Map.insert k Black
+shouldToggle :: Bool -> Coordinates -> Set Coordinates -> Set Coordinates
+shouldToggle = undefined
 
-lookup :: Coordinates -> TileMap -> TileState
-lookup = Map.findWithDefault White
+toggle :: Coordinates -> Set Coordinates -> Set Coordinates
+toggle point set
+  | Set.member point set = Set.delete point set
+  | otherwise = Set.insert point set
 
-neighbors :: [Coordinates]
-neighbors =
-  [ Coordinates (x, y, z)
-    | x <- [-1 .. 1],
-      y <- [-1 .. 1],
-      z <- [-1 .. 1],
-      x + y + z == 0,
-      (x, y, z) /= (0, 0, 0)
-  ]
+candidateOffsets :: Set Coordinates
+candidateOffsets =
+  Set.fromList
+    [ Coordinates (x, y, z)
+      | x <- [-1 .. 1],
+        y <- [-1 .. 1],
+        z <- [-1 .. 1],
+        x + y + z == 0,
+        (x, y, z) /= (0, 0, 0)
+    ]
 
-neighbors' :: Coordinates -> [Coordinates]
-neighbors' coordinates = map (<> coordinates) neighbors
+candidates :: Coordinates -> Set Coordinates
+candidates coordinates = Set.map (<> coordinates) candidateOffsets

@@ -1,9 +1,8 @@
 module Day24.SolutionSpec (spec) where
 
-import Advent.Utils (occurrences)
 import Data.Foldable (for_)
 import qualified Data.IntMap.Strict as IntMap
-import qualified Data.Map.Strict as Map
+import qualified Data.Set as Set
 import Day24.Solution
 import Test.Hspec
 
@@ -75,32 +74,26 @@ spec = focus . parallel $ do
     it "works on the example" $ do
       map asCoordinates exampleTilePaths `shouldBe` coordinates
 
-  let exampleTileMap =
-        Map.fromList
-          [ (Coordinates (-3, 1, 2), Black),
-            (Coordinates (-3, 0, 3), Black),
-            (Coordinates (-1, 1, 0), White),
-            (Coordinates (1, 2, -3), White),
-            (Coordinates (-2, 2, 0), Black),
-            (Coordinates (0, 1, -1), Black),
-            (Coordinates (-2, 1, 1), Black),
-            (Coordinates (0, 2, -2), White),
-            (Coordinates (3, 0, -3), Black),
-            (Coordinates (0, -2, 2), Black),
-            (Coordinates (0, 0, 0), Black),
-            (Coordinates (1, 1, -2), White),
-            (Coordinates (2, 0, -2), White),
-            (Coordinates (2, -2, 0), Black),
-            (Coordinates (-1, 2, -1), Black)
+  let exampleFlippedTileSet =
+        Set.fromList
+          [ Coordinates (-3, 1, 2),
+            Coordinates (-3, 0, 3),
+            Coordinates (-2, 2, 0),
+            Coordinates (0, 1, -1),
+            Coordinates (-2, 1, 1),
+            Coordinates (3, 0, -3),
+            Coordinates (0, -2, 2),
+            Coordinates (0, 0, 0),
+            Coordinates (2, -2, 0),
+            Coordinates (-1, 2, -1)
           ]
-  describe "asTileMap" $ do
+  describe "asFlippedTileSet" $ do
     it "is the result of flipping tiles" $ do
-      asTileMap coordinates `shouldBe` exampleTileMap
+      asFlippedTileSet coordinates `shouldBe` exampleFlippedTileSet
     it "has 10 Black tiles" $ do
-      occurrences Black exampleTileMap `shouldBe` 10
+      length exampleFlippedTileSet `shouldBe` 10
   describe "livingArtDay" $ do
-    -- TODO: build this with accumulator to make this test faster
-    let tileMaps = livingArtDay 100
+    let tileMaps = livingArtDay 100 exampleFlippedTileSet
     let cases =
           [ (0, 10),
             (1, 15),
@@ -125,6 +118,6 @@ spec = focus . parallel $ do
           ] ::
             [(Int, Int)]
     let test (n, expected) = it ("Day " ++ show n ++ ": " ++ show expected) $ do
-          (occurrences Black . (IntMap.! n) . tileMaps) exampleTileMap `shouldBe` expected
+          (length . (IntMap.! n)) tileMaps `shouldBe` expected
 
     for_ cases test
