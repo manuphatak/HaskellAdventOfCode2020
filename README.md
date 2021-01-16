@@ -5,13 +5,35 @@
 
 Solutions to adventofcode.com/2020
 
-## Solutions
+## [Solutions](https://github.com/manuphatak/HaskellAdventOfCode2020/pulls?q=is%3Apr++label%3Asolution+)
 
-[Solutions](https://github.com/manuphatak/HaskellAdventOfCode2020/pulls?q=is%3Apr++label%3Asolution+)
-
-| PR  | Problem              | Solution                                       | Specs                                                    |
-| --- | -------------------- | ---------------------------------------------- | -------------------------------------------------------- |
-| #2  | Day 1: Report Repair | [src/Day01/Solution.hs](src/Day01/Solution.hs) | [test/Day01/SolutionSpec.hs](test/Day01/SolutionSpec.hs) |
+| PR  | Problem                         | Solution                                       | Specs                                                    |
+| --- | ------------------------------- | ---------------------------------------------- | -------------------------------------------------------- |
+| #2  | Day 1: Report Repair            | [src/Day01/Solution.hs](src/Day01/Solution.hs) | [test/Day01/SolutionSpec.hs](test/Day01/SolutionSpec.hs) |
+| #4  | Day 2: Password Philosophy      | [src/Day02/Solution.hs](src/Day02/Solution.hs) | [test/Day02/SolutionSpec.hs](test/Day02/SolutionSpec.hs) |
+| #5  | Day 3: Toboggan Trajectory      | [src/Day03/Solution.hs](src/Day03/Solution.hs) | [test/Day03/SolutionSpec.hs](test/Day03/SolutionSpec.hs) |
+| #6  | Day 4: Passport Processing      | [src/Day04/Solution.hs](src/Day04/Solution.hs) | [test/Day04/SolutionSpec.hs](test/Day04/SolutionSpec.hs) |
+| #7  | Day 5: Binary Boarding          | [src/Day05/Solution.hs](src/Day05/Solution.hs) | [test/Day05/SolutionSpec.hs](test/Day05/SolutionSpec.hs) |
+| #8  | Day 6: Custom Customs           | [src/Day06/Solution.hs](src/Day06/Solution.hs) | [test/Day06/SolutionSpec.hs](test/Day06/SolutionSpec.hs) |
+| #12 | Day 7: Handy Haversacks         | [src/Day07/Solution.hs](src/Day07/Solution.hs) | [test/Day07/SolutionSpec.hs](test/Day07/SolutionSpec.hs) |
+| #13 | Day 8: Handheld Halting         | [src/Day08/Solution.hs](src/Day08/Solution.hs) | [test/Day08/SolutionSpec.hs](test/Day08/SolutionSpec.hs) |
+| #15 | Day 9: Encoding Error           | [src/Day09/Solution.hs](src/Day09/Solution.hs) | [test/Day09/SolutionSpec.hs](test/Day09/SolutionSpec.hs) |
+| #18 | Day 10: Adapter Array           | [src/Day10/Solution.hs](src/Day10/Solution.hs) | [test/Day10/SolutionSpec.hs](test/Day10/SolutionSpec.hs) |
+| #19 | Day 11: Seating System          | [src/Day11/Solution.hs](src/Day11/Solution.hs) | [test/Day11/SolutionSpec.hs](test/Day11/SolutionSpec.hs) |
+| #21 | Day 12: Rain Risk               | [src/Day12/Solution.hs](src/Day12/Solution.hs) | [test/Day12/SolutionSpec.hs](test/Day12/SolutionSpec.hs) |
+| #23 | Day 13: Shuttle Search          | [src/Day13/Solution.hs](src/Day13/Solution.hs) | [test/Day13/SolutionSpec.hs](test/Day13/SolutionSpec.hs) |
+| #24 | Day 14: Docking Data            | [src/Day14/Solution.hs](src/Day14/Solution.hs) | [test/Day14/SolutionSpec.hs](test/Day14/SolutionSpec.hs) |
+| #25 | Day 15: Rambunctious Recitation | [src/Day15/Solution.hs](src/Day15/Solution.hs) | [test/Day15/SolutionSpec.hs](test/Day15/SolutionSpec.hs) |
+| #26 | Day 16: Ticket Translation      | [src/Day16/Solution.hs](src/Day16/Solution.hs) | [test/Day16/SolutionSpec.hs](test/Day16/SolutionSpec.hs) |
+| #30 | Day 17: Conway Cubes            | [src/Day17/Solution.hs](src/Day17/Solution.hs) | [test/Day17/SolutionSpec.hs](test/Day17/SolutionSpec.hs) |
+| #31 | Day 18: Operation Order         | [src/Day18/Solution.hs](src/Day18/Solution.hs) | [test/Day18/SolutionSpec.hs](test/Day18/SolutionSpec.hs) |
+| #32 | Day 19: Monster Messages        | [src/Day19/Solution.hs](src/Day19/Solution.hs) | [test/Day19/SolutionSpec.hs](test/Day19/SolutionSpec.hs) |
+| #34 | Day 20: Jurassic Jigsaw         | [src/Day20/Solution.hs](src/Day20/Solution.hs) | [test/Day20/SolutionSpec.hs](test/Day20/SolutionSpec.hs) |
+| #35 | Day 21: Allergen Assessment     | [src/Day21/Solution.hs](src/Day21/Solution.hs) | [test/Day21/SolutionSpec.hs](test/Day21/SolutionSpec.hs) |
+| #38 | Day 22: Crab Combat             | [src/Day22/Solution.hs](src/Day22/Solution.hs) | [test/Day22/SolutionSpec.hs](test/Day22/SolutionSpec.hs) |
+| #40 | Day 23: Crab Cups               | [src/Day23/Solution.hs](src/Day23/Solution.hs) | [test/Day23/SolutionSpec.hs](test/Day23/SolutionSpec.hs) |
+| #44 | Day 24: Lobby Layout            | [src/Day24/Solution.hs](src/Day24/Solution.hs) | [test/Day24/SolutionSpec.hs](test/Day24/SolutionSpec.hs) |
+| #45 | Day 25: Combo Breaker           | [src/Day25/Solution.hs](src/Day25/Solution.hs) | [test/Day25/SolutionSpec.hs](test/Day25/SolutionSpec.hs) |
 
 ## Run tests
 
