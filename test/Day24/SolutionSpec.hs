@@ -1,7 +1,7 @@
 module Day24.SolutionSpec (spec) where
 
 import Data.Foldable (for_)
-import qualified Data.HashSet as HashSet
+import qualified Data.HashSet as Set
 import qualified Data.IntMap.Strict as IntMap
 import Day24.Solution
 import Test.Hspec
@@ -74,7 +74,7 @@ spec = parallel $ do
       map asCoordinates exampleTilePaths `shouldBe` coordinates
 
   let exampleFlippedTileSet =
-        HashSet.fromList
+        Set.fromList
           [ Coordinates (-3, 1, 2),
             Coordinates (-3, 0, 3),
             Coordinates (-2, 2, 0),
