@@ -2,12 +2,13 @@ module Day24.SolutionSpec (spec) where
 
 import Advent.Utils (occurrences)
 import Data.Foldable (for_)
+import qualified Data.IntMap.Strict as IntMap
 import qualified Data.Map.Strict as Map
 import Day24.Solution
 import Test.Hspec
 
 spec :: Spec
-spec = parallel $ do
+spec = focus . parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day24/input.txt"
     part1 input `shouldBe` "275"
@@ -99,6 +100,7 @@ spec = parallel $ do
       occurrences Black exampleTileMap `shouldBe` 10
   describe "livingArtDay" $ do
     -- TODO: build this with accumulator to make this test faster
+    let tileMaps = livingArtDay 100
     let cases =
           [ (0, 10),
             (1, 15),
@@ -123,6 +125,6 @@ spec = parallel $ do
           ] ::
             [(Int, Int)]
     let test (n, expected) = it ("Day " ++ show n ++ ": " ++ show expected) $ do
-          (occurrences Black . livingArtDay n) exampleTileMap `shouldBe` expected
+          (occurrences Black . (IntMap.! n) . tileMaps) exampleTileMap `shouldBe` expected
 
     for_ cases test
