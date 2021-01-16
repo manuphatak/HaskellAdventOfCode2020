@@ -3,10 +3,11 @@ module Day24.Solution where
 import Advent.Utils
 import Data.Char
 import Data.Function
+import Data.HashSet (HashSet)
+import qualified Data.HashSet as HashSet
+import Data.Hashable
 import Data.IntMap.Strict (IntMap)
 import qualified Data.IntMap.Strict as IntMap
-import Data.Set (Set)
-import qualified Data.Set as Set
 import Text.Parsec
 import Prelude hiding (lookup)
 
@@ -27,6 +28,9 @@ instance Semigroup Coordinates where
 
 instance Monoid Coordinates where
   mempty = Coordinates (0, 0, 0)
+
+instance Hashable Coordinates where
+  hashWithSalt n (Coordinates (a, b, c)) = hashWithSalt n (a, b, c)
 
 parseTilePaths :: String -> Either ParseError [TilePath]
 parseTilePaths = parse (tilePathParser `sepEndBy1` newline) ""
@@ -57,58 +61,49 @@ asCoordinates = mconcat . map go
     go NW = Coordinates (0, 1, -1)
     go NE = Coordinates (1, 0, -1)
 
-asFlippedTileSet :: [Coordinates] -> Set Coordinates
-asFlippedTileSet = foldr toggle Set.empty
+asFlippedTileSet :: [Coordinates] -> HashSet Coordinates
+asFlippedTileSet = foldr toggle HashSet.empty
 
-livingArtDay :: Int -> Set Coordinates -> IntMap (Set Coordinates)
+livingArtDay :: Int -> HashSet Coordinates -> IntMap (HashSet Coordinates)
 livingArtDay d = go IntMap.empty 0
   where
-    go :: IntMap (Set Coordinates) -> Int -> Set Coordinates -> IntMap (Set Coordinates)
+    go :: IntMap (HashSet Coordinates) -> Int -> HashSet Coordinates -> IntMap (HashSet Coordinates)
     go history n flippedTileSet
       | n < 0 = undefined
       | n > d = history
       | n == 0 = go (IntMap.insert n flippedTileSet history) (n + 1) flippedTileSet
       | otherwise = go (IntMap.insert n nextFlippedTileSet history) (n + 1) nextFlippedTileSet
       where
-        nextFlippedTileSet :: Set Coordinates
+        nextFlippedTileSet :: HashSet Coordinates
         nextFlippedTileSet = foldr nextTileState flippedTileSet candidateTiles
 
-        nextTileState :: Coordinates -> Set Coordinates -> Set Coordinates
+        nextTileState :: Coordinates -> HashSet Coordinates -> HashSet Coordinates
         nextTileState point
-          | isMember && (neighborTiles & length & ((||) <$> (0 ==) <*> (> 2))) = Set.delete point
-          | isMember = Set.insert point
-          | not isMember && (neighborTiles & length & (== 2)) = Set.insert point
-          | not isMember = Set.delete point
+          | isMember && (neighborTiles & length & ((||) <$> (0 ==) <*> (> 2))) = HashSet.delete point
+          | isMember = HashSet.insert point
+          | not isMember && (neighborTiles & length & (== 2)) = HashSet.insert point
+          | not isMember = HashSet.delete point
           | otherwise = undefined
           where
             isMember :: Bool
-            isMember = Set.member point flippedTileSet
-            neighborTiles :: Set Coordinates
-            neighborTiles = Set.filter (`Set.member` flippedTileSet) $ candidates point
+            isMember = HashSet.member point flippedTileSet
+            neighborTiles :: HashSet Coordinates
+            neighborTiles = HashSet.filter (`HashSet.member` flippedTileSet) $ candidates point
 
-        -- nextTileState :: Bool -> Set Coordinates -> Bool
-        -- nextTileState = undefined
-        -- nextTileState Black neighborTiles
-        --   | neighborTiles & occurrences Black & ((||) <$> (0 ==) <*> (> 2)) = White
-        --   | otherwise = Black
-        -- nextTileState White neighborTiles
-        --   | neighborTiles & occurrences Black & (== 2) = Black
-        --   | otherwise = White
+        candidateTiles :: HashSet Coordinates
+        candidateTiles = HashSet.union flippedTileSet . HashSet.unions . HashSet.toList . HashSet.map candidates $ flippedTileSet
 
-        candidateTiles :: Set Coordinates
-        candidateTiles = Set.union flippedTileSet . Set.unions . Set.map candidates $ flippedTileSet
-
-shouldToggle :: Bool -> Coordinates -> Set Coordinates -> Set Coordinates
+shouldToggle :: Bool -> Coordinates -> HashSet Coordinates -> HashSet Coordinates
 shouldToggle = undefined
 
-toggle :: Coordinates -> Set Coordinates -> Set Coordinates
+toggle :: Coordinates -> HashSet Coordinates -> HashSet Coordinates
 toggle point set
-  | Set.member point set = Set.delete point set
-  | otherwise = Set.insert point set
+  | HashSet.member point set = HashSet.delete point set
+  | otherwise = HashSet.insert point set
 
-candidateOffsets :: Set Coordinates
+candidateOffsets :: HashSet Coordinates
 candidateOffsets =
-  Set.fromList
+  HashSet.fromList
     [ Coordinates (x, y, z)
       | x <- [-1 .. 1],
         y <- [-1 .. 1],
@@ -117,5 +112,5 @@ candidateOffsets =
         (x, y, z) /= (0, 0, 0)
     ]
 
-candidates :: Coordinates -> Set Coordinates
-candidates coordinates = Set.map (<> coordinates) candidateOffsets
+candidates :: Coordinates -> HashSet Coordinates
+candidates coordinates = HashSet.map (<> coordinates) candidateOffsets
