@@ -1,11 +1,21 @@
-module Day24.Solution where
+module Day24.Solution
+  ( Coordinates (..),
+    Neighbor (..),
+    asCoordinates,
+    asFlippedTileSet,
+    livingArtDay,
+    parseTilePaths,
+    part1,
+    part2,
+  )
+where
 
-import Advent.Utils
-import Data.Char
-import Data.Function
+import Advent.Utils (fromRightOrShowError)
+import Data.Char (toUpper)
+import Data.Function ((&))
 import Data.HashSet (HashSet)
 import qualified Data.HashSet as Set
-import Data.Hashable
+import Data.Hashable (Hashable (hashWithSalt))
 import Data.IntMap.Strict (IntMap)
 import qualified Data.IntMap.Strict as IntMap
 import Text.Parsec
@@ -65,36 +75,33 @@ asFlippedTileSet :: [Coordinates] -> HashSet Coordinates
 asFlippedTileSet = foldr toggle Set.empty
 
 livingArtDay :: Int -> HashSet Coordinates -> IntMap (HashSet Coordinates)
-livingArtDay d = go IntMap.empty 0
+livingArtDay = livingArtDay' IntMap.empty 0
+
+livingArtDay' :: IntMap (HashSet Coordinates) -> Int -> Int -> HashSet Coordinates -> IntMap (HashSet Coordinates)
+livingArtDay' history n d flippedTileSet
+  | n < 0 = undefined
+  | n > d = history
+  | n == 0 = livingArtDay' (IntMap.insert n flippedTileSet history) (n + 1) d flippedTileSet
+  | otherwise = livingArtDay' (IntMap.insert n nextFlippedTileSet history) (n + 1) d nextFlippedTileSet
   where
-    go :: IntMap (HashSet Coordinates) -> Int -> HashSet Coordinates -> IntMap (HashSet Coordinates)
-    go history n flippedTileSet
-      | n < 0 = undefined
-      | n > d = history
-      | n == 0 = go (IntMap.insert n flippedTileSet history) (n + 1) flippedTileSet
-      | otherwise = go (IntMap.insert n nextFlippedTileSet history) (n + 1) nextFlippedTileSet
+    nextFlippedTileSet :: HashSet Coordinates
+    nextFlippedTileSet = foldr nextTileState flippedTileSet candidateTiles
+
+    nextTileState :: Coordinates -> HashSet Coordinates -> HashSet Coordinates
+    nextTileState point
+      | isFlipped && (neighborTiles & length & ((||) <$> (0 ==) <*> (> 2))) = Set.delete point
+      | isFlipped = Set.insert point
+      | not isFlipped && (neighborTiles & length & (== 2)) = Set.insert point
+      | not isFlipped = Set.delete point
+      | otherwise = undefined
       where
-        nextFlippedTileSet :: HashSet Coordinates
-        nextFlippedTileSet = foldr nextTileState flippedTileSet candidateTiles
+        isFlipped :: Bool
+        isFlipped = Set.member point flippedTileSet
+        neighborTiles :: HashSet Coordinates
+        neighborTiles = Set.filter (`Set.member` flippedTileSet) $ candidates point
 
-        nextTileState :: Coordinates -> HashSet Coordinates -> HashSet Coordinates
-        nextTileState point
-          | isMember && (neighborTiles & length & ((||) <$> (0 ==) <*> (> 2))) = Set.delete point
-          | isMember = Set.insert point
-          | not isMember && (neighborTiles & length & (== 2)) = Set.insert point
-          | not isMember = Set.delete point
-          | otherwise = undefined
-          where
-            isMember :: Bool
-            isMember = Set.member point flippedTileSet
-            neighborTiles :: HashSet Coordinates
-            neighborTiles = Set.filter (`Set.member` flippedTileSet) $ candidates point
-
-        candidateTiles :: HashSet Coordinates
-        candidateTiles = Set.union flippedTileSet . Set.unions . Set.toList . Set.map candidates $ flippedTileSet
-
-shouldToggle :: Bool -> Coordinates -> HashSet Coordinates -> HashSet Coordinates
-shouldToggle = undefined
+    candidateTiles :: HashSet Coordinates
+    candidateTiles = Set.union flippedTileSet . Set.unions . Set.toList . Set.map candidates $ flippedTileSet
 
 toggle :: Coordinates -> HashSet Coordinates -> HashSet Coordinates
 toggle point set

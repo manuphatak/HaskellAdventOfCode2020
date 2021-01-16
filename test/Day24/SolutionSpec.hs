@@ -4,6 +4,15 @@ import Data.Foldable (for_)
 import qualified Data.HashSet as Set
 import qualified Data.IntMap.Strict as IntMap
 import Day24.Solution
+  ( Coordinates (..),
+    Neighbor (..),
+    asCoordinates,
+    asFlippedTileSet,
+    livingArtDay,
+    parseTilePaths,
+    part1,
+    part2,
+  )
 import Test.Hspec
 
 spec :: Spec
