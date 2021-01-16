@@ -7,13 +7,12 @@ import Day24.Solution
 import Test.Hspec
 
 spec :: Spec
-spec = focus . parallel $ do
+spec = parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day24/input.txt"
     part1 input `shouldBe` "275"
 
   it "solves Part 2" $ do
-    pendingWith "needs performance boost"
     input <- readFile "./test/Day24/input.txt"
     part2 input `shouldBe` "3537"
 
