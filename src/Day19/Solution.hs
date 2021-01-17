@@ -2,10 +2,11 @@ module Day19.Solution where
 
 import Advent.Parser
 import Advent.Utils
-import Data.Either
+import Control.Applicative
 import Data.IntMap.Lazy (IntMap)
 import qualified Data.IntMap.Lazy as IntMap
-import Text.Parsec
+import Debug.Trace
+import Text.Parsec hiding ((<|>))
 
 part1 :: String -> String
 part1 = show . length . validMessages . fromRightOrShowError . parseDocument
@@ -15,9 +16,9 @@ part2 = show . length . validMessages . withNewRules . fromRightOrShowError . pa
 
 data Rule = Branch [Int] [Int] | Ref [Int] | Val Char deriving (Show, Eq)
 
-type Rules = IntMap Rule
+-- type Rules = IntMap Rule
 
-data Document = Document {dRules :: Rules, dMessages :: [String]} deriving (Show, Eq)
+data Document = Document {dRules :: IntMap Rule, dMessages :: [String]} deriving (Show, Eq)
 
 parseDocument :: String -> Either ParseError Document
 parseDocument = parse documentParser ""
@@ -28,14 +29,14 @@ parseDocument = parse documentParser ""
     messagesParser :: Parsec String () [String]
     messagesParser = many1 letter `sepEndBy` newline
 
-    rulesParser :: Parsec String () Rules
+    rulesParser :: Parsec String () (IntMap Rule)
     rulesParser = IntMap.fromList <$> (rulePairParser `endBy1` newline)
 
     rulePairParser :: Parsec String () (Int, Rule)
     rulePairParser = (,) <$> (intParser <* char ':' <* char ' ') <*> ruleParser
 
     ruleParser :: Parsec String () Rule
-    ruleParser = try branchParser <|> valParser <|> refParser
+    ruleParser = choice [try branchParser, valParser, refParser]
 
     branchParser :: Parsec String () Rule
     branchParser = Branch <$> subRuleParser <*> (char '|' *> char ' ' *> subRuleParser)
@@ -52,28 +53,25 @@ parseDocument = parse documentParser ""
     betweenDblQuotes :: Parsec String () a -> Parsec String () a
     betweenDblQuotes = between (char '"') (char '"')
 
-buildDynamicParser :: Rules -> String -> Either ParseError ()
-buildDynamicParser rules = parse (go 0 *> eof) ""
+isValidMessage :: IntMap Rule -> String -> Bool
+isValidMessage rules = (== Just "") . go 0
   where
-    go :: Int -> Parsec String () ()
-    go i = (rulesMap IntMap.! i) <|> eof
+    go :: Int -> String -> Maybe String
+    go i = match (rules IntMap.! i)
 
-    rulesMap :: IntMap (Parsec String () ())
-    rulesMap = IntMap.map asParser rules
-
-    asParser :: Rule -> Parsec String () ()
-    asParser (Val c) = () <$ char c
-    asParser (Ref paths) = mconcat . map go $ paths
-    asParser (Branch xs ys) =
-      choice
-        [ try $ asParser (Ref xs),
-          asParser (Ref ys)
-        ]
+    match :: Rule -> String -> Maybe String
+    match (Val _) "" = Nothing
+    match (Val c) (x : xs)
+      | c == x = Just xs
+      | otherwise = Nothing
+    match (Ref (x : xs)) input = go x input >>= match (Ref xs)
+    match (Ref []) input = Just input
+    match (Branch ls rs) input = match (Ref ls) input <|> match (Ref rs) input
 
 withNewRules :: Document -> Document
 withNewRules document@Document {dRules = rules} = document {dRules = newRules}
   where
-    newRules :: Rules
+    newRules :: IntMap Rule
     newRules =
       foldr
         (uncurry IntMap.insert)
@@ -83,6 +81,4 @@ withNewRules document@Document {dRules = rules} = document {dRules = newRules}
         ]
 
 validMessages :: Document -> [String]
-validMessages (Document rules messages) = filter (isRight . parseDynamic) messages
-  where
-    parseDynamic = buildDynamicParser rules
+validMessages (Document rules messages) = filter (isValidMessage rules) messages

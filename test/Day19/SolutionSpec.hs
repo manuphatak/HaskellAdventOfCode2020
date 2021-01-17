@@ -1,6 +1,5 @@
 module Day19.SolutionSpec (spec) where
 
-import Data.Either
 import Data.Foldable (for_)
 import qualified Data.IntMap.Lazy as IntMap
 import Day19.Solution
@@ -87,39 +86,38 @@ spec = focus . parallel $ do
 
         parseDocument input `shouldBe` Right exampleDocument3
 
-  describe "dynamicParser" $ do
+  describe "isValidMessage" $ do
     context "given example-2.txt" $ do
-      let parseDynamic = buildDynamicParser exampleRules2
       let cases =
-            [ ("ababbb", isRight),
-              ("bababa", isLeft),
-              ("abbbab", isRight),
-              ("aaabbb", isLeft),
-              ("aaaabbb", isLeft)
+            [ ("ababbb", True),
+              ("bababa", False),
+              ("abbbab", True),
+              ("aaabbb", False),
+              ("aaaabbb", False)
             ]
-      let test (input, matcher) = it ("satisfies matcher for input " ++ show input) $ do
-            parseDynamic input `shouldSatisfy` matcher
+      let test (input, expected) = it ("is " ++ show expected ++ " for input " ++ show input) $ do
+            isValidMessage exampleRules2 input `shouldBe` expected
       for_ cases test
     context "given a modified example-3.txt" $ do
       let cases =
-            [ ("bbabbbbaabaabba", isRight),
-              ("babbbbaabbbbbabbbbbbaabaaabaaa", isRight),
-              ("aaabbbbbbaaaabaababaabababbabaaabbababababaaa", isRight),
-              ("bbbbbbbaaaabbbbaaabbabaaa", isRight),
-              ("bbbababbbbaaaaaaaabbababaaababaabab", isRight),
-              ("ababaaaaaabaaab", isRight),
-              ("ababaaaaabbbaba", isRight),
-              ("baabbaaaabbaaaababbaababb", isRight),
-              ("abbbbabbbbaaaababbbbbbaaaababb", isRight),
-              ("aaaaabbaabaaaaababaa", isRight),
-              ("aaaabbaabbaaaaaaabbbabbbaaabbaabaaa", isRight),
-              ("aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba", isRight),
-              ("aaaabbaaaabbaaa", isLeft)
+            [ (it, "bbabbbbaabaabba", True),
+              (it, "babbbbaabbbbbabbbbbbaabaaabaaa", True),
+              (it, "aaabbbbbbaaaabaababaabababbabaaabbababababaaa", True),
+              (it, "bbbbbbbaaaabbbbaaabbabaaa", True),
+              (it, "bbbababbbbaaaaaaaabbababaaababaabab", True),
+              (it, "ababaaaaaabaaab", True),
+              (it, "ababaaaaabbbaba", True),
+              (it, "baabbaaaabbaaaababbaababb", True),
+              (it, "abbbbabbbbaaaababbbbbbaaaababb", True),
+              (it, "aaaaabbaabaaaaababaa", True),
+              (it, "aaaabbaabbaaaaaaabbbabbbaaabbaabaaa", True),
+              (it, "aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba", True),
+              (it, "aaaabbaaaabbaaa", False)
             ]
-      let test (input, matcher) = it ("satisfies matcher for input " ++ show input) $ do
+      let test (testIt, input, expected) = testIt ("is " ++ show expected ++ " for input " ++ show input) $ do
             example3 <- readFile "./test/Day19/example-3.txt"
-            let Right parseDynamic = buildDynamicParser . dRules . withNewRules <$> parseDocument example3
-            parseDynamic input `shouldSatisfy` matcher
+            let Right rules = dRules . withNewRules <$> parseDocument example3
+            isValidMessage rules input `shouldBe` expected
       for_ cases test
 
   describe "validMessages" $ do
