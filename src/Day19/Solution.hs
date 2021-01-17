@@ -3,6 +3,7 @@ module Day19.Solution where
 import Advent.Parser
 import Advent.Utils
 import Data.Either
+import Data.IntMap.Lazy (IntMap)
 import qualified Data.IntMap.Lazy as IntMap
 import Text.Parsec
 
@@ -12,9 +13,9 @@ part1 = show . length . validMessages . fromRightOrShowError . parseDocument
 part2 :: String -> String
 part2 = show . length . validMessages . withNewRules . fromRightOrShowError . parseDocument
 
-data Rule = Ref [[Int]] | Val Char deriving (Show, Eq)
+data Rule = Branch [Int] [Int] | Ref [Int] | Val Char deriving (Show, Eq)
 
-type Rules = IntMap.IntMap Rule
+type Rules = IntMap Rule
 
 data Document = Document {dRules :: Rules, dMessages :: [String]} deriving (Show, Eq)
 
@@ -34,10 +35,13 @@ parseDocument = parse documentParser ""
     rulePairParser = (,) <$> (intParser <* char ':' <* char ' ') <*> ruleParser
 
     ruleParser :: Parsec String () Rule
-    ruleParser = valParser <|> refParser
+    ruleParser = try branchParser <|> valParser <|> refParser
+
+    branchParser :: Parsec String () Rule
+    branchParser = Branch <$> subRuleParser <*> (char '|' *> char ' ' *> subRuleParser)
 
     refParser :: Parsec String () Rule
-    refParser = Ref <$> (subRuleParser `sepBy1` (char '|' <* char ' '))
+    refParser = Ref <$> subRuleParser
 
     subRuleParser :: Parsec String () [Int]
     subRuleParser = intParser `sepEndBy1` char ' '
@@ -49,26 +53,33 @@ parseDocument = parse documentParser ""
     betweenDblQuotes = between (char '"') (char '"')
 
 buildDynamicParser :: Rules -> String -> Either ParseError String
-buildDynamicParser rules = parse (go 0 <* eof) ""
+buildDynamicParser rules = parse (go 0 <> ("" <$ eof)) ""
   where
     go :: Int -> Parsec String () String
-    go i = rulesMap IntMap.! i
+    go i = (rulesMap IntMap.! i) <|> ("" <$ eof)
 
-    rulesMap :: IntMap.IntMap (Parsec String () String)
+    rulesMap :: IntMap (Parsec String () String)
     rulesMap = IntMap.map asParser rules
 
     asParser :: Rule -> Parsec String () String
     asParser (Val c) = string [c]
-    asParser (Ref options) = choice . map (try . mconcat . map go) $ options
+    asParser (Ref paths) = mconcat . map go $ paths
+    asParser (Branch xs ys) =
+      choice
+        [ try $ asParser (Ref xs),
+          asParser (Ref ys)
+        ]
 
 withNewRules :: Document -> Document
-withNewRules document@Document {dRules = rules} = document {dRules = IntMap.union newRules rules}
+withNewRules document@Document {dRules = rules} = document {dRules = newRules}
   where
     newRules :: Rules
     newRules =
-      IntMap.fromList
-        [ (8, Ref [[42], [42, 8]]),
-          (11, Ref [[42, 31], [42, 11, 31]])
+      foldr
+        (uncurry IntMap.insert)
+        rules
+        [ (8, Branch [42] [42, 8]),
+          (11, Branch [42, 31] [42, 11, 31])
         ]
 
 validMessages :: Document -> [String]
