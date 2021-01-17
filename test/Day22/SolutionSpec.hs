@@ -1,6 +1,6 @@
 module Day22.SolutionSpec (spec) where
 
-import Data.Sequence
+import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
 import Day22.Solution
 import Test.Hspec
@@ -16,8 +16,8 @@ spec = focus . parallel $ do
     -- failed 33957 (too low)
     part2 input `shouldBe` "hello_santa"
 
-  let exampleGame1 = (fromList [9, 2, 6, 3, 1], fromList [5, 8, 4, 7, 10])
-  let exampleGame2 = (fromList [43, 19], fromList [2, 29, 14])
+  let exampleGame1 = (Seq.fromList [9, 2, 6, 3, 1], Seq.fromList [5, 8, 4, 7, 10])
+  let exampleGame2 = (Seq.fromList [43, 19], Seq.fromList [2, 29, 14])
   describe "parseGame" $ do
     context "given example-1.txt" $ do
       it "parses the example" $ do
@@ -27,10 +27,10 @@ spec = focus . parallel $ do
       it "parses the example" $ do
         input <- readFile "./test/Day22/example-2.txt"
         parseGame input `shouldBe` Right exampleGame2
-  let exampleGameFinal1 = (empty, fromList [3, 2, 10, 6, 8, 5, 9, 4, 7, 1]) :: Game
-  let exampleGameFinalRecursive1 = (empty, fromList [7, 5, 6, 2, 4, 1, 10, 8, 9, 3]) :: Game
-  let exampleGameFinal2 = (fromList [43, 19], empty) :: Game
-  let exampleGameFinalRecursive2 = (fromList [43, 19], empty) :: Game
+  let exampleGameFinal1 = (Seq.empty, Seq.fromList [3, 2, 10, 6, 8, 5, 9, 4, 7, 1]) :: Game
+  let exampleGameFinalRecursive1 = (Seq.empty, Seq.fromList [7, 5, 6, 2, 4, 1, 10, 8, 9, 3]) :: Game
+  let exampleGameFinal2 = (Seq.fromList [43, 19], Seq.empty) :: Game
+  let exampleGameFinalRecursive2 = (Seq.fromList [43, 19], Seq.empty) :: Game
   describe "combat" $ do
     context "given example-1.txt" $ do
       it "runs the game until one side loses" $ do
