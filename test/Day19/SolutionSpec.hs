@@ -6,15 +6,13 @@ import Day19.Solution
 import Test.Hspec
 
 spec :: Spec
-spec = focus . parallel $ do
+spec = parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day19/input.txt"
     part1 input `shouldBe` "216"
   it "solves Part 2" $ do
     input <- readFile "./test/Day19/input.txt"
-    -- Not 267
-    -- Not 411
-    part2 input `shouldBe` "hello_santa"
+    part2 input `shouldBe` "400"
 
   let exampleRules1 =
         IntMap.fromList

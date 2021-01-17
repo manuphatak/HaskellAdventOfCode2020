@@ -1,8 +1,11 @@
+{-# LANGUAGE LambdaCase #-}
+
 module Day19.Solution where
 
 import Advent.Parser
 import Advent.Utils
-import Control.Applicative
+import Control.Monad
+import Data.Functor
 import Data.IntMap.Lazy (IntMap)
 import qualified Data.IntMap.Lazy as IntMap
 import Text.Parsec hiding ((<|>))
@@ -20,6 +23,22 @@ data AndOr a
   | And [AndOr a]
   | Or [AndOr a]
   deriving (Show, Eq)
+
+instance Functor AndOr where
+  fmap f = \case
+    Leaf a -> Leaf (f a)
+    And xs -> And (map (fmap f) xs)
+    Or xs -> Or (map (fmap f) xs)
+
+instance Applicative AndOr where
+  pure = return
+  (<*>) = ap
+
+instance Monad AndOr where
+  m >>= f = case m of
+    Leaf x -> f x
+    And xs -> And $ map (>>= f) xs
+    Or xs -> Or $ map (>>= f) xs
 
 data Document = Document {dRules :: IntMap Rule, dMessages :: [String]} deriving (Show, Eq)
 
@@ -60,24 +79,25 @@ parseDocument = parse documentParser ""
     betweenDblQuotes = between (char '"') (char '"')
 
 isValidMessage :: IntMap Rule -> String -> Bool
-isValidMessage rules = (== Just "") . go 0
+isValidMessage rules = any null . match rule
   where
-    go :: Int -> String -> Maybe String
-    go i = match (rules IntMap.! i)
+    rule = expandRules rules IntMap.! 0
 
-    match :: Rule -> String -> Maybe String
+expandRules :: IntMap Rule -> IntMap (AndOr Char)
+expandRules rules = result
+  where
+    result =
+      rules <&> \case
+        Val x -> Leaf x
+        Ref xs -> xs >>= (result IntMap.!)
 
-    match (Val _) "" = Nothing
-    match (Val c) (x : xs)
-      | c == x = Just xs
-      | otherwise = Nothing
-    match (Ref andOr) input = matchAndOr andOr input
-
-    matchAndOr :: AndOr Int -> String -> Maybe String
-    matchAndOr (Or xs) input = foldr1 (<|>) . map (`matchAndOr` input) $ xs
-    matchAndOr (And (x : xs)) input = matchAndOr x input >>= matchAndOr (And xs)
-    matchAndOr (And []) input = Just input
-    matchAndOr (Leaf x) input = go x input
+match :: AndOr Char -> String -> [String]
+match = \case
+  Leaf c -> \case
+    [] -> []
+    x : xs -> xs <$ guard (x == c)
+  And xs -> foldr (>=>) pure (match <$> xs)
+  Or xs -> \str -> concatMap (`match` str) xs
 
 withNewRules :: Document -> Document
 withNewRules document@Document {dRules = rules} = document {dRules = newRules <> rules}
@@ -85,8 +105,8 @@ withNewRules document@Document {dRules = rules} = document {dRules = newRules <>
     newRules :: IntMap Rule
     newRules =
       IntMap.fromList
-        [ (8, Ref (Or [And [Leaf 42], And [Leaf 42, Leaf 8]])),
-          (11, Ref (Or [And [Leaf 42, Leaf 31], And [Leaf 42, Leaf 11, Leaf 31]]))
+        [ (8, Ref $ Or [And [Leaf 42], And [Leaf 42, Leaf 8]]),
+          (11, Ref $ Or [And [Leaf 42, Leaf 31], And [Leaf 42, Leaf 11, Leaf 31]])
         ]
 
 validMessages :: Document -> [String]
