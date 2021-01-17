@@ -51,6 +51,7 @@ library
       Day17.Solution
       Day18.Internal
       Day18.Solution
+      Day19.Solution
       Day20.Solution
       Day21.Solution
       Day24.Solution
@@ -100,6 +101,7 @@ test-suite AdventOfCode2020-test
       Day16.UtilsSpec
       Day17.SolutionSpec
       Day18.SolutionSpec
+      Day19.SolutionSpec
       Day20.SolutionSpec
       Day21.SolutionSpec
       Day24.SolutionSpec
