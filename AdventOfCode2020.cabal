@@ -54,6 +54,7 @@ library
       Day19.Solution
       Day20.Solution
       Day21.Solution
+      Day24.Solution
       Practice.Foldable
       Template.Solution
   other-modules:
@@ -67,7 +68,9 @@ library
   build-depends:
       base >=4.7 && <5
     , containers
+    , hashable
     , parsec
+    , unordered-containers
   default-language: Haskell2010
 
 test-suite AdventOfCode2020-test
@@ -101,6 +104,7 @@ test-suite AdventOfCode2020-test
       Day19.SolutionSpec
       Day20.SolutionSpec
       Day21.SolutionSpec
+      Day24.SolutionSpec
       Practice.FoldableSpec
       Template.SolutionSpec
       Paths_AdventOfCode2020
@@ -115,8 +119,10 @@ test-suite AdventOfCode2020-test
       AdventOfCode2020
     , base >=4.7 && <5
     , containers
+    , hashable
     , hspec
     , hspec-discover
     , hspec-golden
     , parsec
+    , unordered-containers
   default-language: Haskell2010
