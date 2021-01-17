@@ -52,17 +52,17 @@ parseDocument = parse documentParser ""
     betweenDblQuotes :: Parsec String () a -> Parsec String () a
     betweenDblQuotes = between (char '"') (char '"')
 
-buildDynamicParser :: Rules -> String -> Either ParseError String
-buildDynamicParser rules = parse (go 0 <> ("" <$ eof)) ""
+buildDynamicParser :: Rules -> String -> Either ParseError ()
+buildDynamicParser rules = parse (go 0 *> eof) ""
   where
-    go :: Int -> Parsec String () String
-    go i = (rulesMap IntMap.! i) <|> ("" <$ eof)
+    go :: Int -> Parsec String () ()
+    go i = (rulesMap IntMap.! i) <|> eof
 
-    rulesMap :: IntMap (Parsec String () String)
+    rulesMap :: IntMap (Parsec String () ())
     rulesMap = IntMap.map asParser rules
 
-    asParser :: Rule -> Parsec String () String
-    asParser (Val c) = string [c]
+    asParser :: Rule -> Parsec String () ()
+    asParser (Val c) = () <$ char c
     asParser (Ref paths) = mconcat . map go $ paths
     asParser (Branch xs ys) =
       choice
