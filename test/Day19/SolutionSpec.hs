@@ -6,11 +6,11 @@ import Day19.Solution
 import Test.Hspec
 
 spec :: Spec
-spec = parallel $ do
+spec = focus . parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day19/input.txt"
     part1 input `shouldBe` "216"
-  xit "solves Part 2" $ do
+  it "solves Part 2" $ do
     input <- readFile "./test/Day19/input.txt"
     -- Not 267
     -- Not 411
@@ -18,53 +18,53 @@ spec = parallel $ do
 
   let exampleRules1 =
         IntMap.fromList
-          [ (0, Ref [[1, 2]]),
+          [ (0, Ref (Or [And [Leaf 1, Leaf 2]])),
             (1, Val 'a'),
-            (2, Ref [[1, 3], [3, 1]]),
+            (2, Ref (Or [And [Leaf 1, Leaf 3], And [Leaf 3, Leaf 1]])),
             (3, Val 'b')
           ]
   let exampleRules2 =
         IntMap.fromList
-          [ (0, Ref [[4, 1, 5]]),
-            (1, Ref [[2, 3], [3, 2]]),
-            (2, Ref [[4, 4], [5, 5]]),
-            (3, Ref [[4, 5], [5, 4]]),
+          [ (0, Ref (Or [And [Leaf 4, Leaf 1, Leaf 5]])),
+            (1, Ref (Or [And [Leaf 2, Leaf 3], And [Leaf 3, Leaf 2]])),
+            (2, Ref (Or [And [Leaf 4, Leaf 4], And [Leaf 5, Leaf 5]])),
+            (3, Ref (Or [And [Leaf 4, Leaf 5], And [Leaf 5, Leaf 4]])),
             (4, Val 'a'),
             (5, Val 'b')
           ]
   let exampleRules3 =
         IntMap.fromList
-          [ (0, Ref [[8, 11]]),
+          [ (0, Ref (Or [And [Leaf 8, Leaf 11]])),
             (1, Val 'a'),
-            (2, Ref [[1, 24], [14, 4]]),
-            (3, Ref [[5, 14], [16, 1]]),
-            (4, Ref [[1, 1]]),
-            (5, Ref [[1, 14], [15, 1]]),
-            (6, Ref [[14, 14], [1, 14]]),
-            (7, Ref [[14, 5], [1, 21]]),
-            (8, Ref [[42]]),
-            (9, Ref [[14, 27], [1, 26]]),
-            (10, Ref [[23, 14], [28, 1]]),
-            (11, Ref [[42, 31]]),
-            (12, Ref [[24, 14], [19, 1]]),
-            (13, Ref [[14, 3], [1, 12]]),
+            (2, Ref (Or [And [Leaf 1, Leaf 24], And [Leaf 14, Leaf 4]])),
+            (3, Ref (Or [And [Leaf 5, Leaf 14], And [Leaf 16, Leaf 1]])),
+            (4, Ref (Or [And [Leaf 1, Leaf 1]])),
+            (5, Ref (Or [And [Leaf 1, Leaf 14], And [Leaf 15, Leaf 1]])),
+            (6, Ref (Or [And [Leaf 14, Leaf 14], And [Leaf 1, Leaf 14]])),
+            (7, Ref (Or [And [Leaf 14, Leaf 5], And [Leaf 1, Leaf 21]])),
+            (8, Ref (Or [And [Leaf 42]])),
+            (9, Ref (Or [And [Leaf 14, Leaf 27], And [Leaf 1, Leaf 26]])),
+            (10, Ref (Or [And [Leaf 23, Leaf 14], And [Leaf 28, Leaf 1]])),
+            (11, Ref (Or [And [Leaf 42, Leaf 31]])),
+            (12, Ref (Or [And [Leaf 24, Leaf 14], And [Leaf 19, Leaf 1]])),
+            (13, Ref (Or [And [Leaf 14, Leaf 3], And [Leaf 1, Leaf 12]])),
             (14, Val 'b'),
-            (15, Ref [[1], [14]]),
-            (16, Ref [[15, 1], [14, 14]]),
-            (17, Ref [[14, 2], [1, 7]]),
-            (18, Ref [[15, 15]]),
-            (19, Ref [[14, 1], [14, 14]]),
-            (20, Ref [[14, 14], [1, 15]]),
-            (21, Ref [[14, 1], [1, 14]]),
-            (22, Ref [[14, 14]]),
-            (23, Ref [[25, 1], [22, 14]]),
-            (24, Ref [[14, 1]]),
-            (25, Ref [[1, 1], [1, 14]]),
-            (26, Ref [[14, 22], [1, 20]]),
-            (27, Ref [[1, 6], [14, 18]]),
-            (28, Ref [[16, 1]]),
-            (31, Ref [[14, 17], [1, 13]]),
-            (42, Ref [[9, 14], [10, 1]])
+            (15, Ref (Or [And [Leaf 1], And [Leaf 14]])),
+            (16, Ref (Or [And [Leaf 15, Leaf 1], And [Leaf 14, Leaf 14]])),
+            (17, Ref (Or [And [Leaf 14, Leaf 2], And [Leaf 1, Leaf 7]])),
+            (18, Ref (Or [And [Leaf 15, Leaf 15]])),
+            (19, Ref (Or [And [Leaf 14, Leaf 1], And [Leaf 14, Leaf 14]])),
+            (20, Ref (Or [And [Leaf 14, Leaf 14], And [Leaf 1, Leaf 15]])),
+            (21, Ref (Or [And [Leaf 14, Leaf 1], And [Leaf 1, Leaf 14]])),
+            (22, Ref (Or [And [Leaf 14, Leaf 14]])),
+            (23, Ref (Or [And [Leaf 25, Leaf 1], And [Leaf 22, Leaf 14]])),
+            (24, Ref (Or [And [Leaf 14, Leaf 1]])),
+            (25, Ref (Or [And [Leaf 1, Leaf 1], And [Leaf 1, Leaf 14]])),
+            (26, Ref (Or [And [Leaf 14, Leaf 22], And [Leaf 1, Leaf 20]])),
+            (27, Ref (Or [And [Leaf 1, Leaf 6], And [Leaf 14, Leaf 18]])),
+            (28, Ref (Or [And [Leaf 16, Leaf 1]])),
+            (31, Ref (Or [And [Leaf 14, Leaf 17], And [Leaf 1, Leaf 13]])),
+            (42, Ref (Or [And [Leaf 9, Leaf 14], And [Leaf 10, Leaf 1]]))
           ]
 
   let exampleDocument1 = Document exampleRules1 []
@@ -101,17 +101,17 @@ spec = parallel $ do
     context "given a modified example-3.txt" $ do
       let cases =
             [ (it, "bbabbbbaabaabba", True),
-              (xit, "babbbbaabbbbbabbbbbbaabaaabaaa", True),
+              (it, "babbbbaabbbbbabbbbbbaabaaabaaa", True),
               (it, "aaabbbbbbaaaabaababaabababbabaaabbababababaaa", True),
-              (xit, "bbbbbbbaaaabbbbaaabbabaaa", True),
-              (xit, "bbbababbbbaaaaaaaabbababaaababaabab", True),
+              (it, "bbbbbbbaaaabbbbaaabbabaaa", True),
+              (it, "bbbababbbbaaaaaaaabbababaaababaabab", True),
               (it, "ababaaaaaabaaab", True),
               (it, "ababaaaaabbbaba", True),
               (it, "baabbaaaabbaaaababbaababb", True),
-              (xit, "abbbbabbbbaaaababbbbbbaaaababb", True),
-              (xit, "aaaaabbaabaaaaababaa", True),
+              (it, "abbbbabbbbaaaababbbbbbaaaababb", True),
+              (it, "aaaaabbaabaaaaababaa", True),
               (it, "aaaabbaabbaaaaaaabbbabbbaaabbaabaaa", True),
-              (xit, "aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba", True),
+              (it, "aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba", True),
               (it, "aaaabbaaaabbaaa", False)
             ]
       let test (testIt, input, expected) = testIt ("is " ++ show expected ++ " for input " ++ show input) $ do
@@ -130,7 +130,7 @@ spec = parallel $ do
         let Right document = parseDocument input
 
         validMessages document `shouldBe` ["bbabbbbaabaabba", "ababaaaaaabaaab", "ababaaaaabbbaba"]
-    xcontext "given a modified example-3.txt" $ do
+    context "given a modified example-3.txt" $ do
       it "selects valid messages" $ do
         input <- readFile "./test/Day19/example-3.txt"
         let Right document = withNewRules <$> parseDocument input

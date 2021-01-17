@@ -13,9 +13,13 @@ part1 = show . length . validMessages . fromRightOrShowError . parseDocument
 part2 :: String -> String
 part2 = show . length . validMessages . withNewRules . fromRightOrShowError . parseDocument
 
-data Rule = Ref [[Int]] | Val Char deriving (Show, Eq)
+data Rule = Ref (AndOr Int) | Val Char deriving (Show, Eq)
 
--- type Rules = IntMap Rule
+data AndOr a
+  = Leaf a
+  | And [AndOr a]
+  | Or [AndOr a]
+  deriving (Show, Eq)
 
 data Document = Document {dRules :: IntMap Rule, dMessages :: [String]} deriving (Show, Eq)
 
@@ -38,10 +42,16 @@ parseDocument = parse documentParser ""
     ruleParser = choice [valParser, refParser]
 
     refParser :: Parsec String () Rule
-    refParser = Ref <$> (subRuleParser `sepBy1` (char '|' <* char ' '))
+    refParser = Ref <$> orParser
 
-    subRuleParser :: Parsec String () [Int]
-    subRuleParser = intParser `sepEndBy1` char ' '
+    orParser :: Parsec String () (AndOr Int)
+    orParser = Or <$> andParser `sepBy1` (char '|' <* char ' ')
+
+    andParser :: Parsec String () (AndOr Int)
+    andParser = And <$> leafParser `sepEndBy1` char ' '
+
+    leafParser :: Parsec String () (AndOr Int)
+    leafParser = Leaf <$> intParser
 
     valParser :: Parsec String () Rule
     valParser = Val <$> betweenDblQuotes letter
@@ -56,26 +66,27 @@ isValidMessage rules = (== Just "") . go 0
     go i = match (rules IntMap.! i)
 
     match :: Rule -> String -> Maybe String
+
     match (Val _) "" = Nothing
     match (Val c) (x : xs)
       | c == x = Just xs
       | otherwise = Nothing
-    match (Ref xs) input = foldr1 (<|>) . map (`follow` input) $ xs
+    match (Ref andOr) input = matchAndOr andOr input
 
-    follow :: [Int] -> String -> Maybe String
-    follow (y : ys) input = go y input >>= follow ys
-    follow [] input = Just input
+    matchAndOr :: AndOr Int -> String -> Maybe String
+    matchAndOr (Or xs) input = foldr1 (<|>) . map (`matchAndOr` input) $ xs
+    matchAndOr (And (x : xs)) input = matchAndOr x input >>= matchAndOr (And xs)
+    matchAndOr (And []) input = Just input
+    matchAndOr (Leaf x) input = go x input
 
 withNewRules :: Document -> Document
-withNewRules document@Document {dRules = rules} = document {dRules = newRules}
+withNewRules document@Document {dRules = rules} = document {dRules = newRules <> rules}
   where
     newRules :: IntMap Rule
     newRules =
-      foldr
-        (uncurry IntMap.insert)
-        rules
-        [ (8, Ref [[42], [42, 8]]),
-          (11, Ref [[42, 31], [42, 11, 31]])
+      IntMap.fromList
+        [ (8, Ref (Or [And [Leaf 42], And [Leaf 42, Leaf 8]])),
+          (11, Ref (Or [And [Leaf 42, Leaf 31], And [Leaf 42, Leaf 11, Leaf 31]]))
         ]
 
 validMessages :: Document -> [String]
