@@ -5,7 +5,6 @@ import Advent.Utils
 import Control.Applicative
 import Data.IntMap.Lazy (IntMap)
 import qualified Data.IntMap.Lazy as IntMap
-import Debug.Trace
 import Text.Parsec hiding ((<|>))
 
 part1 :: String -> String
@@ -14,7 +13,7 @@ part1 = show . length . validMessages . fromRightOrShowError . parseDocument
 part2 :: String -> String
 part2 = show . length . validMessages . withNewRules . fromRightOrShowError . parseDocument
 
-data Rule = Branch [Int] [Int] | Ref [Int] | Val Char deriving (Show, Eq)
+data Rule = Ref [[Int]] | Val Char deriving (Show, Eq)
 
 -- type Rules = IntMap Rule
 
@@ -36,13 +35,10 @@ parseDocument = parse documentParser ""
     rulePairParser = (,) <$> (intParser <* char ':' <* char ' ') <*> ruleParser
 
     ruleParser :: Parsec String () Rule
-    ruleParser = choice [try branchParser, valParser, refParser]
-
-    branchParser :: Parsec String () Rule
-    branchParser = Branch <$> subRuleParser <*> (char '|' *> char ' ' *> subRuleParser)
+    ruleParser = choice [valParser, refParser]
 
     refParser :: Parsec String () Rule
-    refParser = Ref <$> subRuleParser
+    refParser = Ref <$> (subRuleParser `sepBy1` (char '|' <* char ' '))
 
     subRuleParser :: Parsec String () [Int]
     subRuleParser = intParser `sepEndBy1` char ' '
@@ -64,9 +60,11 @@ isValidMessage rules = (== Just "") . go 0
     match (Val c) (x : xs)
       | c == x = Just xs
       | otherwise = Nothing
-    match (Ref (x : xs)) input = go x input >>= match (Ref xs)
-    match (Ref []) input = Just input
-    match (Branch ls rs) input = match (Ref ls) input <|> match (Ref rs) input
+    match (Ref xs) input = foldr1 (<|>) . map (`follow` input) $ xs
+
+    follow :: [Int] -> String -> Maybe String
+    follow (y : ys) input = go y input >>= follow ys
+    follow [] input = Just input
 
 withNewRules :: Document -> Document
 withNewRules document@Document {dRules = rules} = document {dRules = newRules}
@@ -76,8 +74,8 @@ withNewRules document@Document {dRules = rules} = document {dRules = newRules}
       foldr
         (uncurry IntMap.insert)
         rules
-        [ (8, Branch [42] [42, 8]),
-          (11, Branch [42, 31] [42, 11, 31])
+        [ (8, Ref [[42], [42, 8]]),
+          (11, Ref [[42, 31], [42, 11, 31]])
         ]
 
 validMessages :: Document -> [String]
