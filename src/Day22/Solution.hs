@@ -1,10 +1,20 @@
-module Day22.Solution where
+module Day22.Solution
+  ( Player (..),
+    parseDecks,
+    part1,
+    part2,
+    playGameWith,
+    recursiveCombat,
+    simpleCombat,
+    winningScore,
+  )
+where
 
-import Advent.Parser
-import Advent.Utils
-import Control.Monad
-import Data.Foldable
-import Data.Function
+import Advent.Parser (intParser)
+import Advent.Utils (fromRightOrShowError)
+import Control.Monad (guard)
+import Data.Foldable (Foldable (..))
+import Data.Function ((&))
 import Data.Sequence (Seq (..))
 import qualified Data.Sequence as Seq
 import Data.Set (Set)

@@ -2,6 +2,15 @@ module Day22.SolutionSpec (spec) where
 
 import qualified Data.Sequence as Seq
 import Day22.Solution
+  ( Player (..),
+    parseDecks,
+    part1,
+    part2,
+    playGameWith,
+    recursiveCombat,
+    simpleCombat,
+    winningScore,
+  )
 import Test.Hspec
 
 spec :: Spec
