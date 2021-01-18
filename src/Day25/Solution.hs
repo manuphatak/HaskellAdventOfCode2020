@@ -2,16 +2,12 @@ module Day25.Solution
   ( crack,
     findEncryptionKey,
     part1,
-    part2,
     transform,
   )
 where
 
 part1 :: String -> String
 part1 = show . findEncryptionKey 7 1591838 . readPublicKeys
-
-part2 :: String -> String
-part2 = head . lines
 
 type LoopSize = Integer
 

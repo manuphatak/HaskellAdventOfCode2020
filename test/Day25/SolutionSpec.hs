@@ -4,7 +4,6 @@ import Day25.Solution
   ( crack,
     findEncryptionKey,
     part1,
-    part2,
     transform,
   )
 import Test.Hspec
@@ -14,10 +13,6 @@ spec = parallel $ do
   it "solves Part 1" $ do
     input <- readFile "./test/Day25/input.txt"
     part1 input `shouldBe` "8329514"
-
-  xit "solves Part 2" $ do
-    input <- readFile "./test/Day25/input.txt"
-    part2 input `shouldBe` "hello_santa"
 
   let cardsPrivateKey = 8
   let cardsPublicKey = 5764801
