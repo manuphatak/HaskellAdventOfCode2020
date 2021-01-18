@@ -2,6 +2,7 @@ module Day22.Solution where
 
 import Advent.Parser
 import Advent.Utils
+import Control.Monad
 import Data.Foldable
 import Data.Function
 import Data.Sequence (Seq (..))
@@ -11,10 +12,10 @@ import qualified Data.Set as Set
 import Text.Parsec hiding (Empty)
 
 part1 :: String -> String
-part1 = show . winningScore . uncurry (playGameWith const) . fromRightOrShowError . parseDecks
+part1 = show . winningScore . uncurry (playGameWith simpleCombat) . fromRightOrShowError . parseDecks
 
 part2 :: String -> String
-part2 = show . winningScore . uncurry (playGameWith const) . fromRightOrShowError . parseDecks
+part2 = show . winningScore . uncurry (playGameWith recursiveCombat) . fromRightOrShowError . parseDecks
 
 parseDecks :: String -> Either ParseError (Deck, Deck)
 parseDecks = parse gameParser ""
@@ -32,43 +33,43 @@ type Deck = Seq Int
 
 data Player = Player1 | Player2 deriving (Show, Eq)
 
-playGameWith :: a -> Deck -> Deck -> (Player, Deck)
-playGameWith fn = switch
-  where
-    switch :: Deck -> Deck -> (Player, Deck)
-    switch (x :<| xs) (y :<| ys)
-      | x > y = switch (xs :|> x :|> y) ys
-      | y > x = switch xs (ys :|> y :|> x)
-      | otherwise = switch (xs :|> x) (ys :|> y)
-    switch d Empty = (Player1, d)
-    switch Empty d = (Player2, d)
-
 type History = Set (Deck, Deck)
 
--- | otherwise = trace ("round " ++ show r ++ " game " ++ show i) $ traceShow game $ go game
--- recursiveCombat :: Int -> Int -> History -> (Deck, Deck) -> ((Deck, Deck), History)
--- recursiveCombat i r history game
---   | game `Set.member` history = ((fst game, Empty), nextHistory)
---   | otherwise = go game
---   where
---     go :: (Deck, Deck) -> ((Deck, Deck), History)
---     go (x :<| xs, y :<| ys)
---       | x <= length xs && y <= length ys =
---         recursiveCombat (succ i) 1 nextHistory (xs, ys)
---           & (\(g, h) -> recursiveCombat i (succ r) h (nextGame x xs y ys (gameWinner g)))
---       | otherwise =
---         x `compare` y
---           & nextGame x xs y ys
---           & recursiveCombat i (succ r) nextHistory
---     go g = (g, nextHistory)
+type CombatHandler = (Deck -> Deck -> Maybe Player)
 
---     nextHistory :: Set (Seq Int, Seq Int)
---     nextHistory = Set.insert game history
+simpleCombat :: CombatHandler
+simpleCombat = const . const Nothing
 
---     nextGame :: Int -> Seq Int -> Int -> Seq Int -> Ordering -> (Deck, Deck)
---     nextGame x xs y ys EQ = (xs :|> x, ys :|> y)
---     nextGame x xs y ys LT = (xs, ys :|> y :|> x)
---     nextGame x xs y ys GT = (xs :|> x :|> y, ys)
+recursiveCombat :: CombatHandler
+recursiveCombat (x :<| xs) (y :<| ys) = do
+  xs' <- takeExactly x xs
+  ys' <- takeExactly y ys
+  pure . fst $ playGameWith recursiveCombat xs' ys'
+recursiveCombat _ _ = undefined
+
+takeExactly :: Int -> Seq Int -> Maybe Deck
+takeExactly n xs = Seq.take n xs <$ guard (Seq.length xs >= n)
+
+playGameWith :: CombatHandler -> Deck -> Deck -> (Player, Deck)
+playGameWith fn = go Set.empty
+  where
+    go :: History -> Deck -> Deck -> (Player, Deck)
+    go history xs ys
+      | (xs, ys) `Set.member` history = (Player1, xs)
+      | otherwise = switch history xs ys
+
+    switch :: History -> Deck -> Deck -> (Player, Deck)
+    switch _ d Empty = (Player1, d)
+    switch _ Empty d = (Player2, d)
+    switch history xss@(x :<| xs) yss@(y :<| ys) =
+      let winner = case fn xss yss of
+            Nothing -> if x > y then Player1 else Player2
+            Just p -> p
+       in case winner of
+            Player1 -> go nextHistory (xs :|> x :|> y) ys
+            Player2 -> go nextHistory xs (ys :|> y :|> x)
+      where
+        nextHistory = Set.insert (xss, yss) history
 
 winningScore :: (a, Deck) -> Int
 winningScore (_, deck) = deck & Seq.reverse & toList & zipWith (*) [1 ..] & sum
