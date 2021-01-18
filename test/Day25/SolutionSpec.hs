@@ -1,6 +1,12 @@
 module Day25.SolutionSpec (spec) where
 
 import Day25.Solution
+  ( crack,
+    findEncryptionKey,
+    part1,
+    part2,
+    transform,
+  )
 import Test.Hspec
 
 spec :: Spec
