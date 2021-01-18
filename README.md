@@ -7,7 +7,7 @@ Solutions to adventofcode.com/2020
 
 ![50 Stars](https://user-images.githubusercontent.com/5052422/104944161-a801e000-596b-11eb-9b86-f9e8faa6af9e.png)
 
-## [Solutions](https://github.com/manuphatak/HaskellAdventOfCode2020/pulls?q=is%3Apr+label%3Asolution+sort%3Acreated-asc)
+## Solutions ([Link](https://github.com/manuphatak/HaskellAdventOfCode2020/pulls?q=is%3Apr+label%3Asolution+sort%3Acreated-asc))
 
 | PR                                                                      | Problem                         | Solution                                       | Specs                                                    |
 | ----------------------------------------------------------------------- | ------------------------------- | ---------------------------------------------- | -------------------------------------------------------- |
