@@ -30,13 +30,12 @@ Solutions to adventofcode.com/2020
 | [PR #32](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/32) | Day 19: Monster Messages        | [src/Day19/Solution.hs](src/Day19/Solution.hs) | [test/Day19/SolutionSpec.hs](test/Day19/SolutionSpec.hs) |
 | [PR #34](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/34) | Day 20: Jurassic Jigsaw         | [src/Day20/Solution.hs](src/Day20/Solution.hs) | [test/Day20/SolutionSpec.hs](test/Day20/SolutionSpec.hs) |
 | [PR #35](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/35) | Day 21: Allergen Assessment     | [src/Day21/Solution.hs](src/Day21/Solution.hs) | [test/Day21/SolutionSpec.hs](test/Day21/SolutionSpec.hs) |
-| [PR #38](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/38) | Day 22: Crab Combat             | `[in progress, 1 star ]`                       | `[in progress]`                                          |
+| [PR #38](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/38) | Day 22: Crab Combat             | [src/Day22/Solution.hs](src/Day22/Solution.hs) | [test/Day22/SolutionSpec.hs](test/Day22/SolutionSpec.hs) |
 | [PR #40](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/40) | Day 23: Crab Cups               | `[in progress, 2 stars]`                       | `[in progress]`                                          |
 | [PR #44](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/44) | Day 24: Lobby Layout            | [src/Day24/Solution.hs](src/Day24/Solution.hs) | [test/Day24/SolutionSpec.hs](test/Day24/SolutionSpec.hs) |
 | [PR #45](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/45) | Day 25: Combo Breaker           | `[in progress, 1 star ]`                       | `[in progress]`                                          |
 
 <!-- | [PR #25](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/25) | Day 15: Rambunctious Recitation | [src/Day15/Solution.hs](src/Day15/Solution.hs) | [test/Day15/SolutionSpec.hs](test/Day15/SolutionSpec.hs) | -->
-<!-- | [PR #38](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/38) | Day 22: Crab Combat             | [src/Day22/Solution.hs](src/Day22/Solution.hs) | [test/Day22/SolutionSpec.hs](test/Day22/SolutionSpec.hs) | -->
 <!-- | [PR #40](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/40) | Day 23: Crab Cups               | [src/Day23/Solution.hs](src/Day23/Solution.hs) | [test/Day23/SolutionSpec.hs](test/Day23/SolutionSpec.hs) | -->
 <!-- | [PR #45](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/45) | Day 25: Combo Breaker           | [src/Day25/Solution.hs](src/Day25/Solution.hs) | [test/Day25/SolutionSpec.hs](test/Day25/SolutionSpec.hs) | -->
 

@@ -54,6 +54,7 @@ library
       Day19.Solution
       Day20.Solution
       Day21.Solution
+      Day22.Solution
       Day24.Solution
       Practice.Foldable
       Template.Solution
@@ -104,6 +105,7 @@ test-suite AdventOfCode2020-test
       Day19.SolutionSpec
       Day20.SolutionSpec
       Day21.SolutionSpec
+      Day22.SolutionSpec
       Day24.SolutionSpec
       Practice.FoldableSpec
       Template.SolutionSpec
