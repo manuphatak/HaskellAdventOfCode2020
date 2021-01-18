@@ -5,7 +5,7 @@
 
 Solutions to [adventofcode.com/2020](https://adventofcode.com/2020)
 
-![50 Stars](https://user-images.githubusercontent.com/5052422/104944161-a801e000-596b-11eb-9b86-f9e8faa6af9e.png)
+![50 Stars](https://user-images.githubusercontent.com/5052422/104957167-7cd6bb00-5982-11eb-8f90-1a88169df394.gif)
 
 ## Solutions ([Link](https://github.com/manuphatak/HaskellAdventOfCode2020/pulls?q=is%3Apr+label%3Asolution+sort%3Acreated-asc))
 
