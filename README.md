@@ -3,7 +3,7 @@
 
 # AdventOfCode 2020
 
-Solutions to adventofcode.com/2020
+Solutions to [adventofcode.com/2020](https://adventofcode.com/2020)
 
 ![50 Stars](https://user-images.githubusercontent.com/5052422/104944161-a801e000-596b-11eb-9b86-f9e8faa6af9e.png)
 
