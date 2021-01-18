@@ -3,9 +3,11 @@
 
 # AdventOfCode 2020
 
-Solutions to adventofcode.com/2020
+Solutions to [adventofcode.com/2020](https://adventofcode.com/2020)
 
-## [Solutions](https://github.com/manuphatak/HaskellAdventOfCode2020/pulls?q=is%3Apr+label%3Asolution+sort%3Acreated-asc)
+![50 Stars](https://user-images.githubusercontent.com/5052422/104944161-a801e000-596b-11eb-9b86-f9e8faa6af9e.png)
+
+## Solutions ([Link](https://github.com/manuphatak/HaskellAdventOfCode2020/pulls?q=is%3Apr+label%3Asolution+sort%3Acreated-asc))
 
 | PR                                                                      | Problem                         | Solution                                       | Specs                                                    |
 | ----------------------------------------------------------------------- | ------------------------------- | ---------------------------------------------- | -------------------------------------------------------- |
@@ -33,7 +35,7 @@ Solutions to adventofcode.com/2020
 | [PR #38](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/38) | Day 22: Crab Combat             | [src/Day22/Solution.hs](src/Day22/Solution.hs) | [test/Day22/SolutionSpec.hs](test/Day22/SolutionSpec.hs) |
 | [PR #40](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/40) | Day 23: Crab Cups               | `[in progress, 2 stars]`                       | `[in progress]`                                          |
 | [PR #44](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/44) | Day 24: Lobby Layout            | [src/Day24/Solution.hs](src/Day24/Solution.hs) | [test/Day24/SolutionSpec.hs](test/Day24/SolutionSpec.hs) |
-| [PR #45](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/45) | Day 25: Combo Breaker           | `[in progress, 1 star ]`                       | `[in progress]`                                          |
+| [PR #45](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/45) | Day 25: Combo Breaker           | `[in progress, 2 star ]`                       | `[in progress]`                                          |
 
 <!-- | [PR #25](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/25) | Day 15: Rambunctious Recitation | [src/Day15/Solution.hs](src/Day15/Solution.hs) | [test/Day15/SolutionSpec.hs](test/Day15/SolutionSpec.hs) | -->
 <!-- | [PR #40](https://github.com/manuphatak/HaskellAdventOfCode2020/pull/40) | Day 23: Crab Cups               | [src/Day23/Solution.hs](src/Day23/Solution.hs) | [test/Day23/SolutionSpec.hs](test/Day23/SolutionSpec.hs) | -->
