@@ -51,8 +51,10 @@ library
       Day17.Solution
       Day18.Internal
       Day18.Solution
+      Day19.Solution
       Day20.Solution
       Day21.Solution
+      Day22.Solution
       Day24.Solution
       Day25.Solution
       Practice.Foldable
@@ -101,8 +103,10 @@ test-suite AdventOfCode2020-test
       Day16.UtilsSpec
       Day17.SolutionSpec
       Day18.SolutionSpec
+      Day19.SolutionSpec
       Day20.SolutionSpec
       Day21.SolutionSpec
+      Day22.SolutionSpec
       Day24.SolutionSpec
       Day25.SolutionSpec
       Practice.FoldableSpec
