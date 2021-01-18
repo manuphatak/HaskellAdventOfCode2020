@@ -5,3 +5,9 @@ cradle:
 
     - path: "./test"
       component: "AdventOfCode2020:test:AdventOfCode2020-test"
+
+    - path: "./bench/Bench.hs"
+      component: "AdventOfCode2020:bench:AdventOfCode2020-bench"
+
+    - path: "./bench/Paths_AdventOfCode2020.hs"
+      component: "AdventOfCode2020:bench:AdventOfCode2020-bench"

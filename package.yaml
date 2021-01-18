@@ -26,6 +26,10 @@ dependencies:
 - parsec
 - unordered-containers
 
+ghc-options:
+- -Wall
+- -O2
+
 library:
   source-dirs: src
 
@@ -38,12 +42,28 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     - -Wall
+    - -O2
 
     dependencies:
     - AdventOfCode2020
     - hspec-discover
     - hspec
     - hspec-golden
+
+benchmarks:
+  AdventOfCode2020-bench:
+    main:                Bench.hs
+    source-dirs:         bench
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -Wall
+    - -O2
+
+    dependencies:
+    - AdventOfCode2020
+    - criterion
 
 build-tools:
  - implicit-hie
