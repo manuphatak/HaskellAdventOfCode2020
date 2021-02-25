@@ -45,6 +45,7 @@ library
       Day12.Solution
       Day13.Solution
       Day14.Solution
+      Day15.Solution
       Day16.Parser
       Day16.Solution
       Day16.Utils
@@ -98,6 +99,7 @@ test-suite AdventOfCode2020-test
       Day12.SolutionSpec
       Day13.SolutionSpec
       Day14.SolutionSpec
+      Day15.SolutionSpec
       Day16.SolutionSpec
       Day16.UtilsSpec
       Day17.SolutionSpec
